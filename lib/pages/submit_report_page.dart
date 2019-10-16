@@ -14,6 +14,9 @@ class SubmitReportPage extends StatefulWidget {
 
 class _SubmitReportPageState extends State<SubmitReportPage> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  TextEditingController _codeNameController = TextEditingController();
+  TextEditingController _landmarkController = TextEditingController();
+  TextEditingController _additionalInfoController = TextEditingController();
   File _selectedImage;
 
   @override
@@ -36,18 +39,34 @@ class _SubmitReportPageState extends State<SubmitReportPage> {
           SizedBox(
             height: 128,
           ),
-          ListView(
-            shrinkWrap: true,
-            children: <Widget>[
-              InkWell(
-                onTap: _showImageSourceSelectionDialog,
-                child: Container(
-                  child: (_selectedImage == null)
-                      ? Icon(Icons.add)
-                      : Image.file(_selectedImage),
+          Form(
+            key: _formKey,
+            autovalidate: false,
+            child: ListView(
+              shrinkWrap: true,
+              children: <Widget>[
+                InkWell(
+                  onTap: _showImageSourceSelectionDialog,
+                  child: Container(
+                    height: 300,
+                    width: 300,
+                    child: (_selectedImage == null)
+                        ? Icon(Icons.add)
+                        : Image.file(_selectedImage),
+                  ),
                 ),
-              ),
-            ],
+                TextFormField(
+                  controller: _codeNameController,
+                  decoration: InputDecoration(),
+                ),
+                TextFormField(
+                  controller: _landmarkController,
+                ),
+                TextFormField(
+                  controller: _additionalInfoController,
+                ),
+              ],
+            ),
           )
         ],
       ),
@@ -64,26 +83,27 @@ class _SubmitReportPageState extends State<SubmitReportPage> {
 
   void _showImageSourceSelectionDialog() {
     showDialog(
-        context: context,
-        builder: (context) {
-          return Row(
-            children: <Widget>[
-              SuperellipseIconButton(
-                color: Colors.amber,
-                iconData: Icons.camera,
-                onTap: () {
-                  selectImage(ImageSource.camera);
-                },
-              ),
-              SuperellipseIconButton(
-                color: Colors.amber,
-                iconData: Icons.image,
-                onTap: () {
-                  selectImage(ImageSource.gallery);
-                },
-              ),
-            ],
-          );
-        });
+      context: context,
+      builder: (context) {
+        return Row(
+          children: <Widget>[
+            SuperellipseIconButton(
+              color: Colors.amber,
+              iconData: Icons.camera,
+              onTap: () {
+                selectImage(ImageSource.camera);
+              },
+            ),
+            SuperellipseIconButton(
+              color: Colors.amber,
+              iconData: Icons.image,
+              onTap: () {
+                selectImage(ImageSource.gallery);
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }
