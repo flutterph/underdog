@@ -27,6 +27,13 @@ dependencies:
   sqflite:
   image_picker: ^0.6.1+8
   firebase_database: ^3.0.7
+  firebase_auth: ^0.14.0+5
+  shared_preferences: ^0.5.3+5
+  google_sign_in: ^4.0.7
+  cupertino_icons:
+  font_awesome_flutter: ^8.5.0
+  get_it: ^3.0.1
+  firebase_storage: ^3.0.6
 
 dev_dependencies:
   flutter_test:
@@ -66,6 +73,46 @@ flutter:
     - family: Jua
       fonts:
         - asset: assets/fonts/jua/Jua-Regular.ttf
+
+    - family: OpenSans
+      fonts:
+        - asset: assets/fonts/open_sans/OpenSans-Regular.ttf
+        - asset: assets/fonts/open_sans/OpenSans-Italic.ttf
+          style: italic
+        - asset: assets/fonts/open_sans/OpenSans-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/open_sans/OpenSans-BoldItalic.ttf
+          weight: 700
+          style: italic
+        - asset: assets/fonts/open_sans/OpenSans-Light.ttf
+          weight: 300
+        - asset: assets/fonts/open_sans/OpenSans-LightItalic.ttf
+          weight: 300
+          style: italic
+
+    - family: Manjari
+      fonts:
+        - asset: assets/fonts/manjari/Manjari-Regular.ttf
+        - asset: assets/fonts/manjari/Manjari-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/manjari/Manjari-Thin.ttf
+          weight: 100
+
+    - family: Lato
+      fonts:
+        - asset: assets/fonts/lato/Lato-Regular.ttf
+        - asset: assets/fonts/lato/Lato-Italic.ttf
+          style: italic
+        - asset: assets/fonts/lato/Lato-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/lato/Lato-BoldItalic.ttf
+          weight: 700
+          style: italic
+        - asset: assets/fonts/lato/Lato-Light.ttf
+          weight: 300
+        - asset: assets/fonts/lato/Lato-LightItalic.ttf
+          weight: 300
+          style: italic
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

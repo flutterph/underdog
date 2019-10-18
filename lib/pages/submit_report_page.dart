@@ -26,49 +26,106 @@ class _SubmitReportPageState extends State<SubmitReportPage> {
         elevation: 0,
         backgroundColor: Colors.transparent,
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          SizedBox(
-            height: 128,
-          ),
-          Text(
-            'Let\'s Rescue!',
-            style: UnderdogTheme.pageTitle,
-          ),
-          SizedBox(
-            height: 128,
-          ),
-          Form(
-            key: _formKey,
-            autovalidate: false,
-            child: ListView(
-              shrinkWrap: true,
+      body: Center(
+        child: Container(
+          constraints: BoxConstraints(maxWidth: 256),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                InkWell(
-                  onTap: _showImageSourceSelectionDialog,
-                  child: Container(
-                    height: 300,
-                    width: 300,
-                    child: (_selectedImage == null)
-                        ? Icon(Icons.add)
-                        : Image.file(_selectedImage),
+                Text(
+                  'Let\'s Rescue!',
+                  style: UnderdogTheme.pageTitle,
+                ),
+                SizedBox(
+                  height: 64,
+                ),
+                Form(
+                  key: _formKey,
+                  autovalidate: false,
+                  child: ListView(
+                    shrinkWrap: true,
+                    children: <Widget>[
+                      Material(
+                        color: Colors.black12,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(24)),
+                        child: InkWell(
+                          onTap: _showImageSourceSelectionDialog,
+                          child: SizedBox(
+                            height: 256,
+                            child: (_selectedImage == null)
+                                ? Icon(Icons.add)
+                                : Image.file(
+                                    _selectedImage,
+                                    fit: BoxFit.fill,
+                                  ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 32,
+                      ),
+                      TextFormField(
+                        controller: _codeNameController,
+                        decoration: InputDecoration(
+                            hintText: 'Give him or her a codename for now'),
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Please provide a codename';
+                          }
+
+                          return null;
+                        },
+                      ),
+                      TextFormField(
+                        controller: _landmarkController,
+                        decoration: InputDecoration(hintText: 'Landmark'),
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'This will help rescuers find the dog or puppy faster';
+                          }
+
+                          return null;
+                        },
+                      ),
+                      TextFormField(
+                        controller: _additionalInfoController,
+                        decoration: InputDecoration(
+                            hintText:
+                                '(Optional) Any other additional valuable information'),
+                      ),
+                    ],
                   ),
                 ),
-                TextFormField(
-                  controller: _codeNameController,
-                  decoration: InputDecoration(),
+                SizedBox(
+                  height: 24,
                 ),
-                TextFormField(
-                  controller: _landmarkController,
+                RaisedButton(
+                  color: Theme.of(context).accentColor,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16)),
+                  child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 16),
+                      child: Text(
+                        'Submit Report',
+                        style: UnderdogTheme.raisedButtonText,
+                      )),
+                  onPressed: () {
+                    if (_formKey.currentState.validate()) {
+                      Navigator.of(context).pop();
+                    }
+                  },
                 ),
-                TextFormField(
-                  controller: _additionalInfoController,
+                SizedBox(
+                  height: 64,
                 ),
               ],
             ),
-          )
-        ],
+          ),
+        ),
       ),
     );
   }
@@ -85,23 +142,33 @@ class _SubmitReportPageState extends State<SubmitReportPage> {
     showDialog(
       context: context,
       builder: (context) {
-        return Row(
-          children: <Widget>[
-            SuperellipseIconButton(
-              color: Colors.amber,
-              iconData: Icons.camera,
-              onTap: () {
-                selectImage(ImageSource.camera);
-              },
-            ),
-            SuperellipseIconButton(
-              color: Colors.amber,
-              iconData: Icons.image,
-              onTap: () {
-                selectImage(ImageSource.gallery);
-              },
-            ),
-          ],
+        return AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+          title: Text('Choose a source'),
+          content: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              SuperellipseIconButton(
+                bgColor: Colors.white,
+                iconColor: Theme.of(context).accentColor,
+                iconData: Icons.camera,
+                onTap: () {
+                  Navigator.pop(context);
+                  selectImage(ImageSource.camera);
+                },
+              ),
+              SuperellipseIconButton(
+                bgColor: Colors.white,
+                iconColor: Theme.of(context).accentColor,
+                iconData: Icons.image,
+                onTap: () {
+                  Navigator.pop(context);
+                  selectImage(ImageSource.gallery);
+                },
+              ),
+            ],
+          ),
         );
       },
     );

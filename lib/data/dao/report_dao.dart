@@ -6,6 +6,9 @@ abstract class ReportDao {
   @Query("SELECT * FROM Report")
   Future<List<Report>> getAll();
 
+  @Query("SELECT * FROM Report")
+  Stream<List<Report>> watchAll();
+
   @Insert()
   Future<void> insert(Report report);
 }

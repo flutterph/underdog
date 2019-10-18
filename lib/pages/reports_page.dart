@@ -1,30 +1,44 @@
 import 'package:flutter/material.dart';
+import 'package:underdog/hero_tag.dart';
 import 'package:underdog/underdog_theme.dart';
+import 'package:underdog/widgets/item_report.dart';
 
-class ReportsPage extends StatelessWidget {
+class ReportsPage extends StatefulWidget {
   const ReportsPage({Key key}) : super(key: key);
+
+  @override
+  _ReportsPageState createState() => _ReportsPageState();
+}
+
+class _ReportsPageState extends State<ReportsPage> {
+  GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: <Widget>[
+          AppBar(elevation: 0, backgroundColor: Colors.transparent),
           Container(
             child: Column(
               children: <Widget>[
                 SizedBox(
-                  height: 128,
+                  height: 96,
                 ),
                 Text(
                   'Reports',
                   style: UnderdogTheme.pageTitle,
                 ),
                 SizedBox(
-                  height: 128,
+                  height: 32,
                 ),
-                AnimatedList(
-                  shrinkWrap: true,
-                  itemBuilder: _buildItem,
+                Expanded(
+                  child: AnimatedList(
+                    key: _listKey,
+                    shrinkWrap: true,
+                    initialItemCount: 5,
+                    itemBuilder: _buildItem,
+                  ),
                 )
               ],
             ),
@@ -35,22 +49,7 @@ class ReportsPage extends StatelessWidget {
   }
 
   Widget _buildItem(BuildContext context, int index, Animation animation) {
-    return Container(
-      child: Card(
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-          child: Row(
-            children: <Widget>[
-              Placeholder(
-                color: Color(0xffffd800),
-              ),
-              SizedBox(
-                width: 24,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+    return Hero(
+        tag: HeroTag.REPORT_CARD_ + index.toString(), child: ReportItem());
   }
 }

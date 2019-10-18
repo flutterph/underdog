@@ -4,24 +4,31 @@ import 'package:superellipse_shape/superellipse_shape.dart';
 class SuperellipseIconButton extends StatelessWidget {
   final IconData iconData;
   final Function onTap;
-  final Color color;
-  const SuperellipseIconButton(
-      {Key key,
-      @required this.iconData,
-      @required this.onTap,
-      @required this.color})
-      : super(key: key);
+  final Color bgColor;
+  final Color iconColor;
+  const SuperellipseIconButton({
+    Key key,
+    @required this.iconData,
+    @required this.onTap,
+    @required this.bgColor,
+    @required this.iconColor,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: color,
-      shape: SuperellipseShape(borderRadius: BorderRadius.circular(24)),
+      elevation: 2,
+      color: bgColor,
+      shape: SuperellipseShape(borderRadius: BorderRadius.circular(32)),
       child: InkWell(
         onTap: onTap,
         child: Container(
-          padding: const EdgeInsets.all(8),
-          child: Icon(iconData),
+          padding: const EdgeInsets.all(12),
+          child: Icon(
+            iconData,
+            color: iconColor,
+            size: 32,
+          ),
         ),
       ),
     );

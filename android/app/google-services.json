@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "721645452025",
+    "firebase_url": "https://underdog-rescue-assistant.firebaseio.com",
+    "project_id": "underdog-rescue-assistant",
+    "storage_bucket": "underdog-rescue-assistant.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:721645452025:android:03d0f9ab59ab18ec748028",
+        "android_client_info": {
+          "package_name": "com.oliatienza.underdog"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "721645452025-tvibim6fbpu4dklmimsikgogk8qma4ld.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAfzK-HvYgcS60CDIkRNz0Gh5yqXuVzuR4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "721645452025-tvibim6fbpu4dklmimsikgogk8qma4ld.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

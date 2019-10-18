@@ -84,7 +84,7 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `User` (`id` INTEGER, `firstName` TEXT, `lastName` TEXT, `address` TEXT, `birthdate` INTEGER, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Report` (`id` INTEGER, `reporterId` INTEGER, `codeName` TEXT, `breed` TEXT, `latitude` REAL, `longitude` REAL, `landmark` TEXT, `additionalInfo` TEXT, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `Report` (`id` INTEGER, `reporterId` INTEGER, `rescuerId` INTEGER, `isRescued` INTEGER, `codeName` TEXT, `imageUrl` TEXT, `breed` TEXT, `latitude` REAL, `longitude` REAL, `landmark` TEXT, `additionalInfo` TEXT, PRIMARY KEY (`id`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -139,20 +139,24 @@ class _$UserDao extends UserDao {
 
 class _$ReportDao extends ReportDao {
   _$ReportDao(this.database, this.changeListener)
-      : _queryAdapter = QueryAdapter(database),
+      : _queryAdapter = QueryAdapter(database, changeListener),
         _reportInsertionAdapter = InsertionAdapter(
             database,
             'Report',
             (Report item) => <String, dynamic>{
                   'id': item.id,
                   'reporterId': item.reporterId,
+                  'rescuerId': item.rescuerId,
+                  'isRescued': item.isRescued ? 1 : 0,
                   'codeName': item.codeName,
+                  'imageUrl': item.imageUrl,
                   'breed': item.breed,
                   'latitude': item.latitude,
                   'longitude': item.longitude,
                   'landmark': item.landmark,
                   'additionalInfo': item.additionalInfo
-                });
+                },
+            changeListener);
 
   final sqflite.DatabaseExecutor database;
 
@@ -160,7 +164,18 @@ class _$ReportDao extends ReportDao {
 
   final QueryAdapter _queryAdapter;
 
-  static final _reportMapper = (Map<String, dynamic> row) => Report();
+  static final _reportMapper = (Map<String, dynamic> row) => Report(
+      row['id'] as int,
+      row['reporterId'] as int,
+      row['rescuerId'] as int,
+      (row['isRescued'] as int) != 0,
+      row['codeName'] as String,
+      row['imageUrl'] as String,
+      row['breed'] as String,
+      row['latitude'] as String,
+      row['longitude'] as double,
+      row['landmark'] as double,
+      row['additionalInfo'] as String);
 
   final InsertionAdapter<Report> _reportInsertionAdapter;
 
@@ -168,6 +183,12 @@ class _$ReportDao extends ReportDao {
   Future<List<Report>> getAll() async {
     return _queryAdapter.queryList('SELECT * FROM Report',
         mapper: _reportMapper);
+  }
+
+  @override
+  Stream<List<Report>> watchAll() {
+    return _queryAdapter.queryListStream('SELECT * FROM Report',
+        tableName: 'Report', mapper: _reportMapper);
   }
 
   @override
