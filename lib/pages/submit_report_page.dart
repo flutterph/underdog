@@ -2,6 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+import 'package:underdog/service_locator.dart';
+import 'package:underdog/viewmodels/submit_report_model.dart';
 
 import '../underdog_theme.dart';
 import '../widgets/superellipse_icon_button.dart';
@@ -21,111 +24,136 @@ class _SubmitReportPageState extends State<SubmitReportPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-      ),
-      body: Center(
-        child: Container(
-          constraints: BoxConstraints(maxWidth: 256),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  'Let\'s Rescue!',
-                  style: UnderdogTheme.pageTitle,
-                ),
-                SizedBox(
-                  height: 64,
-                ),
-                Form(
-                  key: _formKey,
-                  autovalidate: false,
-                  child: ListView(
-                    shrinkWrap: true,
+    return ChangeNotifierProvider<SubmitReportModel>(
+      builder: (context) => locator<SubmitReportModel>(),
+      child: Consumer<SubmitReportModel>(
+        builder: (context, model, child) {
+          return Scaffold(
+            appBar: AppBar(
+              elevation: 0,
+              backgroundColor: Colors.transparent,
+            ),
+            body: Center(
+              child: Container(
+                constraints: BoxConstraints(maxWidth: 256),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
-                      Material(
-                        color: Colors.black12,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(24)),
-                        child: InkWell(
-                          onTap: _showImageSourceSelectionDialog,
-                          child: SizedBox(
-                            height: 256,
-                            child: (_selectedImage == null)
-                                ? Icon(Icons.add)
-                                : Image.file(
-                                    _selectedImage,
-                                    fit: BoxFit.fill,
-                                  ),
-                          ),
+                      Text(
+                        'Let\'s Rescue!',
+                        style: UnderdogTheme.pageTitle,
+                      ),
+                      SizedBox(
+                        height: 64,
+                      ),
+                      Form(
+                        key: _formKey,
+                        autovalidate: false,
+                        child: ListView(
+                          shrinkWrap: true,
+                          children: <Widget>[
+                            Material(
+                              color: Colors.black12,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(24)),
+                              child: InkWell(
+                                onTap: _showImageSourceSelectionDialog,
+                                child: SizedBox(
+                                  height: 256,
+                                  child: (_selectedImage == null)
+                                      ? Icon(Icons.add)
+                                      : Image.file(
+                                          _selectedImage,
+                                          fit: BoxFit.fill,
+                                        ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 32,
+                            ),
+                            TextFormField(
+                              controller: _codeNameController,
+                              decoration: InputDecoration(
+                                  hintText:
+                                      'Give him or her a codename for now'),
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return 'Please provide a codename';
+                                }
+
+                                return null;
+                              },
+                            ),
+                            TextFormField(
+                              controller: _landmarkController,
+                              decoration: InputDecoration(hintText: 'Landmark'),
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return 'This will help rescuers find the dog or puppy faster';
+                                }
+
+                                return null;
+                              },
+                            ),
+                            TextFormField(
+                              controller: _additionalInfoController,
+                              decoration: InputDecoration(
+                                  hintText:
+                                      '(Optional) Any other additional valuable information'),
+                            ),
+                          ],
                         ),
                       ),
                       SizedBox(
-                        height: 32,
+                        height: 24,
                       ),
-                      TextFormField(
-                        controller: _codeNameController,
-                        decoration: InputDecoration(
-                            hintText: 'Give him or her a codename for now'),
-                        validator: (value) {
-                          if (value.isEmpty) {
-                            return 'Please provide a codename';
-                          }
+                      RaisedButton(
+                        color: Theme.of(context).accentColor,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16)),
+                        child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 16),
+                            child: Text(
+                              'Submit Report',
+                              style: UnderdogTheme.raisedButtonText,
+                            )),
+                        onPressed: () async {
+                          if (_formKey.currentState.validate()) {
+                            final submitStatus = await model.submitReport(
+                                _selectedImage,
+                                _codeNameController.text,
+                                'Golden Retriever',
+                                _landmarkController.text,
+                                14.4793,
+                                121.0198,
+                                _additionalInfoController.text);
 
-                          return null;
+                            if (submitStatus != null) {
+                              Scaffold.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(submitStatus),
+                                ),
+                              );
+                            } else {
+                              Navigator.pop(context);
+                            }
+                          }
                         },
                       ),
-                      TextFormField(
-                        controller: _landmarkController,
-                        decoration: InputDecoration(hintText: 'Landmark'),
-                        validator: (value) {
-                          if (value.isEmpty) {
-                            return 'This will help rescuers find the dog or puppy faster';
-                          }
-
-                          return null;
-                        },
-                      ),
-                      TextFormField(
-                        controller: _additionalInfoController,
-                        decoration: InputDecoration(
-                            hintText:
-                                '(Optional) Any other additional valuable information'),
+                      SizedBox(
+                        height: 64,
                       ),
                     ],
                   ),
                 ),
-                SizedBox(
-                  height: 24,
-                ),
-                RaisedButton(
-                  color: Theme.of(context).accentColor,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16)),
-                  child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 16),
-                      child: Text(
-                        'Submit Report',
-                        style: UnderdogTheme.raisedButtonText,
-                      )),
-                  onPressed: () {
-                    if (_formKey.currentState.validate()) {
-                      Navigator.of(context).pop();
-                    }
-                  },
-                ),
-                SizedBox(
-                  height: 64,
-                ),
-              ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }

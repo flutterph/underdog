@@ -1,8 +1,8 @@
-import 'package:floor/floor.dart';
+// import 'package:floor/floor.dart';
 
-@entity
+// @entity
 class User {
-  @primaryKey
+  // @primaryKey
   int id;
   String firstName;
   String lastName;

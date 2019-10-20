@@ -9,6 +9,10 @@ enum AuthStatus {
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  Future<String> getUserId() async {
+    return (await _auth.currentUser()).uid;
+  }
+
   Future<AuthStatus> checkAuthStatus() async {
     if ((await _auth.currentUser()) != null) {
       return AuthStatus.LOGGED_IN;

@@ -1,23 +1,22 @@
-import 'package:floor/floor.dart';
+// import 'package:floor/floor.dart';
 
-@entity
+// @entity
 class Report {
-  @primaryKey
-  int id;
-  int reporterId;
-  int rescuerId;
+  // @primaryKey
+  String reporterId;
+  String rescuerId;
 
   bool isRescued;
   String codeName;
   String imageUrl;
   String breed;
+  String landmark;
   double latitude;
   double longitude;
-  String landmark;
   String additionalInfo;
+  String date;
 
   Report(
-      this.id,
       this.reporterId,
       this.rescuerId,
       this.isRescued,
@@ -27,5 +26,6 @@ class Report {
       this.landmark,
       this.latitude,
       this.longitude,
-      this.additionalInfo);
+      this.additionalInfo,
+      this.date);
 }
