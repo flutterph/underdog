@@ -15,6 +15,7 @@ class SubmitReportModel extends ChangeNotifier {
   final StorageService _storageService = locator<StorageService>();
   final ReportsDatabaseService _reportsDatabaseService =
       locator<ReportsDatabaseService>();
+  String breed = 'Aspin';
 
   Future<String> submitReport(
     File image,

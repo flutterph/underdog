@@ -1,6 +1,11 @@
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
+import 'package:underdog/data/models/report.dart';
 import 'package:underdog/hero_tag.dart';
+import 'package:underdog/service_locator.dart';
 import 'package:underdog/underdog_theme.dart';
+import 'package:underdog/viewmodels/reports_model.dart';
 import 'package:underdog/widgets/item_report.dart';
 
 class ReportsPage extends StatefulWidget {
@@ -33,10 +38,11 @@ class _ReportsPageState extends State<ReportsPage> {
                   height: 32,
                 ),
                 Expanded(
-                  child: AnimatedList(
+                  child: FirebaseAnimatedList(
+                    query: locator<ReportsModel>().getReports(),
                     key: _listKey,
                     shrinkWrap: true,
-                    initialItemCount: 5,
+                    defaultChild: Center(child: CircularProgressIndicator()),
                     itemBuilder: _buildItem,
                   ),
                 )
@@ -48,8 +54,12 @@ class _ReportsPageState extends State<ReportsPage> {
     );
   }
 
-  Widget _buildItem(BuildContext context, int index, Animation animation) {
-    return Hero(
-        tag: HeroTag.REPORT_CARD_ + index.toString(), child: ReportItem());
+  Widget _buildItem(BuildContext context, DataSnapshot snapshot,
+      Animation animation, int index) {
+    final report = Report.fromSnapshot(snapshot);
+
+    return ReportItem(
+      report: report,
+    );
   }
 }

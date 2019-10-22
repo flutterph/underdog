@@ -30,22 +30,7 @@ class AuthService {
       return null;
     } catch (e) {
       print(e.code);
-      // switch (e.code) {
-      //   case 'ERROR_INVALID_EMAIL':
-      //     break;
-      //   case 'ERROR_WRONG_PASSWORD':
-      //     break;
-      //   case 'ERROR_USER_NOT_FOUND':
-      //     break;
-      //   case 'ERROR_USER_DISABLED':
-      //     break;
-      //   case 'ERROR_TOO_MANY_REQUESTS':
-      //     break;
-      //   case 'ERROR_OPERATION_NOT_ALLOWED':
-      //     break;
-      // }
-
-      return e.code;
+      return mapErrorCodeToMessage(e.code);
     }
   }
 
@@ -56,6 +41,29 @@ class AuthService {
       return true;
     } catch (e) {
       return false;
+    }
+  }
+
+  String mapErrorCodeToMessage(String code) {
+    switch (code) {
+      case 'ERROR_INVALID_EMAIL':
+        return 'Please use a valid e-mail address';
+        break;
+      case 'ERROR_WRONG_PASSWORD':
+        return 'You entered an incorrect password';
+        break;
+      case 'ERROR_USER_NOT_FOUND':
+        return 'There is no user associated with those credentials';
+        break;
+      case 'ERROR_USER_DISABLED':
+        return 'This user has been disabled by the administrator';
+        break;
+      case 'ERROR_TOO_MANY_REQUESTS':
+        return 'Too many incorrect attempts';
+        break;
+      case 'ERROR_OPERATION_NOT_ALLOWED':
+        return 'This user has been disabled by the administrators';
+        break;
     }
   }
 }

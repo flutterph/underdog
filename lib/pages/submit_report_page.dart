@@ -1,8 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:underdog/data/breeds.dart';
+import 'package:underdog/pages/select_location_page.dart';
 import 'package:underdog/service_locator.dart';
 import 'package:underdog/viewmodels/submit_report_model.dart';
 
@@ -54,28 +57,48 @@ class _SubmitReportPageState extends State<SubmitReportPage> {
                         child: ListView(
                           shrinkWrap: true,
                           children: <Widget>[
-                            Material(
-                              color: Colors.black12,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(24)),
-                              child: InkWell(
-                                onTap: _showImageSourceSelectionDialog,
-                                child: SizedBox(
-                                  height: 256,
-                                  child: (_selectedImage == null)
-                                      ? Icon(Icons.add)
-                                      : Image.file(
-                                          _selectedImage,
-                                          fit: BoxFit.fill,
+                            InkWell(
+                              onTap: _showImageSourceSelectionDialog,
+                              child: (_selectedImage == null)
+                                  ? Container(
+                                      height: 256,
+                                      width: 256,
+                                      child: Center(
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            'Upload an image to help with the rescue',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black45),
+                                          ),
                                         ),
-                                ),
-                              ),
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Colors.black12,
+                                        borderRadius: BorderRadius.circular(24),
+                                      ),
+                                    )
+                                  : Container(
+                                      height: 256,
+                                      width: 256,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(24),
+                                          image: DecorationImage(
+                                              fit: BoxFit.cover,
+                                              image:
+                                                  FileImage(_selectedImage))),
+                                    ),
                             ),
                             SizedBox(
                               height: 32,
                             ),
                             TextFormField(
                               controller: _codeNameController,
+                              maxLines: 1,
+                              textCapitalization: TextCapitalization.words,
                               decoration: InputDecoration(
                                   hintText:
                                       'Give him or her a codename for now'),
@@ -87,19 +110,56 @@ class _SubmitReportPageState extends State<SubmitReportPage> {
                                 return null;
                               },
                             ),
-                            TextFormField(
-                              controller: _landmarkController,
-                              decoration: InputDecoration(hintText: 'Landmark'),
-                              validator: (value) {
-                                if (value.isEmpty) {
-                                  return 'This will help rescuers find the dog or puppy faster';
-                                }
-
-                                return null;
+                            DropdownButton<String>(
+                              value: model.breed,
+                              items:
+                                  breeds.map<DropdownMenuItem<String>>((value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                              onChanged: (value) {
+                                setState(() {
+                                  model.breed = value;
+                                });
                               },
+                            ),
+                            Row(
+                              children: <Widget>[
+                                Expanded(
+                                  child: TextFormField(
+                                    controller: _landmarkController,
+                                    maxLines: 1,
+                                    textCapitalization:
+                                        TextCapitalization.words,
+                                    decoration:
+                                        InputDecoration(hintText: 'Landmark'),
+                                    validator: (value) {
+                                      if (value.isEmpty) {
+                                        return 'This will help rescuers find the dog or puppy faster';
+                                      }
+
+                                      return null;
+                                    },
+                                  ),
+                                ),
+                                IconButton(
+                                  icon: Icon(FontAwesomeIcons.mapMarkerAlt),
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                SelectLocationPage()));
+                                  },
+                                )
+                              ],
                             ),
                             TextFormField(
                               controller: _additionalInfoController,
+                              maxLines: 1,
+                              textCapitalization: TextCapitalization.sentences,
                               decoration: InputDecoration(
                                   hintText:
                                       '(Optional) Any other additional valuable information'),
@@ -110,39 +170,50 @@ class _SubmitReportPageState extends State<SubmitReportPage> {
                       SizedBox(
                         height: 24,
                       ),
-                      RaisedButton(
-                        color: Theme.of(context).accentColor,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16)),
-                        child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 16),
-                            child: Text(
-                              'Submit Report',
-                              style: UnderdogTheme.raisedButtonText,
-                            )),
-                        onPressed: () async {
-                          if (_formKey.currentState.validate()) {
-                            final submitStatus = await model.submitReport(
-                                _selectedImage,
-                                _codeNameController.text,
-                                'Golden Retriever',
-                                _landmarkController.text,
-                                14.4793,
-                                121.0198,
-                                _additionalInfoController.text);
+                      Builder(
+                        builder: (context) => RaisedButton(
+                          color: Theme.of(context).accentColor,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16)),
+                          child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 16),
+                              child: Text(
+                                'Submit Report',
+                                style: UnderdogTheme.raisedButtonText,
+                              )),
+                          onPressed: () async {
+                            if (_formKey.currentState.validate()) {
+                              if (_selectedImage != null) {
+                                final submitStatus = await model.submitReport(
+                                    _selectedImage,
+                                    _codeNameController.text,
+                                    model.breed,
+                                    _landmarkController.text,
+                                    14.4793,
+                                    121.0198,
+                                    _additionalInfoController.text);
 
-                            if (submitStatus != null) {
-                              Scaffold.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(submitStatus),
-                                ),
-                              );
-                            } else {
-                              Navigator.pop(context);
+                                if (submitStatus != null) {
+                                  Scaffold.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(submitStatus),
+                                    ),
+                                  );
+                                } else {
+                                  Navigator.pop(context);
+                                }
+                              } else {
+                                Scaffold.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                        'Please select an image with the dog in it'),
+                                  ),
+                                );
+                              }
                             }
-                          }
-                        },
+                          },
+                        ),
                       ),
                       SizedBox(
                         height: 64,

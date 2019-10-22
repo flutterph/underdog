@@ -35,6 +35,8 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+
+    _initializeReportsMarkers();
   }
 
   @override
@@ -213,5 +215,29 @@ class _HomePageState extends State<HomePage> {
         target: LatLng(userLocation.latitude, userLocation.longitude),
         zoom: _zoom);
     controller.animateCamera(CameraUpdate.newCameraPosition(newPosition));
+  }
+
+  void _initializeReportsMarkers() async {
+    final HomeModel homeModel = locator<HomeModel>();
+    final reports = await homeModel.getReports();
+
+    ImageConfiguration imageConfig = ImageConfiguration(size: Size(48, 48));
+    final icon = await BitmapDescriptor.fromAssetImage(
+        imageConfig, 'assets/service-dog.png');
+
+    reports.forEach((report) {
+      final markerId = MarkerId(report.uid);
+      final Marker marker = Marker(
+        markerId: markerId,
+        position: LatLng(report.latitude, report.longitude),
+        infoWindow: InfoWindow(title: report.codeName),
+        icon: icon,
+        onTap: () {},
+      );
+
+      setState(() {
+        markers[markerId] = marker;
+      });
+    });
   }
 }

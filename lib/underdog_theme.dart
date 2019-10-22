@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 
 class UnderdogTheme {
-  static const TextStyle pageTitle = TextStyle(
+  static MaterialColor color = Colors.green;
+  static TextStyle pageTitle = TextStyle(
       fontWeight: FontWeight.bold,
       fontSize: 36,
-      color: Colors.brown,
+      color: color,
       fontFamily: 'Jua');
 
-  static const TextStyle raisedButtonText =
+  static TextStyle raisedButtonText =
       TextStyle(fontWeight: FontWeight.bold, color: Colors.white);
-  static const TextStyle hintText = TextStyle(color: Colors.grey, fontSize: 12);
+  static TextStyle outlineButtonText =
+      TextStyle(fontWeight: FontWeight.bold, color: color);
+  static TextStyle hintText = TextStyle(color: Colors.grey, fontSize: 12);
 }
