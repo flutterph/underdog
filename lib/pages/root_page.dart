@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:underdog/hero_tag.dart';
 import 'package:underdog/pages/home_page.dart';
 import 'package:underdog/pages/login_page.dart';
 import 'package:underdog/services/auth_service.dart';
+import 'package:underdog/underdog_theme.dart';
 
 import '../service_locator.dart';
 
@@ -19,40 +21,34 @@ class _RootPageState extends State<RootPage> {
     super.initState();
     final _authService = locator<AuthService>();
     _authService.checkAuthStatus().then((value) {
-      setState(() {
-        _authStatus = value;
-      });
+      switch (value) {
+        case AuthStatus.NOT_DETERMINED:
+          // TODO: Handle this case.
+          break;
+        case AuthStatus.NOT_LOGGED_IN:
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => LoginPage()));
+          break;
+        case AuthStatus.LOGGED_IN:
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => HomePage()));
+          break;
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    switch (_authStatus) {
-      case AuthStatus.NOT_DETERMINED:
-        return Scaffold(
-          body: Center(
-            child: Text(
-              'Underdog',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
-            ),
-          ),
-        );
-        break;
-      case AuthStatus.NOT_LOGGED_IN:
-        print('Not logged in');
-        return LoginPage();
-        break;
-      case AuthStatus.LOGGED_IN:
-        print('Logged in');
-        return HomePage();
-        break;
-    }
-
     return Scaffold(
       body: Center(
-        child: Text(
-          'Underdog',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+        child: Hero(
+          tag: HeroTag.MAIN_TITLE,
+          child: Material(
+            child: Text(
+              'Underdog',
+              style: UnderdogTheme.pageTitle,
+            ),
+          ),
         ),
       ),
     );

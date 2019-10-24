@@ -1,4 +1,6 @@
 class HeroTag {
+  static const MAIN_TITLE = 'main_title';
+
   static const REPORT_CARD_ = 'report_card_';
   static const REPORT_IMAGE_ = 'report_image_';
   static const REPORT_CODE_NAME_ = 'report_code_name_';

@@ -4,12 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:underdog/data/models/report.dart';
 import 'package:underdog/data/models/user_location.dart';
+import 'package:underdog/hero_tag.dart';
 import 'package:underdog/pages/login_page.dart';
 import 'package:underdog/pages/reports_page.dart';
 import 'package:underdog/pages/submit_report_page.dart';
+import 'package:underdog/pages/view_report_page.dart';
 import 'package:underdog/underdog_theme.dart';
 import 'package:underdog/viewmodels/home_model.dart';
+import 'package:underdog/widgets/report_preview.dart';
 
 import '../service_locator.dart';
 
@@ -94,9 +98,14 @@ class _HomePageState extends State<HomePage> {
                           bottomLeft: Radius.circular(0),
                           bottomRight: Radius.circular(0))),
                   centerTitle: true,
-                  title: Text(
-                    'Underdog',
-                    style: UnderdogTheme.pageTitle.copyWith(fontSize: 24),
+                  title: Hero(
+                    tag: HeroTag.MAIN_TITLE,
+                    child: Material(
+                      child: Text(
+                        'Underdog',
+                        style: UnderdogTheme.pageTitle.copyWith(fontSize: 24),
+                      ),
+                    ),
                   ),
                 ),
                 body: GoogleMap(
@@ -112,41 +121,63 @@ class _HomePageState extends State<HomePage> {
                   markers: Set<Marker>.of(markers.values),
                 ),
                 floatingActionButton: FloatingActionButton(
-                  backgroundColor: Colors.white,
                   child: Icon(
                     FontAwesomeIcons.mapMarkerAlt,
                     color: Theme.of(context).accentColor,
                   ),
-                  focusElevation: 0,
-                  highlightElevation: 0,
                   onPressed: _animateToUserLocation,
-                  elevation: 0,
-                  shape: CircleBorder(side: BorderSide(color: Colors.black12)),
                 ),
                 bottomNavigationBar: Card(
                   margin: EdgeInsets.zero,
                   shape: RoundedRectangleBorder(
                       side: BorderSide(color: Colors.black12),
                       borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(24),
-                          topRight: Radius.circular(24))),
+                          topLeft: Radius.circular(16),
+                          topRight: Radius.circular(16))),
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 4),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        IconButton(
-                            icon: Icon(
-                              FontAwesomeIcons.list,
-                              color: Theme.of(context).accentColor,
+                        (model.selectedReport == null)
+                            ? Container()
+                            : InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => ViewReportPage(
+                                                report: model.selectedReport,
+                                              )));
+                                },
+                                child: ReportPreview(
+                                    report: model.selectedReport)),
+                        (model.selectedReport == null)
+                            ? Container()
+                            : Divider(
+                                height: 2,
+                              ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            Builder(
+                              builder: (context) => IconButton(
+                                  icon: Icon(
+                                    FontAwesomeIcons.list,
+                                    color: Theme.of(context).accentColor,
+                                  ),
+                                  onPressed: () {
+                                    _navigateToReportsPage(model);
+                                  }),
                             ),
-                            onPressed: _navigateToReportsPage),
-                        IconButton(
-                          icon: Icon(
-                            FontAwesomeIcons.paperPlane,
-                            color: Theme.of(context).accentColor,
-                          ),
-                          onPressed: _navigateToSubmitReportPage,
+                            IconButton(
+                              icon: Icon(
+                                FontAwesomeIcons.paperPlane,
+                                color: Theme.of(context).accentColor,
+                              ),
+                              onPressed: _navigateToSubmitReportPage,
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -160,14 +191,27 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void _navigateToReportsPage() {
-    Navigator.of(context)
+  void _navigateToReportsPage(HomeModel model) {
+    final result = Navigator.of(context)
         .push(MaterialPageRoute(builder: (context) => ReportsPage()));
+
+    result.then((report) {
+      if (report != null) {
+        model.selectReport(report as Report);
+        _animateToLocation(
+            LatLng((report as Report).latitude, (report as Report).longitude));
+      }
+    });
   }
 
   void _navigateToSubmitReportPage() {
-    Navigator.of(context)
+    final result = Navigator.of(context)
         .push(MaterialPageRoute(builder: (context) => SubmitReportPage()));
+
+    result.then((value) {
+      if (value != null) if ((value as bool) == true)
+        _initializeReportsMarkers();
+    });
   }
 
   void _initializeUserMarker() async {
@@ -214,6 +258,14 @@ class _HomePageState extends State<HomePage> {
     final CameraPosition newPosition = CameraPosition(
         target: LatLng(userLocation.latitude, userLocation.longitude),
         zoom: _zoom);
+    controller.animateCamera(CameraUpdate.newCameraPosition(newPosition));
+  }
+
+  void _animateToLocation(LatLng location) async {
+    final GoogleMapController controller = await _controller.future;
+
+    final CameraPosition newPosition = CameraPosition(
+        target: LatLng(location.latitude, location.longitude), zoom: _zoom);
     controller.animateCamera(CameraUpdate.newCameraPosition(newPosition));
   }
 

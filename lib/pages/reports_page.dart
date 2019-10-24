@@ -1,8 +1,10 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:underdog/data/models/report.dart';
 import 'package:underdog/hero_tag.dart';
+import 'package:underdog/pages/view_report_page.dart';
 import 'package:underdog/service_locator.dart';
 import 'package:underdog/underdog_theme.dart';
 import 'package:underdog/viewmodels/reports_model.dart';
@@ -58,8 +60,22 @@ class _ReportsPageState extends State<ReportsPage> {
       Animation animation, int index) {
     final report = Report.fromSnapshot(snapshot);
 
-    return ReportItem(
-      report: report,
+    return InkWell(
+      onTap: () {
+        final result = Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ViewReportPage(
+                      report: report,
+                    )));
+
+        result.then((report) {
+          if (report != null) Navigator.pop(context, report);
+        });
+      },
+      child: ReportItem(
+        report: report,
+      ),
     );
   }
 }

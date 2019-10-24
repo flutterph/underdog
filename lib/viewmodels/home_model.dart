@@ -9,13 +9,15 @@ class HomeModel extends ChangeNotifier {
   final AuthService _authService = locator<AuthService>();
   final ReportsDatabaseService _reportsDatabaseService =
       locator<ReportsDatabaseService>();
+  Report selectedReport;
+  List<Report> _reports;
 
   Future<bool> logout() async {
     return _authService.logout();
   }
 
   Future<List<Report>> getReports() async {
-    List<Report> reports = List<Report>();
+    _reports = List<Report>();
     var snapshot = await _reportsDatabaseService.databaseReference.once();
 
     print('SNAPSHOT: ${snapshot.value}');
@@ -24,8 +26,13 @@ class HomeModel extends ChangeNotifier {
     maps.forEach((key, value) {
       final report = Report.fromMap(maps[key]);
       report.uid = key;
-      reports.add(report);
+      _reports.add(report);
     });
-    return reports;
+    return _reports;
+  }
+
+  void selectReport(Report report) {
+    selectedReport = report;
+    notifyListeners();
   }
 }

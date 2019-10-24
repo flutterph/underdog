@@ -13,4 +13,10 @@ class UnderdogTheme {
   static TextStyle outlineButtonText =
       TextStyle(fontWeight: FontWeight.bold, color: color);
   static TextStyle hintText = TextStyle(color: Colors.grey, fontSize: 12);
+
+  static TextStyle labelStyle = TextStyle(
+    fontWeight: FontWeight.bold,
+    fontSize: 12,
+    color: Colors.black54,
+  );
 }

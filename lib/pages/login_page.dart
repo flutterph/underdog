@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:underdog/hero_tag.dart';
 import 'package:underdog/pages/register_page.dart';
 import 'package:underdog/viewmodels/login_model.dart';
 
@@ -34,9 +35,14 @@ class _LoginPageState extends State<LoginPage> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Text(
-                        'Underdog',
-                        style: UnderdogTheme.pageTitle,
+                      Hero(
+                        tag: HeroTag.MAIN_TITLE,
+                        child: Material(
+                          child: Text(
+                            'Underdog',
+                            style: UnderdogTheme.pageTitle,
+                          ),
+                        ),
                       ),
                       SizedBox(
                         height: 32,

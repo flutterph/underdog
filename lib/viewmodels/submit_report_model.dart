@@ -1,8 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:underdog/data/models/location_info.dart';
 import 'package:underdog/data/models/report.dart';
 import 'package:underdog/services/auth_service.dart';
+import 'package:underdog/services/location_service.dart';
 import 'package:underdog/services/reports_database_service.dart';
 import 'package:underdog/services/storage_service.dart';
 
@@ -13,9 +15,16 @@ enum ViewState { Idle, Busy }
 class SubmitReportModel extends ChangeNotifier {
   final _authService = locator<AuthService>();
   final StorageService _storageService = locator<StorageService>();
+  final LocationService _locationService = locator<LocationService>();
   final ReportsDatabaseService _reportsDatabaseService =
       locator<ReportsDatabaseService>();
+
   String breed = 'Aspin';
+  LocationInfo locationInfo;
+
+  SubmitReportModel() {
+    getLocationInfo();
+  }
 
   Future<String> submitReport(
     File image,
@@ -45,5 +54,15 @@ class SubmitReportModel extends ChangeNotifier {
       return null;
     } else
       return 'Something went wrong while trying to submit your report. Please try again.';
+  }
+
+  Future<void> getLocationInfo() async {
+    locationInfo = await _locationService.getLocationInfoFromUserLocation();
+    notifyListeners();
+  }
+
+  updateLocationInfo(LocationInfo newLocationInfo) {
+    locationInfo = newLocationInfo;
+    notifyListeners();
   }
 }
