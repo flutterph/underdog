@@ -19,11 +19,12 @@ class SubmitReportModel extends ChangeNotifier {
   final ReportsDatabaseService _reportsDatabaseService =
       locator<ReportsDatabaseService>();
 
+  // States
   String breed = 'Aspin';
-  LocationInfo locationInfo;
+  LocationInfo _locationInfo;
 
   SubmitReportModel() {
-    getLocationInfo();
+    getLocationInfoFromCurrentLocation();
   }
 
   Future<String> submitReport(
@@ -56,13 +57,16 @@ class SubmitReportModel extends ChangeNotifier {
       return 'Something went wrong while trying to submit your report. Please try again.';
   }
 
-  Future<void> getLocationInfo() async {
-    locationInfo = await _locationService.getLocationInfoFromUserLocation();
+  Future<void> getLocationInfoFromCurrentLocation() async {
+    _locationInfo = await _locationService.getLocationInfoFromCurrentLocation();
     notifyListeners();
   }
 
-  updateLocationInfo(LocationInfo newLocationInfo) {
-    locationInfo = newLocationInfo;
+  updateLocationInfo(LocationInfo locationInfo) {
+    _locationInfo = locationInfo;
     notifyListeners();
   }
+
+  // Accessors
+  LocationInfo get locationInfo => _locationInfo;
 }

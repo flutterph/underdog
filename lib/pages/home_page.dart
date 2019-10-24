@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:underdog/camera_positions.dart';
 import 'package:underdog/data/models/report.dart';
 import 'package:underdog/data/models/user_location.dart';
 import 'package:underdog/hero_tag.dart';
@@ -30,11 +31,6 @@ class _HomePageState extends State<HomePage> {
   double _zoom = 16;
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
   MarkerId _userMarkerId = MarkerId('userMarkerId');
-
-  static final CameraPosition _taguigLocation = CameraPosition(
-    target: LatLng(14.5176, 121.0509),
-    zoom: 16,
-  );
 
   @override
   void initState() {
@@ -76,7 +72,6 @@ class _HomePageState extends State<HomePage> {
                 extendBody: true,
                 backgroundColor: Colors.transparent,
                 appBar: AppBar(
-                  automaticallyImplyLeading: true,
                   leading: Builder(
                     builder: (BuildContext context) {
                       return IconButton(
@@ -110,7 +105,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 body: GoogleMap(
                   mapType: MapType.normal,
-                  initialCameraPosition: _taguigLocation,
+                  initialCameraPosition: CameraPositions.taguig,
                   onMapCreated: (GoogleMapController controller) {
                     _controller.complete(controller);
                     _locationUpdateTimer =
@@ -195,6 +190,7 @@ class _HomePageState extends State<HomePage> {
     final result = Navigator.of(context)
         .push(MaterialPageRoute(builder: (context) => ReportsPage()));
 
+    // Animate Maps camera if a report has been selected
     result.then((report) {
       if (report != null) {
         model.selectReport(report as Report);
@@ -208,6 +204,7 @@ class _HomePageState extends State<HomePage> {
     final result = Navigator.of(context)
         .push(MaterialPageRoute(builder: (context) => SubmitReportPage()));
 
+    // Update markers if a new report was successfully submitted
     result.then((value) {
       if (value != null) if ((value as bool) == true)
         _initializeReportsMarkers();

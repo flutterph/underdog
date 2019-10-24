@@ -69,6 +69,7 @@ class _ReportsPageState extends State<ReportsPage> {
                       report: report,
                     )));
 
+        // Navigate back to home page if a report has been selected
         result.then((report) {
           if (report != null) Navigator.pop(context, report);
         });

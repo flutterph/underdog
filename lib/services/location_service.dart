@@ -46,11 +46,10 @@ class LocationService {
     });
   }
 
-  Future<LocationInfo> getLocationInfoFromUserLocation() async {
+  Future<LocationInfo> getLocationInfoFromCurrentLocation() async {
     final List<Address> address = await Geocoder.local
         .findAddressesFromCoordinates(
             Coordinates(_currentLocation.latitude, _currentLocation.longitude));
-
     final addressLine = address.first.addressLine;
 
     return LocationInfo(
@@ -63,7 +62,6 @@ class LocationService {
     final List<Address> address = await Geocoder.local
         .findAddressesFromCoordinates(
             Coordinates(latLng.latitude, latLng.longitude));
-
     final addressLine = address.first.addressLine;
 
     return LocationInfo(addressLine, latLng.latitude, latLng.longitude);

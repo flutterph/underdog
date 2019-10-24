@@ -1,4 +1,3 @@
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -14,10 +13,7 @@ class UnderdogApp extends StatelessWidget {
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIOverlays([]);
 
-    // TODO: Find somewhere else to call this
-    FirebaseDatabase.instance.setPersistenceEnabled(true);
-
-    // Temp
+    // TODO: Remove this when the theme is decided
     final color = Colors.red;
     UnderdogTheme.color = color;
 

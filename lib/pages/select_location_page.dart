@@ -8,6 +8,7 @@ import 'package:underdog/data/models/user_location.dart';
 import 'package:underdog/underdog_theme.dart';
 import 'package:underdog/viewmodels/select_location_model.dart';
 
+import '../camera_positions.dart';
 import '../service_locator.dart';
 
 class SelectLocationPage extends StatefulWidget {
@@ -21,11 +22,6 @@ class _SelectLocationPageState extends State<SelectLocationPage> {
   Completer<GoogleMapController> _controller = Completer();
   double _zoom = 16;
   final _markerSize = 44.0;
-
-  final CameraPosition _rizalMonument = CameraPosition(
-    target: LatLng(14.5818, 120.9770),
-    zoom: 16,
-  );
 
   @override
   void initState() {
@@ -45,7 +41,7 @@ class _SelectLocationPageState extends State<SelectLocationPage> {
                 GoogleMap(
                   mapType: MapType.normal,
                   initialCameraPosition:
-                      _initCameraPosition() ?? _rizalMonument,
+                      _initCameraPosition() ?? CameraPositions.rizalMonument,
                   onCameraIdle: model.getLocationInfoFromCameraPosition,
                   onCameraMove: model.updateCameraPosition,
                   onMapCreated: (GoogleMapController controller) {

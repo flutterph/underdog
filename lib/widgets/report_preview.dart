@@ -2,7 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:maps_launcher/maps_launcher.dart';
+import 'package:provider/provider.dart';
 import 'package:underdog/data/models/report.dart';
+import 'package:underdog/viewmodels/home_model.dart';
 
 import '../underdog_theme.dart';
 
@@ -12,7 +14,9 @@ class ReportPreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 500),
+      curve: Curves.fastOutSlowIn,
       padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
       child: Column(
         children: <Widget>[
@@ -94,7 +98,9 @@ class ReportPreview extends StatelessWidget {
             children: <Widget>[
               FlatButton(
                 child: Text('Cancel'),
-                onPressed: () {},
+                onPressed: () {
+                  Provider.of<HomeModel>(context).clearSelectedReport();
+                },
               ),
               SizedBox(
                 width: 8,

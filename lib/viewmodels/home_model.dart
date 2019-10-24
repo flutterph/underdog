@@ -9,6 +9,7 @@ class HomeModel extends ChangeNotifier {
   final AuthService _authService = locator<AuthService>();
   final ReportsDatabaseService _reportsDatabaseService =
       locator<ReportsDatabaseService>();
+
   Report selectedReport;
   List<Report> _reports;
 
@@ -33,6 +34,11 @@ class HomeModel extends ChangeNotifier {
 
   void selectReport(Report report) {
     selectedReport = report;
+    notifyListeners();
+  }
+
+  void clearSelectedReport() {
+    selectedReport = null;
     notifyListeners();
   }
 }

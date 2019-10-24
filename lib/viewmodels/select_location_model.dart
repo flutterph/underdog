@@ -7,23 +7,29 @@ import '../service_locator.dart';
 
 class SelectLocationModel extends ChangeNotifier {
   LocationService _locationService = locator<LocationService>();
-  CameraPosition _cameraPosition;
-  String addressLine;
-  LocationInfo locationInfo;
 
-  Future<void> getLocationInfoFromCameraPosition() async {
-    locationInfo = await _locationService
+  // States
+  String _addressLine;
+  CameraPosition _cameraPosition;
+  LocationInfo _locationInfo;
+
+  void getLocationInfoFromCameraPosition() async {
+    _locationInfo = await _locationService
         .getLocationInfoFromCameraPosition(_cameraPosition);
-    addressLine = locationInfo.addressLine;
+    _addressLine = _locationInfo.addressLine;
     notifyListeners();
   }
 
-  Future<LocationInfo> getLocationInfoFromUserLocation() async {
-    locationInfo = await _locationService.getLocationInfoFromUserLocation();
-    return locationInfo;
+  void getLocationInfoFromCurrentLocation() async {
+    _locationInfo = await _locationService.getLocationInfoFromCurrentLocation();
   }
 
   void updateCameraPosition(CameraPosition cameraPosition) {
     _cameraPosition = cameraPosition;
   }
+
+  // Getters
+  String get addressLine => _addressLine;
+  CameraPosition get cameraPosition => _cameraPosition;
+  LocationInfo get locationInfo => _locationInfo;
 }

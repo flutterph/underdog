@@ -217,23 +217,32 @@ class _SubmitReportPageState extends State<SubmitReportPage> {
                           onPressed: () async {
                             if (_formKey.currentState.validate()) {
                               if (_selectedImage != null) {
-                                final submitStatus = await model.submitReport(
-                                    _selectedImage,
-                                    _codeNameController.text,
-                                    model.breed,
-                                    model.locationInfo.addressLine,
-                                    model.locationInfo.latitude,
-                                    model.locationInfo.longitude,
-                                    _additionalInfoController.text);
+                                if (model.locationInfo != null) {
+                                  final submitStatus = await model.submitReport(
+                                      _selectedImage,
+                                      _codeNameController.text,
+                                      model.breed,
+                                      model.locationInfo.addressLine,
+                                      model.locationInfo.latitude,
+                                      model.locationInfo.longitude,
+                                      _additionalInfoController.text);
 
-                                if (submitStatus != null) {
+                                  if (submitStatus != null) {
+                                    Scaffold.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(submitStatus),
+                                      ),
+                                    );
+                                  } else {
+                                    Navigator.pop(context, true);
+                                  }
+                                } else {
                                   Scaffold.of(context).showSnackBar(
                                     SnackBar(
-                                      content: Text(submitStatus),
+                                      content: Text(
+                                          'There was an error retrieving the location. Please turn on LOCATION service'),
                                     ),
                                   );
-                                } else {
-                                  Navigator.pop(context, true);
                                 }
                               } else {
                                 Scaffold.of(context).showSnackBar(
