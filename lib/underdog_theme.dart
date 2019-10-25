@@ -10,9 +10,16 @@ class UnderdogTheme {
 
   static TextStyle raisedButtonText =
       TextStyle(fontWeight: FontWeight.bold, color: Colors.white);
+  static TextStyle raisedButtonTextDark =
+      TextStyle(fontWeight: FontWeight.bold, color: color);
+
   static TextStyle outlineButtonText =
       TextStyle(fontWeight: FontWeight.bold, color: color);
+  static TextStyle outlineButtonTextDark =
+      TextStyle(fontWeight: FontWeight.bold, color: Colors.white);
   static TextStyle hintText = TextStyle(color: Colors.grey, fontSize: 12);
+  static TextStyle hintTextDark =
+      TextStyle(color: Colors.white70, fontSize: 12);
 
   static TextStyle labelStyle = TextStyle(
     fontWeight: FontWeight.bold,

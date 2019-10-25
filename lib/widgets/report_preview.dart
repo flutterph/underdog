@@ -60,6 +60,7 @@ class ReportPreview extends StatelessWidget {
                         Icon(
                           FontAwesomeIcons.mapMarkerAlt,
                           size: 16,
+                          color: Theme.of(context).accentColor,
                         ),
                         SizedBox(
                           width: 6,
@@ -91,13 +92,18 @@ class ReportPreview extends StatelessWidget {
             ],
           ),
           SizedBox(
-            height: 8,
+            height: 16,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               FlatButton(
-                child: Text('Cancel'),
+                child: Text(
+                  'Cancel',
+                  style: UnderdogTheme.outlineButtonText,
+                ),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16)),
                 onPressed: () {
                   Provider.of<HomeModel>(context).clearSelectedReport();
                 },
@@ -106,10 +112,13 @@ class ReportPreview extends StatelessWidget {
                 width: 8,
               ),
               RaisedButton.icon(
-                icon: Icon(
-                  FontAwesomeIcons.mapMarkedAlt,
-                  color: Colors.white,
-                  size: 20,
+                icon: Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Icon(
+                    FontAwesomeIcons.mapMarkedAlt,
+                    color: Colors.white,
+                    size: 20,
+                  ),
                 ),
                 label: Padding(
                   padding:

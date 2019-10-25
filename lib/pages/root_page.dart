@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:underdog/hero_tag.dart';
 import 'package:underdog/pages/home_page.dart';
 import 'package:underdog/pages/login_page.dart';
@@ -44,9 +45,10 @@ class _RootPageState extends State<RootPage> {
         child: Hero(
           tag: HeroTag.MAIN_TITLE,
           child: Material(
-            child: Text(
-              'Underdog',
-              style: UnderdogTheme.pageTitle,
+            child: SvgPicture.asset(
+              'assets/wordmark.svg',
+              width: 176,
+              color: Theme.of(context).accentColor,
             ),
           ),
         ),

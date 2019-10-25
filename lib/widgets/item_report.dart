@@ -2,8 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:underdog/data/models/report.dart';
+import 'package:underdog/date_time_utils.dart';
 import 'package:underdog/hero_tag.dart';
-import 'package:underdog/pages/view_report_page.dart';
 
 class ReportItem extends StatelessWidget {
   final Report report;
@@ -26,8 +26,8 @@ class ReportItem extends StatelessWidget {
                 Hero(
                     tag: HeroTag.REPORT_IMAGE_ + report.uid,
                     child: SizedBox(
-                      height: 96,
-                      width: 96,
+                      height: 152,
+                      width: 152,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8),
                         child: CachedNetworkImage(
@@ -65,29 +65,56 @@ class ReportItem extends StatelessWidget {
                       ),
                       Row(
                         children: <Widget>[
-                          Icon(FontAwesomeIcons.mapMarkerAlt),
+                          Icon(
+                            FontAwesomeIcons.mapMarkerAlt,
+                            color: Theme.of(context).accentColor,
+                            size: 16,
+                          ),
                           SizedBox(
-                            width: 8,
+                            width: 6,
                           ),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-                                Hero(
-                                  tag: HeroTag.REPORT_LANDMARK_ + report.uid,
-                                  child: Text(
-                                    report.landmark,
-                                    style: TextStyle(fontSize: 12),
-                                    overflow: TextOverflow.fade,
-                                    maxLines: 1,
-                                    softWrap: false,
-                                  ),
+                                Text(
+                                  report.landmark,
+                                  style: TextStyle(fontSize: 12),
+                                  overflow: TextOverflow.fade,
+                                  maxLines: 1,
+                                  softWrap: false,
                                 ),
                                 Text(
                                   '${report.latitude.toStringAsPrecision(7)}, ${report.longitude.toStringAsPrecision(7)}',
-                                  style: TextStyle(fontSize: 12),
+                                  style: TextStyle(
+                                      fontSize: 10, color: Colors.black54),
                                 ),
                               ],
+                            ),
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Icon(
+                            FontAwesomeIcons.calendar,
+                            color: Theme.of(context).accentColor,
+                            size: 16,
+                          ),
+                          SizedBox(
+                            width: 6,
+                          ),
+                          Expanded(
+                            child: Text(
+                              DateTimeUtils.dateStringToDisplayString(
+                                  report.date),
+                              style: TextStyle(fontSize: 12),
+                              overflow: TextOverflow.fade,
+                              maxLines: 1,
+                              softWrap: false,
                             ),
                           )
                         ],

@@ -5,6 +5,7 @@ import 'package:underdog/services/reports_database_service.dart';
 import 'package:underdog/services/storage_service.dart';
 import 'package:underdog/viewmodels/home_model.dart';
 import 'package:underdog/viewmodels/login_model.dart';
+import 'package:underdog/viewmodels/register_model.dart';
 import 'package:underdog/viewmodels/reports_model.dart';
 import 'package:underdog/viewmodels/select_location_model.dart';
 import 'package:underdog/viewmodels/submit_report_model.dart';
@@ -18,6 +19,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => LocationService());
 
   locator.registerFactory(() => LoginModel());
+  locator.registerFactory(() => RegisterModel());
   locator.registerFactory(() => HomeModel());
   locator.registerFactory(() => SubmitReportModel());
   locator.registerFactory(() => SelectLocationModel());

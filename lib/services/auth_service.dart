@@ -44,8 +44,27 @@ class AuthService {
     }
   }
 
+  Future<String> createUserWithEmailAndPassword(
+      String email, String password, String firstName, String lastName) async {
+    try {
+      final FirebaseUser authResult = (await _auth
+              .createUserWithEmailAndPassword(email: email, password: password))
+          .user;
+
+      final userUpdateInfo = UserUpdateInfo();
+      userUpdateInfo.displayName = '$firstName $lastName';
+
+      await authResult.updateProfile(UserUpdateInfo());
+
+      return null;
+    } catch (e) {
+      return mapErrorCodeToMessage(e.code);
+    }
+  }
+
   String mapErrorCodeToMessage(String code) {
     switch (code) {
+      // Login error codes
       case 'ERROR_INVALID_EMAIL':
         return 'Please use a valid e-mail address';
         break;
@@ -63,6 +82,14 @@ class AuthService {
         break;
       case 'ERROR_OPERATION_NOT_ALLOWED':
         return 'This user has been disabled by the administrators';
+        break;
+
+      // Register error codes
+      case 'ERROR_WEAK_PASSWORD':
+        return 'Please choose a more secure password';
+        break;
+      case 'ERROR_EMAIL_ALREADY_IN_USE':
+        return 'Looks like that e-mail address is already in use';
         break;
     }
   }

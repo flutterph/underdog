@@ -14,7 +14,7 @@ class UnderdogApp extends StatelessWidget {
     SystemChrome.setEnabledSystemUIOverlays([]);
 
     // TODO: Remove this when the theme is decided
-    final color = Colors.red;
+    final color = Colors.pink;
     UnderdogTheme.color = color;
 
     return MultiProvider(
@@ -31,6 +31,8 @@ class UnderdogApp extends StatelessWidget {
             inputDecorationTheme:
                 InputDecorationTheme(hintStyle: UnderdogTheme.hintText),
             primarySwatch: color,
+            accentColor: color,
+            cursorColor: color,
             buttonTheme: ButtonThemeData(
               buttonColor: color,
               padding: const EdgeInsets.all(16),
@@ -38,6 +40,9 @@ class UnderdogApp extends StatelessWidget {
                   borderRadius: BorderRadius.circular(16),
                   side: BorderSide(color: Colors.black12)),
             ),
+            cardTheme: CardTheme(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16))),
             floatingActionButtonTheme: FloatingActionButtonThemeData(
                 foregroundColor: color,
                 backgroundColor: Colors.white,

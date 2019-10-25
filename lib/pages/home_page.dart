@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -25,12 +26,15 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin {
+  final double _zoom = 16;
+
   Timer _locationUpdateTimer;
   Completer<GoogleMapController> _controller = Completer();
-  double _zoom = 16;
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
   MarkerId _userMarkerId = MarkerId('userMarkerId');
+  HomeModel _homeModel = locator<HomeModel>();
 
   @override
   void initState() {
@@ -48,25 +52,30 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      builder: (context) => locator<HomeModel>(),
+      builder: (context) => _homeModel,
       child: Consumer<HomeModel>(
         builder: (context, model, child) {
           return Stack(
             children: <Widget>[
               Scaffold(
-                drawer: Drawer(
-                  child: IconButton(
-                    icon: Icon(FontAwesomeIcons.doorOpen),
-                    onPressed: () {
-                      model.logout().then((value) {
-                        if (value) {
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => LoginPage()));
-                        }
-                      });
-                    },
+                drawer: Card(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      IconButton(
+                        icon: Icon(FontAwesomeIcons.doorOpen),
+                        onPressed: () {
+                          model.logout().then((value) {
+                            if (value) {
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => LoginPage()));
+                            }
+                          });
+                        },
+                      ),
+                    ],
                   ),
                 ),
                 extendBody: true,
@@ -88,17 +97,16 @@ class _HomePageState extends State<HomePage> {
                   elevation: 0,
                   backgroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
-                      side: BorderSide(color: Colors.black12),
-                      borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(0),
-                          bottomRight: Radius.circular(0))),
+                      side: BorderSide(color: Colors.black12)),
                   centerTitle: true,
                   title: Hero(
                     tag: HeroTag.MAIN_TITLE,
                     child: Material(
-                      child: Text(
-                        'Underdog',
-                        style: UnderdogTheme.pageTitle.copyWith(fontSize: 24),
+                      type: MaterialType.transparency,
+                      child: SvgPicture.asset(
+                        'assets/wordmark.svg',
+                        width: 112,
+                        color: Theme.of(context).accentColor,
                       ),
                     ),
                   ),
@@ -133,26 +141,39 @@ class _HomePageState extends State<HomePage> {
                     padding: const EdgeInsets.symmetric(vertical: 4),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
-                        (model.selectedReport == null)
-                            ? Container()
-                            : InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => ViewReportPage(
-                                                report: model.selectedReport,
-                                              )));
-                                },
-                                child: ReportPreview(
-                                    report: model.selectedReport)),
-                        (model.selectedReport == null)
-                            ? Container()
-                            : Divider(
-                                height: 2,
-                              ),
+                        AnimatedSize(
+                          duration: Duration(milliseconds: 500),
+                          curve: Curves.fastOutSlowIn,
+                          vsync: this,
+                          child: Column(
+                            children: <Widget>[
+                              (model.selectedReport == null)
+                                  ? Container()
+                                  : InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ViewReportPage(
+                                                      report:
+                                                          model.selectedReport,
+                                                    )));
+                                      },
+                                      child: ReportPreview(
+                                          report: model.selectedReport)),
+                              (model.selectedReport == null)
+                                  ? Container()
+                                  : Divider(
+                                      height: 2,
+                                    ),
+                            ],
+                          ),
+                        ),
                         Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
                             Builder(
@@ -225,6 +246,11 @@ class _HomePageState extends State<HomePage> {
       markers[_userMarkerId] = marker;
     });
 
+    if (!_homeModel.hasAnimatedToCurrentLocation) {
+      _animateToUserLocation();
+      _homeModel.hasAnimatedToCurrentLocation = true;
+    }
+
     print(
         'Initialized user location at ${userLocation.latitude}, ${userLocation.longitude}');
   }
@@ -267,8 +293,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _initializeReportsMarkers() async {
-    final HomeModel homeModel = locator<HomeModel>();
-    final reports = await homeModel.getReports();
+    final reports = await _homeModel.getReports();
 
     ImageConfiguration imageConfig = ImageConfiguration(size: Size(48, 48));
     final icon = await BitmapDescriptor.fromAssetImage(
@@ -281,7 +306,9 @@ class _HomePageState extends State<HomePage> {
         position: LatLng(report.latitude, report.longitude),
         infoWindow: InfoWindow(title: report.codeName),
         icon: icon,
-        onTap: () {},
+        onTap: () {
+          _homeModel.selectReport(report);
+        },
       );
 
       setState(() {

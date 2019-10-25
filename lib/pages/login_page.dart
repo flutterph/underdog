@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:underdog/hero_tag.dart';
 import 'package:underdog/pages/register_page.dart';
@@ -15,9 +16,12 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+class _LoginPageState extends State<LoginPage>
+    with SingleTickerProviderStateMixin {
+  TextEditingController _emailController =
+      TextEditingController(text: 'oliatienza@gmail.com');
+  TextEditingController _passwordController =
+      TextEditingController(text: 'jollibee');
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
@@ -38,9 +42,11 @@ class _LoginPageState extends State<LoginPage> {
                       Hero(
                         tag: HeroTag.MAIN_TITLE,
                         child: Material(
-                          child: Text(
-                            'Underdog',
-                            style: UnderdogTheme.pageTitle,
+                          type: MaterialType.transparency,
+                          child: SvgPicture.asset(
+                            'assets/wordmark.svg',
+                            width: 176,
+                            color: Theme.of(context).accentColor,
                           ),
                         ),
                       ),
@@ -91,34 +97,66 @@ class _LoginPageState extends State<LoginPage> {
                       Builder(
                         builder: (context) => RaisedButton(
                           color: Theme.of(context).accentColor,
+                          disabledColor: Theme.of(context).accentColor,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(16)),
-                          child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 16),
-                              child: Text(
-                                'Log In',
-                                style: UnderdogTheme.raisedButtonText,
-                              )),
-                          onPressed: () {
-                            if (_formKey.currentState.validate()) {
-                              model
-                                  .login(_emailController.text.trim(),
-                                      _passwordController.text)
-                                  .then((value) {
-                                if (value == null)
-                                  Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => HomePage()));
-                                else {
-                                  Scaffold.of(context).showSnackBar(SnackBar(
-                                    content: Text(value),
-                                  ));
+                          child: AnimatedSize(
+                            duration: Duration(milliseconds: 500),
+                            curve: Curves.fastOutSlowIn,
+                            vsync: this,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Text(
+                                  (model.state == PageState.Idle)
+                                      ? 'Log In'
+                                      : 'Logging In',
+                                  style: UnderdogTheme.raisedButtonText,
+                                ),
+                                (model.state == PageState.Busy)
+                                    ? Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: <Widget>[
+                                          SizedBox(
+                                            width: 8,
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                            width: 10,
+                                            child: CircularProgressIndicator(
+                                              backgroundColor: Colors.white,
+                                              strokeWidth: 2,
+                                            ),
+                                          )
+                                        ],
+                                      )
+                                    : Container()
+                              ],
+                            ),
+                          ),
+                          onPressed: (model.state == PageState.Idle)
+                              ? () {
+                                  if (_formKey.currentState.validate()) {
+                                    model
+                                        .login(_emailController.text.trim(),
+                                            _passwordController.text)
+                                        .then((value) {
+                                      if (value == null)
+                                        Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    HomePage()));
+                                      else {
+                                        Scaffold.of(context)
+                                            .showSnackBar(SnackBar(
+                                          content: Text(value),
+                                        ));
+                                      }
+                                    });
+                                  }
                                 }
-                              });
-                            }
-                          },
+                              : null,
                         ),
                       ),
                       SizedBox(
@@ -130,9 +168,13 @@ class _LoginPageState extends State<LoginPage> {
                             'Sign Up',
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
-                          onPressed: () {
-                            _navigateToRegisterPage(context);
-                          },
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16)),
+                          onPressed: (model.state == PageState.Idle)
+                              ? () {
+                                  _navigateToRegisterPage(context);
+                                }
+                              : null,
                         ),
                       )
                     ],

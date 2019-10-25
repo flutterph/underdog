@@ -287,27 +287,29 @@ class _SubmitReportPageState extends State<SubmitReportPage> {
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           title: Text('Choose a source'),
           content: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               RaisedButton(
                   child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Icon(
-                            FontAwesomeIcons.cameraRetro,
-                            color: Colors.white,
-                          ),
-                          SizedBox(
-                            height: 8,
-                          ),
-                          Text(
-                            'Camera',
-                            style: UnderdogTheme.raisedButtonText,
-                          ),
-                        ],
-                      )),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 16, horizontal: 16),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Icon(
+                          FontAwesomeIcons.cameraRetro,
+                          color: Colors.white,
+                        ),
+                        SizedBox(
+                          height: 8,
+                        ),
+                        Text(
+                          'Camera',
+                          style: UnderdogTheme.raisedButtonText,
+                        ),
+                      ],
+                    ),
+                  ),
                   onPressed: () {
                     Navigator.pop(context);
                     selectImage(ImageSource.camera);
@@ -317,7 +319,8 @@ class _SubmitReportPageState extends State<SubmitReportPage> {
               ),
               RaisedButton(
                   child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 16, horizontal: 16),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[

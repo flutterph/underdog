@@ -10,6 +10,7 @@ class HomeModel extends ChangeNotifier {
   final ReportsDatabaseService _reportsDatabaseService =
       locator<ReportsDatabaseService>();
 
+  bool hasAnimatedToCurrentLocation = false;
   Report selectedReport;
   List<Report> _reports;
 
@@ -33,6 +34,10 @@ class HomeModel extends ChangeNotifier {
   }
 
   void selectReport(Report report) {
+    if (report == null)
+      print('null boi');
+    else
+      print(report.uid);
     selectedReport = report;
     notifyListeners();
   }
