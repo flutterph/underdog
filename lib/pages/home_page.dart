@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -15,6 +16,7 @@ import 'package:underdog/pages/submit_report_page.dart';
 import 'package:underdog/pages/view_report_page.dart';
 import 'package:underdog/underdog_theme.dart';
 import 'package:underdog/viewmodels/home_model.dart';
+import 'package:underdog/widgets/home_drawer.dart';
 import 'package:underdog/widgets/report_preview.dart';
 
 import '../service_locator.dart';
@@ -58,26 +60,7 @@ class _HomePageState extends State<HomePage>
           return Stack(
             children: <Widget>[
               Scaffold(
-                drawer: Card(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      IconButton(
-                        icon: Icon(FontAwesomeIcons.doorOpen),
-                        onPressed: () {
-                          model.logout().then((value) {
-                            if (value) {
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => LoginPage()));
-                            }
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                ),
+                drawer: HomeDrawer(),
                 extendBody: true,
                 backgroundColor: Colors.transparent,
                 appBar: AppBar(
@@ -103,10 +86,13 @@ class _HomePageState extends State<HomePage>
                     tag: HeroTag.MAIN_TITLE,
                     child: Material(
                       type: MaterialType.transparency,
-                      child: SvgPicture.asset(
-                        'assets/wordmark.svg',
-                        width: 112,
-                        color: Theme.of(context).accentColor,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: SvgPicture.asset(
+                          'assets/wordmark.svg',
+                          width: 112,
+                          color: Theme.of(context).accentColor,
+                        ),
                       ),
                     ),
                   ),

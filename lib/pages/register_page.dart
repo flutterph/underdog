@@ -39,6 +39,8 @@ class _RegisterPageState extends State<RegisterPage>
       builder: (context) => locator<RegisterModel>(),
       child: Consumer<RegisterModel>(
         builder: (context, model, child) {
+          final isBusy = (model.state == PageState.Busy);
+
           return Scaffold(
             backgroundColor: Theme.of(context).accentColor,
             body: Hero(
@@ -67,6 +69,7 @@ class _RegisterPageState extends State<RegisterPage>
                           children: <Widget>[
                             Expanded(
                               child: TextFormField(
+                                enabled: !isBusy,
                                 controller: _fnController,
                                 style: _textStyle,
                                 cursorColor: _cursorColor,
@@ -90,6 +93,7 @@ class _RegisterPageState extends State<RegisterPage>
                             ),
                             Expanded(
                               child: TextFormField(
+                                enabled: !isBusy,
                                 controller: _lnController,
                                 style: _textStyle,
                                 cursorColor: _cursorColor,
@@ -111,6 +115,7 @@ class _RegisterPageState extends State<RegisterPage>
                           ],
                         ),
                         TextFormField(
+                          enabled: !isBusy,
                           controller: _emailController,
                           style: _textStyle,
                           cursorColor: _cursorColor,
@@ -136,6 +141,7 @@ class _RegisterPageState extends State<RegisterPage>
                           },
                         ),
                         TextFormField(
+                          enabled: !isBusy,
                           controller: _passwordController,
                           style: _textStyle,
                           cursorColor: _cursorColor,
@@ -159,6 +165,7 @@ class _RegisterPageState extends State<RegisterPage>
                           },
                         ),
                         TextFormField(
+                          enabled: !isBusy,
                           controller: _confirmPasswordController,
                           style: _textStyle,
                           cursorColor: _cursorColor,
@@ -194,12 +201,10 @@ class _RegisterPageState extends State<RegisterPage>
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
                                   Text(
-                                    (model.state == PageState.Idle)
-                                        ? 'Register'
-                                        : 'Registering',
+                                    !isBusy ? 'Register' : 'Registering',
                                     style: UnderdogTheme.raisedButtonTextDark,
                                   ),
-                                  (model.state == PageState.Busy)
+                                  isBusy
                                       ? Row(
                                           mainAxisSize: MainAxisSize.min,
                                           children: <Widget>[
@@ -210,9 +215,7 @@ class _RegisterPageState extends State<RegisterPage>
                                               height: 10,
                                               width: 10,
                                               child: CircularProgressIndicator(
-                                                backgroundColor:
-                                                    Theme.of(context)
-                                                        .accentColor,
+                                                backgroundColor: Colors.white,
                                                 strokeWidth: 2,
                                               ),
                                             )
@@ -260,9 +263,11 @@ class _RegisterPageState extends State<RegisterPage>
                           ),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(16)),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
+                          onPressed: isBusy
+                              ? null
+                              : () {
+                                  Navigator.of(context).pop();
+                                },
                         ),
                       ],
                     ),

@@ -9,6 +9,7 @@ import 'package:underdog/data/models/location_info.dart';
 import 'package:underdog/pages/select_location_page.dart';
 import 'package:underdog/service_locator.dart';
 import 'package:underdog/viewmodels/submit_report_model.dart';
+import 'package:underdog/widgets/error_snackbar.dart';
 
 import '../underdog_theme.dart';
 
@@ -18,10 +19,10 @@ class SubmitReportPage extends StatefulWidget {
   _SubmitReportPageState createState() => _SubmitReportPageState();
 }
 
-class _SubmitReportPageState extends State<SubmitReportPage> {
+class _SubmitReportPageState extends State<SubmitReportPage>
+    with SingleTickerProviderStateMixin {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController _codeNameController = TextEditingController();
-  // TextEditingController _landmarkController = TextEditingController();
   TextEditingController _additionalInfoController = TextEditingController();
   File _selectedImage;
 
@@ -210,50 +211,84 @@ class _SubmitReportPageState extends State<SubmitReportPage> {
                       ),
                       Builder(
                         builder: (context) => RaisedButton(
-                          child: Text(
-                            'Submit Report',
-                            style: UnderdogTheme.raisedButtonText,
+                          disabledColor: Theme.of(context).accentColor,
+                          child: AnimatedSize(
+                            duration: Duration(milliseconds: 500),
+                            curve: Curves.fastOutSlowIn,
+                            vsync: this,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Text(
+                                  (model.state == PageState.Idle)
+                                      ? 'Submit Report'
+                                      : 'Submitting Report',
+                                  style: UnderdogTheme.raisedButtonText,
+                                ),
+                                (model.state == PageState.Busy)
+                                    ? Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: <Widget>[
+                                          SizedBox(
+                                            width: 8,
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                            width: 10,
+                                            child: CircularProgressIndicator(
+                                              backgroundColor: Colors.white,
+                                              strokeWidth: 2,
+                                            ),
+                                          )
+                                        ],
+                                      )
+                                    : Container()
+                              ],
+                            ),
                           ),
-                          onPressed: () async {
-                            if (_formKey.currentState.validate()) {
-                              if (_selectedImage != null) {
-                                if (model.locationInfo != null) {
-                                  final submitStatus = await model.submitReport(
-                                      _selectedImage,
-                                      _codeNameController.text,
-                                      model.breed,
-                                      model.locationInfo.addressLine,
-                                      model.locationInfo.latitude,
-                                      model.locationInfo.longitude,
-                                      _additionalInfoController.text);
+                          onPressed: (model.state == PageState.Busy)
+                              ? null
+                              : () async {
+                                  if (_formKey.currentState.validate()) {
+                                    if (_selectedImage != null) {
+                                      if (model.locationInfo != null) {
+                                        final submitStatus =
+                                            await model.submitReport(
+                                                _selectedImage,
+                                                _codeNameController.text,
+                                                model.breed,
+                                                model.locationInfo.addressLine,
+                                                model.locationInfo.latitude,
+                                                model.locationInfo.longitude,
+                                                _additionalInfoController.text);
 
-                                  if (submitStatus != null) {
-                                    Scaffold.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(submitStatus),
-                                      ),
-                                    );
-                                  } else {
-                                    Navigator.pop(context, true);
+                                        if (submitStatus != null) {
+                                          Scaffold.of(context).showSnackBar(
+                                            ErrorSnackBar(
+                                              content: Text(submitStatus),
+                                            ),
+                                          );
+                                        } else {
+                                          Navigator.pop(context, true);
+                                        }
+                                      } else {
+                                        Scaffold.of(context).showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                                'There was an error retrieving the location. Please turn on LOCATION service'),
+                                          ),
+                                        );
+                                      }
+                                    } else {
+                                      Scaffold.of(context).showSnackBar(
+                                        ErrorSnackBar(
+                                          content: Text(
+                                              'Please select an image with the dog in it'),
+                                        ),
+                                      );
+                                    }
                                   }
-                                } else {
-                                  Scaffold.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                          'There was an error retrieving the location. Please turn on LOCATION service'),
-                                    ),
-                                  );
-                                }
-                              } else {
-                                Scaffold.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                        'Please select an image with the dog in it'),
-                                  ),
-                                );
-                              }
-                            }
-                          },
+                                },
                         ),
                       ),
                       SizedBox(

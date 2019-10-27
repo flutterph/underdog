@@ -3,15 +3,11 @@ import 'package:underdog/services/reports_database_service.dart';
 
 import '../service_locator.dart';
 
-class ReportsModel {
+class RescuedReportsListModel {
   ReportsDatabaseService _reportsDatabaseService =
       locator<ReportsDatabaseService>();
 
-  DatabaseReference getReports() {
-    return _reportsDatabaseService.databaseReference;
-  }
-
-  Query getUnrescued() {
+  Query getRescued() {
     return _reportsDatabaseService.getRescued();
   }
 }

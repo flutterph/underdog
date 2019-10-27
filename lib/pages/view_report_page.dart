@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:underdog/data/models/report.dart';
 import 'package:underdog/hero_tag.dart';
 import 'package:underdog/pages/view_image_page.dart';
@@ -93,7 +92,7 @@ class ViewReportPage extends StatelessWidget {
                     ),
                     Hero(
                         tag: HeroTag.REPORT_LANDMARK_ + report.uid,
-                        child: Text(report.landmark)),
+                        child: Text(report.address)),
                     SizedBox(
                       height: 16,
                     ),
@@ -101,7 +100,12 @@ class ViewReportPage extends StatelessWidget {
                       'ADDITIONAL INFO',
                       style: UnderdogTheme.labelStyle,
                     ),
-                    Text(report.additionalInfo),
+                    (report.additionalInfo.isEmpty)
+                        ? Text(
+                            'None',
+                            style: TextStyle(fontStyle: FontStyle.italic),
+                          )
+                        : Text(report.additionalInfo),
                     SizedBox(
                       height: 16,
                     ),

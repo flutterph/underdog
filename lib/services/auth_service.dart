@@ -1,4 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:underdog/data/models/user.dart';
 
 enum AuthStatus {
   NOT_DETERMINED,
@@ -8,9 +10,17 @@ enum AuthStatus {
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final DatabaseReference _databaseReference =
+      FirebaseDatabase.instance.reference().child('users');
+
+  User user;
 
   Future<String> getUserId() async {
     return (await _auth.currentUser()).uid;
+  }
+
+  Future<FirebaseUser> getUser() async {
+    return (await _auth.currentUser());
   }
 
   Future<AuthStatus> checkAuthStatus() async {
@@ -26,6 +36,8 @@ class AuthService {
       final FirebaseUser user = (await _auth.signInWithEmailAndPassword(
               email: email, password: password))
           .user;
+      this.user =
+          User.fromSnapshot(await _databaseReference.child(user.uid).once());
 
       return null;
     } catch (e) {
@@ -37,6 +49,7 @@ class AuthService {
   Future<bool> logout() async {
     try {
       await _auth.signOut();
+      this.user = null;
 
       return true;
     } catch (e) {
@@ -47,14 +60,17 @@ class AuthService {
   Future<String> createUserWithEmailAndPassword(
       String email, String password, String firstName, String lastName) async {
     try {
-      final FirebaseUser authResult = (await _auth
-              .createUserWithEmailAndPassword(email: email, password: password))
+      final FirebaseUser user = (await _auth.createUserWithEmailAndPassword(
+              email: email, password: password))
           .user;
 
-      final userUpdateInfo = UserUpdateInfo();
-      userUpdateInfo.displayName = '$firstName $lastName';
+      final newUser = User()
+        ..uid = user.uid
+        ..email = email
+        ..firstName = firstName
+        ..lastName = lastName;
 
-      await authResult.updateProfile(UserUpdateInfo());
+      await _databaseReference.child(user.uid).set(newUser.toMap());
 
       return null;
     } catch (e) {
@@ -72,7 +88,7 @@ class AuthService {
         return 'You entered an incorrect password';
         break;
       case 'ERROR_USER_NOT_FOUND':
-        return 'There is no user associated with those credentials';
+        return 'This account does not exist';
         break;
       case 'ERROR_USER_DISABLED':
         return 'This user has been disabled by the administrator';

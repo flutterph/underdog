@@ -13,7 +13,7 @@ class Report {
   String codeName;
   String imageUrl;
   String breed;
-  String landmark;
+  String address;
   double latitude;
   double longitude;
   String additionalInfo;
@@ -26,7 +26,7 @@ class Report {
       this.codeName,
       this.imageUrl,
       this.breed,
-      this.landmark,
+      this.address,
       this.latitude,
       this.longitude,
       this.additionalInfo,
@@ -40,7 +40,7 @@ class Report {
       'code_name': codeName,
       'image_url': imageUrl,
       'breed': breed,
-      'landmark': landmark,
+      'address': address,
       'latitude': latitude,
       'longitude': longitude,
       'additional_info': additionalInfo,
@@ -48,7 +48,7 @@ class Report {
     };
   }
 
-  static Report fromMap(Map<dynamic, dynamic> map) {
+  factory Report.fromMap(Map<dynamic, dynamic> map) {
     return Report(
       map['reporter_id'],
       map['rescuer_id'],
@@ -56,7 +56,7 @@ class Report {
       map['code_name'],
       map['image_url'],
       map['breed'],
-      map['landmark'],
+      map['address'],
       map['latitude'],
       map['longitude'],
       map['additional_info'],
@@ -64,7 +64,7 @@ class Report {
     );
   }
 
-  static Report fromSnapshot(DataSnapshot snapshot) {
+  factory Report.fromSnapshot(DataSnapshot snapshot) {
     final report = Report(
       snapshot.value['reporter_id'],
       snapshot.value['rescuer_id'],
@@ -72,7 +72,7 @@ class Report {
       snapshot.value['code_name'],
       snapshot.value['image_url'],
       snapshot.value['breed'],
-      snapshot.value['landmark'],
+      snapshot.value['address'],
       snapshot.value['latitude'],
       snapshot.value['longitude'],
       snapshot.value['additional_info'],

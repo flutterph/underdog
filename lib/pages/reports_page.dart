@@ -1,14 +1,7 @@
-import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:underdog/data/models/report.dart';
-import 'package:underdog/hero_tag.dart';
-import 'package:underdog/pages/view_report_page.dart';
-import 'package:underdog/service_locator.dart';
 import 'package:underdog/underdog_theme.dart';
-import 'package:underdog/viewmodels/reports_model.dart';
-import 'package:underdog/widgets/item_report.dart';
+import 'package:underdog/widgets/rescued_reports_list.dart';
+import 'package:underdog/widgets/unrescued_reports_list.dart';
 
 class ReportsPage extends StatefulWidget {
   const ReportsPage({Key key}) : super(key: key);
@@ -17,8 +10,26 @@ class ReportsPage extends StatefulWidget {
   _ReportsPageState createState() => _ReportsPageState();
 }
 
-class _ReportsPageState extends State<ReportsPage> {
-  GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
+class _ReportsPageState extends State<ReportsPage>
+    with SingleTickerProviderStateMixin {
+  TabController _tabController;
+
+  TextStyle _tabStyle;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _tabController = TabController(length: 2, vsync: this);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    _tabStyle = TextStyle(
+        color: Theme.of(context).accentColor, fontWeight: FontWeight.bold);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,53 +40,37 @@ class _ReportsPageState extends State<ReportsPage> {
           Container(
             child: Column(
               children: <Widget>[
-                SizedBox(
-                  height: 96,
-                ),
+                SizedBox(height: 96),
                 Text(
                   'Reports',
                   style: UnderdogTheme.pageTitle,
                 ),
-                SizedBox(
-                  height: 32,
+                SizedBox(height: 32),
+                TabBar(
+                  controller: _tabController,
+                  labelPadding: const EdgeInsets.all(16),
+                  indicatorColor: Theme.of(context).accentColor,
+                  indicatorSize: TabBarIndicatorSize.label,
+                  tabs: <Widget>[
+                    Text(
+                      'Unrescued',
+                      style: _tabStyle,
+                    ),
+                    Text(
+                      'Rescued',
+                      style: _tabStyle,
+                    ),
+                  ],
                 ),
                 Expanded(
-                  child: FirebaseAnimatedList(
-                    query: locator<ReportsModel>().getReports(),
-                    key: _listKey,
-                    shrinkWrap: true,
-                    defaultChild: Center(child: CircularProgressIndicator()),
-                    itemBuilder: _buildItem,
-                  ),
-                )
+                    child: TabBarView(controller: _tabController, children: [
+                  UnrescuedReportsList(),
+                  RescuedReportsList(),
+                ]))
               ],
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildItem(BuildContext context, DataSnapshot snapshot,
-      Animation animation, int index) {
-    final report = Report.fromSnapshot(snapshot);
-
-    return InkWell(
-      onTap: () {
-        final result = Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => ViewReportPage(
-                      report: report,
-                    )));
-
-        // Navigate back to home page if a report has been selected
-        result.then((report) {
-          if (report != null) Navigator.pop(context, report);
-        });
-      },
-      child: ReportItem(
-        report: report,
       ),
     );
   }

@@ -70,7 +70,7 @@ class ReportPreview extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Text(
-                                report.landmark,
+                                report.address,
                                 style: TextStyle(fontSize: 12),
                                 overflow: TextOverflow.fade,
                                 maxLines: 1,
@@ -129,8 +129,8 @@ class ReportPreview extends StatelessWidget {
                   ),
                 ),
                 onPressed: () {
-                  if (report.landmark != null)
-                    MapsLauncher.launchQuery(report.landmark);
+                  if (report.address != null)
+                    MapsLauncher.launchQuery(report.address);
                   else
                     MapsLauncher.launchCoordinates(
                         report.latitude, report.longitude);

@@ -78,7 +78,7 @@ class ReportItem extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Text(
-                                  report.landmark,
+                                  report.address,
                                   style: TextStyle(fontSize: 12),
                                   overflow: TextOverflow.fade,
                                   maxLines: 1,

@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:underdog/hero_tag.dart';
 import 'package:underdog/pages/register_page.dart';
 import 'package:underdog/viewmodels/login_model.dart';
+import 'package:underdog/widgets/error_snackbar.dart';
+import 'package:underdog/widgets/success_snackbar.dart';
 
 import '../service_locator.dart';
 import '../underdog_theme.dart';
@@ -21,7 +23,7 @@ class _LoginPageState extends State<LoginPage>
   TextEditingController _emailController =
       TextEditingController(text: 'oliatienza@gmail.com');
   TextEditingController _passwordController =
-      TextEditingController(text: 'jollibee');
+      TextEditingController(text: 'password');
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
@@ -30,6 +32,8 @@ class _LoginPageState extends State<LoginPage>
       builder: (context) => locator<LoginModel>(),
       child: Consumer<LoginModel>(
         builder: (context, model, child) {
+          final isBusy = model.state == PageState.Busy;
+
           return Scaffold(
             body: Center(
               child: Container(
@@ -54,6 +58,7 @@ class _LoginPageState extends State<LoginPage>
                         height: 32,
                       ),
                       TextFormField(
+                        enabled: !isBusy,
                         controller: _emailController,
                         decoration: InputDecoration(
                             hintText: 'E-mail',
@@ -74,6 +79,7 @@ class _LoginPageState extends State<LoginPage>
                         },
                       ),
                       TextFormField(
+                        enabled: !isBusy,
                         controller: _passwordController,
                         obscureText: true,
                         decoration: InputDecoration(
@@ -108,12 +114,10 @@ class _LoginPageState extends State<LoginPage>
                               mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
                                 Text(
-                                  (model.state == PageState.Idle)
-                                      ? 'Log In'
-                                      : 'Logging In',
+                                  !isBusy ? 'Log In' : 'Logging In',
                                   style: UnderdogTheme.raisedButtonText,
                                 ),
-                                (model.state == PageState.Busy)
+                                isBusy
                                     ? Row(
                                         mainAxisSize: MainAxisSize.min,
                                         children: <Widget>[
@@ -134,7 +138,7 @@ class _LoginPageState extends State<LoginPage>
                               ],
                             ),
                           ),
-                          onPressed: (model.state == PageState.Idle)
+                          onPressed: !isBusy
                               ? () {
                                   if (_formKey.currentState.validate()) {
                                     model
@@ -149,7 +153,7 @@ class _LoginPageState extends State<LoginPage>
                                                     HomePage()));
                                       else {
                                         Scaffold.of(context)
-                                            .showSnackBar(SnackBar(
+                                            .showSnackBar(ErrorSnackBar(
                                           content: Text(value),
                                         ));
                                       }
@@ -166,11 +170,11 @@ class _LoginPageState extends State<LoginPage>
                         builder: (BuildContext context) => FlatButton(
                           child: Text(
                             'Sign Up',
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                            style: UnderdogTheme.outlineButtonText,
                           ),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(16)),
-                          onPressed: (model.state == PageState.Idle)
+                          onPressed: !isBusy
                               ? () {
                                   _navigateToRegisterPage(context);
                                 }
@@ -195,7 +199,7 @@ class _LoginPageState extends State<LoginPage>
     if (result is String) {
       Scaffold.of(context)
         ..removeCurrentSnackBar()
-        ..showSnackBar(SnackBar(content: Text('$result')));
+        ..showSnackBar(SuccessSnackBar(content: Text('$result')));
     }
   }
 }

@@ -10,7 +10,7 @@ import 'package:underdog/services/storage_service.dart';
 
 import '../service_locator.dart';
 
-enum ViewState { Idle, Busy }
+enum PageState { Idle, Busy }
 
 class SubmitReportModel extends ChangeNotifier {
   final _authService = locator<AuthService>();
@@ -22,6 +22,12 @@ class SubmitReportModel extends ChangeNotifier {
   // States
   String breed = 'Aspin';
   LocationInfo _locationInfo;
+  PageState _pageState = PageState.Idle;
+
+  void setState(PageState state) {
+    _pageState = state;
+    notifyListeners();
+  }
 
   SubmitReportModel() {
     getLocationInfoFromCurrentLocation();
@@ -36,6 +42,7 @@ class SubmitReportModel extends ChangeNotifier {
     double longitude,
     String additionalInfo,
   ) async {
+    setState(PageState.Busy);
     final imageUrl = await _storageService.uploadImage(image);
     if (imageUrl != null) {
       final newReport = Report(
@@ -52,9 +59,12 @@ class SubmitReportModel extends ChangeNotifier {
           DateTime.now().toIso8601String());
       _reportsDatabaseService.addReport(newReport);
 
+      setState(PageState.Busy);
       return null;
-    } else
+    } else {
+      setState(PageState.Busy);
       return 'Something went wrong while trying to submit your report. Please try again.';
+    }
   }
 
   Future<void> getLocationInfoFromCurrentLocation() async {
@@ -69,4 +79,5 @@ class SubmitReportModel extends ChangeNotifier {
 
   // Accessors
   LocationInfo get locationInfo => _locationInfo;
+  PageState get state => _pageState;
 }
