@@ -18,7 +18,7 @@ class ReportItem extends StatelessWidget {
           elevation: 0,
           shape: RoundedRectangleBorder(
               side: BorderSide(color: Colors.black12),
-              borderRadius: BorderRadius.circular(24)),
+              borderRadius: BorderRadius.circular(16)),
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             child: Row(

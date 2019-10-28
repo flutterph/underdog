@@ -6,6 +6,7 @@ import 'package:underdog/pages/register_page.dart';
 import 'package:underdog/viewmodels/login_model.dart';
 import 'package:underdog/widgets/animated_raised_button.dart';
 import 'package:underdog/widgets/error_snackbar.dart';
+import 'package:underdog/widgets/scale_page_route.dart';
 import 'package:underdog/widgets/success_snackbar.dart';
 
 import '../service_locator.dart';
@@ -105,6 +106,7 @@ class _LoginPageState extends State<LoginPage>
                         builder: (context) => AnimatedRaisedButton(
                           isBusy: isBusy,
                           label: !isBusy ? 'Log In' : 'Logging In',
+                          delay: 125,
                           onPressed: !isBusy
                               ? () {
                                   if (_formKey.currentState.validate()) {
@@ -113,11 +115,8 @@ class _LoginPageState extends State<LoginPage>
                                             _passwordController.text)
                                         .then((value) {
                                       if (value == null)
-                                        Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    HomePage()));
+                                        Navigator.pushReplacement(context,
+                                            ScalePageRoute(page: HomePage()));
                                       else {
                                         Scaffold.of(context)
                                             .showSnackBar(ErrorSnackBar(

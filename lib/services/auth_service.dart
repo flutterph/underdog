@@ -70,7 +70,8 @@ class AuthService {
         ..uid = user.uid
         ..email = email
         ..firstName = firstName
-        ..lastName = lastName;
+        ..lastName = lastName
+        ..type = 'normal';
 
       await _databaseReference.child(user.uid).set(newUser.toMap());
 
@@ -110,5 +111,7 @@ class AuthService {
         return 'Looks like that e-mail address is already in use';
         break;
     }
+
+    return null;
   }
 }

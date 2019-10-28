@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:underdog/service_locator.dart';
 import 'package:underdog/viewmodels/register_model.dart';
-import 'package:underdog/widgets/animated_white_raised_button.dart';
+import 'package:underdog/widgets/animated_raised_button.dart';
 
 import '../hero_tag.dart';
 import '../underdog_theme.dart';
@@ -24,8 +24,6 @@ class _RegisterPageState extends State<RegisterPage>
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _confirmPasswordController = TextEditingController();
 
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
   final _enabledBorder = UnderlineInputBorder(
       borderSide: BorderSide(color: Colors.white70, width: 1));
   final _focusedBorder = UnderlineInputBorder(
@@ -38,6 +36,22 @@ class _RegisterPageState extends State<RegisterPage>
     return ChangeNotifierProvider<RegisterModel>(
       builder: (context) => locator<RegisterModel>(),
       child: Consumer<RegisterModel>(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            FittedBox(
+              fit: BoxFit.fitWidth,
+              child: Text(
+                'Become a Rescuer',
+                style: UnderdogTheme.pageTitle.copyWith(color: Colors.white),
+              ),
+            ),
+            SizedBox(
+              height: 32,
+            ),
+          ],
+        ),
         builder: (context, model, child) {
           final isBusy = (model.state == PageState.Busy);
 
@@ -53,17 +67,7 @@ class _RegisterPageState extends State<RegisterPage>
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        FittedBox(
-                          fit: BoxFit.fitWidth,
-                          child: Text(
-                            'Become a Rescuer',
-                            style: UnderdogTheme.pageTitle
-                                .copyWith(color: Colors.white),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 32,
-                        ),
+                        child,
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
@@ -188,9 +192,12 @@ class _RegisterPageState extends State<RegisterPage>
                           height: 24,
                         ),
                         Builder(
-                          builder: (context) => AnimatedWhiteRaisedButton(
+                          builder: (context) => AnimatedRaisedButton(
                             isBusy: isBusy,
                             label: !isBusy ? 'Register' : 'Registering',
+                            color: Colors.white,
+                            style: UnderdogTheme.raisedButtonTextDark,
+                            delay: 125,
                             onPressed: (isBusy)
                                 ? null
                                 : () {
