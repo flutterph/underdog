@@ -9,12 +9,14 @@ class AnimatedOutlineButton extends StatefulWidget {
   final String label;
   final bool isBusy;
   final int delay;
+  final IconData icon;
   AnimatedOutlineButton(
       {Key key,
       @required this.onPressed,
       @required this.label,
       this.isBusy = false,
-      this.delay = 0})
+      this.delay = 0,
+      this.icon})
       : super(key: key);
 
   @override
@@ -61,6 +63,17 @@ class _AnimatedOutlineButtonState extends State<AnimatedOutlineButton>
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
+                (widget.icon != null)
+                    ? Row(
+                        children: <Widget>[
+                          Icon(widget.icon,
+                              size: 20, color: Theme.of(context).accentColor),
+                          SizedBox(
+                            width: 4,
+                          ),
+                        ],
+                      )
+                    : Container(),
                 Text(
                   widget.label,
                   style: UnderdogTheme.outlineButtonText,

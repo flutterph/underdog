@@ -9,12 +9,14 @@ class AnimatedRaisedButton extends StatefulWidget {
   final String label;
   final bool isBusy;
   final int delay;
+  final IconData icon;
   AnimatedRaisedButton(
       {Key key,
       @required this.onPressed,
       @required this.label,
       this.isBusy = false,
-      this.delay = 0})
+      this.delay = 0,
+      this.icon})
       : super(key: key);
 
   @override
@@ -60,6 +62,16 @@ class _AnimatedRaisedButtonState extends State<AnimatedRaisedButton>
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
+                (widget.icon != null)
+                    ? Row(
+                        children: <Widget>[
+                          Icon(widget.icon, size: 20, color: Colors.white),
+                          SizedBox(
+                            width: 4,
+                          ),
+                        ],
+                      )
+                    : Container(),
                 Text(
                   widget.label,
                   style: UnderdogTheme.raisedButtonText,

@@ -5,6 +5,7 @@ import 'package:maps_launcher/maps_launcher.dart';
 import 'package:provider/provider.dart';
 import 'package:underdog/data/models/report.dart';
 import 'package:underdog/viewmodels/home_model.dart';
+import 'package:underdog/widgets/animated_raised_button.dart';
 
 import '../underdog_theme.dart';
 
@@ -111,23 +112,9 @@ class ReportPreview extends StatelessWidget {
               SizedBox(
                 width: 8,
               ),
-              RaisedButton.icon(
-                icon: Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: Icon(
-                    FontAwesomeIcons.mapMarkedAlt,
-                    color: Colors.white,
-                    size: 20,
-                  ),
-                ),
-                label: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 4, vertical: 16),
-                  child: Text(
-                    'Navigate',
-                    style: UnderdogTheme.raisedButtonText,
-                  ),
-                ),
+              AnimatedRaisedButton(
+                label: 'Navigate',
+                icon: FontAwesomeIcons.mapMarkedAlt,
                 onPressed: () {
                   if (report.address != null)
                     MapsLauncher.launchQuery(report.address);

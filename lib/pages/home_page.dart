@@ -119,77 +119,95 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       right: 0,
                       child: AnimatedBuilder(
                           animation: _bottomBarAnimation,
-                          child: Card(
-                            margin: EdgeInsets.zero,
-                            shape: RoundedRectangleBorder(
-                                side: BorderSide(color: Colors.black12),
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(16),
-                                    topRight: Radius.circular(16))),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(vertical: 4),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: <Widget>[
-                                  AnimatedSize(
-                                    duration: Duration(milliseconds: 500),
-                                    curve: Curves.fastOutSlowIn,
-                                    vsync: this,
-                                    child: Column(
-                                      children: <Widget>[
-                                        (model.selectedReport == null)
-                                            ? Container()
-                                            : InkWell(
-                                                onTap: () {
-                                                  Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              ViewReportPage(
-                                                                report: model
-                                                                    .selectedReport,
-                                                              )));
-                                                },
-                                                child: ReportPreview(
-                                                    report:
-                                                        model.selectedReport)),
-                                        (model.selectedReport == null)
-                                            ? Container()
-                                            : Divider(
-                                                height: 2,
-                                              ),
-                                      ],
-                                    ),
-                                  ),
-                                  Row(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
+                          child: Column(
+                            children: <Widget>[
+                              FloatingActionButton(
+                                child: Icon(
+                                  FontAwesomeIcons.mapMarkerAlt,
+                                  color: Theme.of(context).accentColor,
+                                ),
+                                onPressed: _animateToUserLocation,
+                              ),
+                              SizedBox(
+                                height: 16,
+                              ),
+                              Card(
+                                margin: EdgeInsets.zero,
+                                shape: RoundedRectangleBorder(
+                                    side: BorderSide(color: Colors.black12),
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(16),
+                                        topRight: Radius.circular(16))),
+                                child: Container(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 4),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment: MainAxisAlignment.end,
                                     children: <Widget>[
-                                      Builder(
-                                        builder: (context) => IconButton(
+                                      AnimatedSize(
+                                        duration: Duration(milliseconds: 500),
+                                        curve: Curves.fastOutSlowIn,
+                                        vsync: this,
+                                        child: Column(
+                                          children: <Widget>[
+                                            (model.selectedReport == null)
+                                                ? Container()
+                                                : InkWell(
+                                                    onTap: () {
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  ViewReportPage(
+                                                                    report: model
+                                                                        .selectedReport,
+                                                                  )));
+                                                    },
+                                                    child: ReportPreview(
+                                                        report: model
+                                                            .selectedReport)),
+                                            (model.selectedReport == null)
+                                                ? Container()
+                                                : Divider(
+                                                    height: 2,
+                                                  ),
+                                          ],
+                                        ),
+                                      ),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: <Widget>[
+                                          Builder(
+                                            builder: (context) => IconButton(
+                                                icon: Icon(
+                                                  FontAwesomeIcons.list,
+                                                  color: Theme.of(context)
+                                                      .accentColor,
+                                                ),
+                                                onPressed: () {
+                                                  _navigateToReportsPage(model);
+                                                }),
+                                          ),
+                                          IconButton(
                                             icon: Icon(
-                                              FontAwesomeIcons.list,
+                                              FontAwesomeIcons.paperPlane,
                                               color:
                                                   Theme.of(context).accentColor,
                                             ),
-                                            onPressed: () {
-                                              _navigateToReportsPage(model);
-                                            }),
-                                      ),
-                                      IconButton(
-                                        icon: Icon(
-                                          FontAwesomeIcons.paperPlane,
-                                          color: Theme.of(context).accentColor,
-                                        ),
-                                        onPressed: _navigateToSubmitReportPage,
+                                            onPressed:
+                                                _navigateToSubmitReportPage,
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
-                                ],
+                                ),
                               ),
-                            ),
+                            ],
                           ),
                           builder: (context, animatedChild) {
                             return Transform.translate(
@@ -199,16 +217,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           }),
                     )
                   ],
-                ),
-                floatingActionButton: Padding(
-                  padding: const EdgeInsets.only(bottom: 56),
-                  child: FloatingActionButton(
-                    child: Icon(
-                      FontAwesomeIcons.mapMarkerAlt,
-                      color: Theme.of(context).accentColor,
-                    ),
-                    onPressed: _animateToUserLocation,
-                  ),
                 ),
               ),
             ],
