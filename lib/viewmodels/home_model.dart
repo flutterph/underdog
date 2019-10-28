@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:underdog/data/models/report.dart';
 import 'package:underdog/services/auth_service.dart';
+import 'package:underdog/services/pref_service.dart';
 import 'package:underdog/services/reports_database_service.dart';
 
 import '../service_locator.dart';
@@ -9,12 +10,14 @@ class HomeModel extends ChangeNotifier {
   final AuthService _authService = locator<AuthService>();
   final ReportsDatabaseService _reportsDatabaseService =
       locator<ReportsDatabaseService>();
+  final PrefService _prefService = locator<PrefService>();
 
   bool hasAnimatedToCurrentLocation = false;
   Report selectedReport;
   List<Report> _reports;
 
   Future<bool> logout() async {
+    await _prefService.clearUserPrefs();
     return _authService.logout();
   }
 

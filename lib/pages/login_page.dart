@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:underdog/hero_tag.dart';
 import 'package:underdog/pages/register_page.dart';
 import 'package:underdog/viewmodels/login_model.dart';
+import 'package:underdog/widgets/animated_raised_button.dart';
 import 'package:underdog/widgets/error_snackbar.dart';
 import 'package:underdog/widgets/success_snackbar.dart';
 
@@ -101,43 +102,9 @@ class _LoginPageState extends State<LoginPage>
                         height: 24,
                       ),
                       Builder(
-                        builder: (context) => RaisedButton(
-                          color: Theme.of(context).accentColor,
-                          disabledColor: Theme.of(context).accentColor,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16)),
-                          child: AnimatedSize(
-                            duration: Duration(milliseconds: 500),
-                            curve: Curves.fastOutSlowIn,
-                            vsync: this,
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                Text(
-                                  !isBusy ? 'Log In' : 'Logging In',
-                                  style: UnderdogTheme.raisedButtonText,
-                                ),
-                                isBusy
-                                    ? Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: <Widget>[
-                                          SizedBox(
-                                            width: 8,
-                                          ),
-                                          SizedBox(
-                                            height: 10,
-                                            width: 10,
-                                            child: CircularProgressIndicator(
-                                              backgroundColor: Colors.white,
-                                              strokeWidth: 2,
-                                            ),
-                                          )
-                                        ],
-                                      )
-                                    : Container()
-                              ],
-                            ),
-                          ),
+                        builder: (context) => AnimatedRaisedButton(
+                          isBusy: isBusy,
+                          label: !isBusy ? 'Log In' : 'Logging In',
                           onPressed: !isBusy
                               ? () {
                                   if (_formKey.currentState.validate()) {
@@ -163,6 +130,69 @@ class _LoginPageState extends State<LoginPage>
                               : null,
                         ),
                       ),
+                      // Builder(
+                      //   builder: (context) => RaisedButton(
+                      //     color: Theme.of(context).accentColor,
+                      //     disabledColor: Theme.of(context).accentColor,
+                      //     shape: RoundedRectangleBorder(
+                      //         borderRadius: BorderRadius.circular(16)),
+                      //     child: AnimatedSize(
+                      //       duration: Duration(milliseconds: 500),
+                      //       curve: Curves.fastOutSlowIn,
+                      //       vsync: this,
+                      //       child: Row(
+                      //         mainAxisSize: MainAxisSize.min,
+                      //         children: <Widget>[
+                      //           Text(
+                      //             !isBusy ? 'Log In' : 'Logging In',
+                      //             style: UnderdogTheme.raisedButtonText,
+                      //           ),
+                      //           isBusy
+                      //               ? Row(
+                      //                   mainAxisSize: MainAxisSize.min,
+                      //                   children: <Widget>[
+                      //                     SizedBox(
+                      //                       width: 8,
+                      //                     ),
+                      //                     SizedBox(
+                      //                       height: 10,
+                      //                       width: 10,
+                      //                       child: CircularProgressIndicator(
+                      //                         backgroundColor: Colors.white,
+                      //                         strokeWidth: 2,
+                      //                       ),
+                      //                     )
+                      //                   ],
+                      //                 )
+                      //               : Container()
+                      //         ],
+                      //       ),
+                      //     ),
+                      //     onPressed: !isBusy
+                      //         ? () {
+                      //             if (_formKey.currentState.validate()) {
+                      //               model
+                      //                   .login(_emailController.text.trim(),
+                      //                       _passwordController.text)
+                      //                   .then((value) {
+                      //                 if (value == null)
+                      //                   Navigator.pushReplacement(
+                      //                       context,
+                      //                       MaterialPageRoute(
+                      //                           builder: (context) =>
+                      //                               HomePage()));
+                      //                 else {
+                      //                   Scaffold.of(context)
+                      //                       .showSnackBar(ErrorSnackBar(
+                      //                     content: Text(value),
+                      //                   ));
+                      //                 }
+                      //               });
+                      //             }
+                      //           }
+                      //         : null,
+                      //   ),
+                      // ),
                       SizedBox(
                         height: 8,
                       ),

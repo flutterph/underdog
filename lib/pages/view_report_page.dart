@@ -4,6 +4,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:underdog/data/models/report.dart';
 import 'package:underdog/hero_tag.dart';
 import 'package:underdog/pages/view_image_page.dart';
+import 'package:underdog/widgets/animated_outline_button.dart';
+import 'package:underdog/widgets/animated_raised_button.dart';
 
 import '../underdog_theme.dart';
 
@@ -109,27 +111,20 @@ class ViewReportPage extends StatelessWidget {
                     SizedBox(
                       height: 16,
                     ),
-                    RaisedButton(
-                      child: Text(
-                        'Get Directions',
-                        style: UnderdogTheme.raisedButtonText,
-                      ),
+                    AnimatedRaisedButton(
+                      label: 'Get Directions',
                       onPressed: () {
                         Navigator.pop(context, report);
                       },
+                      delay: 125,
                     ),
                     SizedBox(
                       height: 8,
                     ),
-                    OutlineButton(
-                      color: Theme.of(context).accentColor,
-                      borderSide:
-                          BorderSide(color: Theme.of(context).accentColor),
-                      child: Text(
-                        'I rescued this pup!',
-                        style: UnderdogTheme.outlineButtonText,
-                      ),
+                    AnimatedOutlineButton(
+                      label: 'I rescued this pup!',
                       onPressed: () {},
+                      delay: 250,
                     ),
                   ],
                 ),

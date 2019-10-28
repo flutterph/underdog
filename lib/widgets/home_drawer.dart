@@ -30,7 +30,7 @@ class HomeDrawer extends StatelessWidget {
                           CircleBorder(side: BorderSide(color: Colors.white12)),
                       child: ClipOval(
                         child: CachedNetworkImage(
-                          imageUrl:
+                          imageUrl: model.user.displayPhotoUrl ??
                               'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/03-the-joker-w1200-h630-1562679871.jpg?crop=0.526xw:1.00xh;0.238xw,0&resize=480:*',
                           height: 96,
                           width: 96,
@@ -40,18 +40,20 @@ class HomeDrawer extends StatelessWidget {
                     ),
                   ],
                 ),
-                Text('${model.user.displayName}'),
+                Text('${model.user.firstName} ${model.user.lastName}'),
                 IconButton(
                   icon: Icon(FontAwesomeIcons.doorOpen),
                   onPressed: () {
-                    Provider.of<HomeModel>(context).logout().then((value) {
-                      if (value) {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => LoginPage()));
-                      }
-                    });
+                    Provider.of<HomeModel>(context).logout().then(
+                      (value) {
+                        if (value) {
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => LoginPage()));
+                        }
+                      },
+                    );
                   },
                 ),
               ],

@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:underdog/data/models/user.dart';
+import 'package:underdog/service_locator.dart';
+import 'package:underdog/services/pref_service.dart';
 
 enum AuthStatus {
   NOT_DETERMINED,
@@ -19,7 +21,7 @@ class AuthService {
     return (await _auth.currentUser()).uid;
   }
 
-  Future<FirebaseUser> getUser() async {
+  Future<FirebaseUser> getFirebaseUser() async {
     return (await _auth.currentUser());
   }
 
@@ -38,10 +40,10 @@ class AuthService {
           .user;
       this.user =
           User.fromSnapshot(await _databaseReference.child(user.uid).once());
+      await locator<PrefService>().setUserPrefs(this.user);
 
       return null;
     } catch (e) {
-      print(e.code);
       return mapErrorCodeToMessage(e.code);
     }
   }
@@ -57,13 +59,13 @@ class AuthService {
     }
   }
 
+  // TODO: Implement this using Cloud Functions in the future
   Future<String> createUserWithEmailAndPassword(
       String email, String password, String firstName, String lastName) async {
     try {
       final FirebaseUser user = (await _auth.createUserWithEmailAndPassword(
               email: email, password: password))
           .user;
-
       final newUser = User()
         ..uid = user.uid
         ..email = email

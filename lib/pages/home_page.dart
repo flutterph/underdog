@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -10,11 +9,10 @@ import 'package:underdog/camera_positions.dart';
 import 'package:underdog/data/models/report.dart';
 import 'package:underdog/data/models/user_location.dart';
 import 'package:underdog/hero_tag.dart';
-import 'package:underdog/pages/login_page.dart';
 import 'package:underdog/pages/reports_page.dart';
 import 'package:underdog/pages/submit_report_page.dart';
 import 'package:underdog/pages/view_report_page.dart';
-import 'package:underdog/underdog_theme.dart';
+import 'package:underdog/viewmodels/home_app_bar.dart';
 import 'package:underdog/viewmodels/home_model.dart';
 import 'package:underdog/widgets/home_drawer.dart';
 import 'package:underdog/widgets/report_preview.dart';
@@ -28,8 +26,7 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage>
-    with SingleTickerProviderStateMixin {
+class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   final double _zoom = 16;
 
   Timer _locationUpdateTimer;
@@ -38,9 +35,34 @@ class _HomePageState extends State<HomePage>
   MarkerId _userMarkerId = MarkerId('userMarkerId');
   HomeModel _homeModel = locator<HomeModel>();
 
+  // Animation variables
+  AnimationController _appBarAnimationController;
+  Animation _appBarAnimation;
+
+  AnimationController _bottomBarAnimationController;
+  Animation _bottomBarAnimation;
+
   @override
   void initState() {
     super.initState();
+
+    // Animations
+    _appBarAnimationController =
+        AnimationController(vsync: this, duration: Duration(seconds: 1));
+    _appBarAnimation = Tween<Offset>(begin: Offset(0, -128), end: Offset(0, 0))
+        .animate(CurvedAnimation(
+            parent: _appBarAnimationController, curve: Curves.fastOutSlowIn));
+
+    _bottomBarAnimationController =
+        AnimationController(vsync: this, duration: Duration(seconds: 1));
+    _bottomBarAnimation =
+        Tween<Offset>(begin: Offset(0, 128), end: Offset(0, 0)).animate(
+            CurvedAnimation(
+                parent: _bottomBarAnimationController,
+                curve: Curves.fastOutSlowIn));
+
+    _appBarAnimationController.forward();
+    _bottomBarAnimationController.forward();
 
     _initializeReportsMarkers();
   }
@@ -56,133 +78,136 @@ class _HomePageState extends State<HomePage>
     return ChangeNotifierProvider(
       builder: (context) => _homeModel,
       child: Consumer<HomeModel>(
-        builder: (context, model, child) {
+        child: HomeAppBar(),
+        builder: (context, model, consumerChild) {
           return Stack(
             children: <Widget>[
               Scaffold(
                 drawer: HomeDrawer(),
-                extendBody: true,
                 backgroundColor: Colors.transparent,
-                appBar: AppBar(
-                  leading: Builder(
-                    builder: (BuildContext context) {
-                      return IconButton(
-                        icon: Icon(
-                          FontAwesomeIcons.hamburger,
-                          color: Theme.of(context).accentColor,
-                        ),
-                        onPressed: () {
-                          Scaffold.of(context).openDrawer();
-                        },
-                      );
-                    },
-                  ),
-                  elevation: 0,
-                  backgroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                      side: BorderSide(color: Colors.black12)),
-                  centerTitle: true,
-                  title: Hero(
-                    tag: HeroTag.MAIN_TITLE,
-                    child: Material(
-                      type: MaterialType.transparency,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
-                        child: SvgPicture.asset(
-                          'assets/wordmark.svg',
-                          width: 112,
-                          color: Theme.of(context).accentColor,
-                        ),
-                      ),
+                body: Stack(
+                  children: <Widget>[
+                    GoogleMap(
+                      mapType: MapType.normal,
+                      initialCameraPosition: CameraPositions.taguig,
+                      onMapCreated: (GoogleMapController controller) {
+                        _controller.complete(controller);
+                        _locationUpdateTimer = Timer.periodic(
+                            Duration(seconds: 3), _updateUserMarker);
+                        _initializeUserMarker();
+                        _animateToUserLocation();
+                      },
+                      markers: Set<Marker>.of(markers.values),
                     ),
-                  ),
-                ),
-                body: GoogleMap(
-                  mapType: MapType.normal,
-                  initialCameraPosition: CameraPositions.taguig,
-                  onMapCreated: (GoogleMapController controller) {
-                    _controller.complete(controller);
-                    _locationUpdateTimer =
-                        Timer.periodic(Duration(seconds: 3), _updateUserMarker);
-                    _initializeUserMarker();
-                    _animateToUserLocation();
-                  },
-                  markers: Set<Marker>.of(markers.values),
-                ),
-                floatingActionButton: FloatingActionButton(
-                  child: Icon(
-                    FontAwesomeIcons.mapMarkerAlt,
-                    color: Theme.of(context).accentColor,
-                  ),
-                  onPressed: _animateToUserLocation,
-                ),
-                bottomNavigationBar: Card(
-                  margin: EdgeInsets.zero,
-                  shape: RoundedRectangleBorder(
-                      side: BorderSide(color: Colors.black12),
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(16),
-                          topRight: Radius.circular(16))),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 4),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        AnimatedSize(
-                          duration: Duration(milliseconds: 500),
-                          curve: Curves.fastOutSlowIn,
-                          vsync: this,
-                          child: Column(
-                            children: <Widget>[
-                              (model.selectedReport == null)
-                                  ? Container()
-                                  : InkWell(
-                                      onTap: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ViewReportPage(
-                                                      report:
-                                                          model.selectedReport,
-                                                    )));
-                                      },
-                                      child: ReportPreview(
-                                          report: model.selectedReport)),
-                              (model.selectedReport == null)
-                                  ? Container()
-                                  : Divider(
-                                      height: 2,
+                    Positioned(
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      child: AnimatedBuilder(
+                          animation: _appBarAnimation,
+                          child: consumerChild,
+                          builder: (context, animatedChild) {
+                            return Transform.translate(
+                              offset: _appBarAnimation.value,
+                              child: animatedChild,
+                            );
+                          }),
+                    ),
+                    Positioned(
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      child: AnimatedBuilder(
+                          animation: _bottomBarAnimation,
+                          child: Card(
+                            margin: EdgeInsets.zero,
+                            shape: RoundedRectangleBorder(
+                                side: BorderSide(color: Colors.black12),
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(16),
+                                    topRight: Radius.circular(16))),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(vertical: 4),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: <Widget>[
+                                  AnimatedSize(
+                                    duration: Duration(milliseconds: 500),
+                                    curve: Curves.fastOutSlowIn,
+                                    vsync: this,
+                                    child: Column(
+                                      children: <Widget>[
+                                        (model.selectedReport == null)
+                                            ? Container()
+                                            : InkWell(
+                                                onTap: () {
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              ViewReportPage(
+                                                                report: model
+                                                                    .selectedReport,
+                                                              )));
+                                                },
+                                                child: ReportPreview(
+                                                    report:
+                                                        model.selectedReport)),
+                                        (model.selectedReport == null)
+                                            ? Container()
+                                            : Divider(
+                                                height: 2,
+                                              ),
+                                      ],
                                     ),
-                            ],
-                          ),
-                        ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: <Widget>[
-                            Builder(
-                              builder: (context) => IconButton(
-                                  icon: Icon(
-                                    FontAwesomeIcons.list,
-                                    color: Theme.of(context).accentColor,
                                   ),
-                                  onPressed: () {
-                                    _navigateToReportsPage(model);
-                                  }),
-                            ),
-                            IconButton(
-                              icon: Icon(
-                                FontAwesomeIcons.paperPlane,
-                                color: Theme.of(context).accentColor,
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: <Widget>[
+                                      Builder(
+                                        builder: (context) => IconButton(
+                                            icon: Icon(
+                                              FontAwesomeIcons.list,
+                                              color:
+                                                  Theme.of(context).accentColor,
+                                            ),
+                                            onPressed: () {
+                                              _navigateToReportsPage(model);
+                                            }),
+                                      ),
+                                      IconButton(
+                                        icon: Icon(
+                                          FontAwesomeIcons.paperPlane,
+                                          color: Theme.of(context).accentColor,
+                                        ),
+                                        onPressed: _navigateToSubmitReportPage,
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
-                              onPressed: _navigateToSubmitReportPage,
                             ),
-                          ],
-                        ),
-                      ],
+                          ),
+                          builder: (context, animatedChild) {
+                            return Transform.translate(
+                              offset: _bottomBarAnimation.value,
+                              child: animatedChild,
+                            );
+                          }),
+                    )
+                  ],
+                ),
+                floatingActionButton: Padding(
+                  padding: const EdgeInsets.only(bottom: 56),
+                  child: FloatingActionButton(
+                    child: Icon(
+                      FontAwesomeIcons.mapMarkerAlt,
+                      color: Theme.of(context).accentColor,
                     ),
+                    onPressed: _animateToUserLocation,
                   ),
                 ),
               ),

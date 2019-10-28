@@ -1,15 +1,15 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:underdog/data/models/user.dart';
 import 'package:underdog/service_locator.dart';
-import 'package:underdog/services/auth_service.dart';
+import 'package:underdog/services/pref_service.dart';
 
 enum ViewState { Idle, Busy }
 
 class HomeDrawerModel extends ChangeNotifier {
-  final AuthService _authService = locator<AuthService>();
+  final PrefService _prefService = locator<PrefService>();
 
   ViewState _state = ViewState.Idle;
-  FirebaseUser _user;
+  User _user;
 
   void setState(ViewState state) {
     _state = state;
@@ -22,13 +22,11 @@ class HomeDrawerModel extends ChangeNotifier {
 
   Future<void> getUser() async {
     setState(ViewState.Busy);
-    _user = await _authService.getUser();
-    print(_user.uid);
-    print(_user.displayName);
+    _user = await _prefService.getUserInPrefs();
 
     setState(ViewState.Idle);
   }
 
   ViewState get state => _state;
-  FirebaseUser get user => _user;
+  User get user => _user;
 }
