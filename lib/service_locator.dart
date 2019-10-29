@@ -24,6 +24,11 @@ void setupLocator() {
   locator.registerLazySingleton(() => LocationService());
   locator.registerLazySingleton(() => PrefService());
 
+  // Widgets
+  locator.registerFactory(() => HomeDrawerModel());
+  locator.registerFactory(() => RescuedReportsListModel());
+  locator.registerFactory(() => UnrescuedReportsListModel());
+
   // Pages
   locator.registerFactory(() => LoginModel());
   locator.registerFactory(() => RegisterModel());
@@ -31,9 +36,4 @@ void setupLocator() {
   locator.registerFactory(() => SubmitReportModel());
   locator.registerFactory(() => SelectLocationModel());
   locator.registerFactory(() => ReportsModel());
-
-  // Widgets
-  locator.registerFactory(() => HomeDrawerModel());
-  locator.registerFactory(() => RescuedReportsListModel());
-  locator.registerFactory(() => UnrescuedReportsListModel());
 }

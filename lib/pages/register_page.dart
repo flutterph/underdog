@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:underdog/service_locator.dart';
 import 'package:underdog/viewmodels/register_model.dart';
+import 'package:underdog/widgets/animated_flat_button.dart';
 import 'package:underdog/widgets/animated_raised_button.dart';
 
 import '../hero_tag.dart';
@@ -226,15 +227,10 @@ class _RegisterPageState extends State<RegisterPage>
                           ),
                         ),
                         const SizedBox(height: 8),
-                        FlatButton(
-                          child: Text(
-                            'Cancel',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white),
-                          ),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16)),
+                        AnimatedFlatButton(
+                          label: 'Cancel',
+                          delay: 250,
+                          style: UnderdogTheme.darkFlatButtonText,
                           onPressed: isBusy
                               ? null
                               : () {

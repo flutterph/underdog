@@ -63,12 +63,14 @@ class _ReportsPageState extends State<ReportsPage>
                   ],
                 ),
                 Expanded(
-                    child: TabBarView(
-                        controller: _tabController,
-                        children: const <Widget>[
+                  child: TabBarView(
+                    controller: _tabController,
+                    children: const <Widget>[
                       UnrescuedReportsList(),
                       RescuedReportsList(),
-                    ]))
+                    ],
+                  ),
+                )
               ],
             ),
           ),

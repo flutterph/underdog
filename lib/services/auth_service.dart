@@ -35,15 +35,16 @@ class AuthService {
 
   Future<String> login(String email, String password) async {
     try {
-      final FirebaseUser user = (await _auth.signInWithEmailAndPassword(
+      final FirebaseUser firebaseUser = (await _auth.signInWithEmailAndPassword(
               email: email, password: password))
           .user;
-      this.user =
-          User.fromSnapshot(await _databaseReference.child(user.uid).once());
-      await locator<PrefService>().setUserPrefs(this.user);
+      user = User.fromSnapshot(
+          await _databaseReference.child(firebaseUser.uid).once());
+      await locator<PrefService>().setUserPrefs(user);
 
       return null;
-    } catch (e) {
+    } catch (e, s) {
+      print(s);
       return mapErrorCodeToMessage(e.code);
     }
   }
@@ -63,17 +64,17 @@ class AuthService {
   Future<String> createUserWithEmailAndPassword(
       String email, String password, String firstName, String lastName) async {
     try {
-      final FirebaseUser user = (await _auth.createUserWithEmailAndPassword(
-              email: email, password: password))
+      final FirebaseUser firebaseUser = (await _auth
+              .createUserWithEmailAndPassword(email: email, password: password))
           .user;
       final User newUser = User()
-        ..uid = user.uid
+        ..uid = firebaseUser.uid
         ..email = email
         ..firstName = firstName
         ..lastName = lastName
         ..type = 'normal';
 
-      await _databaseReference.child(user.uid).set(newUser.toMap());
+      await _databaseReference.child(firebaseUser.uid).set(newUser.toMap());
 
       return null;
     } catch (e) {

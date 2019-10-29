@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:underdog/data/models/report.dart';
 import 'package:underdog/hero_tag.dart';
+import 'package:underdog/pages/submit_rescue_page.dart';
 import 'package:underdog/pages/view_image_page.dart';
+import 'package:underdog/widgets/animated_flat_button.dart';
 import 'package:underdog/widgets/animated_outline_button.dart';
 import 'package:underdog/widgets/animated_raised_button.dart';
+import 'package:underdog/widgets/scale_page_route.dart';
 
 import '../underdog_theme.dart';
 
@@ -65,11 +68,10 @@ class ViewReportPage extends StatelessWidget {
                                   imageUrl: report.imageUrl,
                                   fit: BoxFit.cover,
                                   useOldImageOnUrlChange: true,
-                                  placeholder:
-                                      (BuildContext context, String url) =>
-                                          Center(
-                                    child: const CircularProgressIndicator(),
-                                  ),
+                                  placeholder: (BuildContext context,
+                                          String url) =>
+                                      const Center(
+                                          child: CircularProgressIndicator()),
                                   errorWidget: (BuildContext context,
                                           String url, Object error) =>
                                       Icon(FontAwesomeIcons.frown),
@@ -100,7 +102,7 @@ class ViewReportPage extends StatelessWidget {
                       style: UnderdogTheme.labelStyle,
                     ),
                     if (report.additionalInfo.isEmpty)
-                      Text(
+                      const Text(
                         'None',
                         style: TextStyle(fontStyle: FontStyle.italic),
                       )
@@ -117,7 +119,12 @@ class ViewReportPage extends StatelessWidget {
                     const SizedBox(height: 8),
                     AnimatedOutlineButton(
                       label: 'I rescued this pup!',
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            ScalePageRoute<bool>(
+                                page: SubmitRescuePage(report: report)));
+                      },
                       delay: 250,
                     ),
                   ],

@@ -30,7 +30,7 @@ class AnimatedFlatButton extends StatefulWidget {
 
 class _AnimatedFlatButtonState extends State<AnimatedFlatButton>
     with TickerProviderStateMixin {
-  Animation _animation;
+  Animation<double> _animation;
   AnimationController _animationController;
   Color _color;
   TextStyle _style;
@@ -48,7 +48,7 @@ class _AnimatedFlatButtonState extends State<AnimatedFlatButton>
     _animationController.addListener(() {
       setState(() {});
     });
-    _animation = Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+    _animation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
         parent: _animationController, curve: Curves.fastOutSlowIn));
 
     if (widget.delay > 0)

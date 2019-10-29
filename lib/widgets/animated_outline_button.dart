@@ -30,7 +30,7 @@ class AnimatedOutlineButton extends StatefulWidget {
 
 class _AnimatedOutlineButtonState extends State<AnimatedOutlineButton>
     with TickerProviderStateMixin {
-  Animation _animation;
+  Animation<double> _animation;
   AnimationController _animationController;
   Color _color;
   TextStyle _style;
@@ -48,7 +48,7 @@ class _AnimatedOutlineButtonState extends State<AnimatedOutlineButton>
     _animationController.addListener(() {
       setState(() {});
     });
-    _animation = Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+    _animation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
         parent: _animationController, curve: Curves.fastOutSlowIn));
 
     if (widget.delay > 0)
@@ -85,101 +85,40 @@ class _AnimatedOutlineButtonState extends State<AnimatedOutlineButton>
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                (widget.icon != null)
-                    ? Row(
-                        children: <Widget>[
-                          Icon(widget.icon, size: 20, color: _color),
-                          SizedBox(
-                            width: 4,
-                          ),
-                        ],
-                      )
-                    : Container(),
+                if (widget.icon != null)
+                  Row(
+                    children: <Widget>[
+                      Icon(widget.icon, size: 20, color: _color),
+                      const SizedBox(width: 4),
+                    ],
+                  )
+                else
+                  Container(),
                 Text(
                   widget.label,
                   style: _style,
                 ),
-                (widget.isBusy)
-                    ? Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          SizedBox(
-                            width: 8,
-                          ),
-                          SizedBox(
-                            height: 10,
-                            width: 10,
-                            child: CircularProgressIndicator(
-                              backgroundColor: _pbColor,
-                              strokeWidth: 2,
-                            ),
-                          )
-                        ],
+                if (widget.isBusy)
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      const SizedBox(width: 8),
+                      SizedBox(
+                        height: 10,
+                        width: 10,
+                        child: CircularProgressIndicator(
+                          backgroundColor: _pbColor,
+                          strokeWidth: 2,
+                        ),
                       )
-                    : Container()
+                    ],
+                  )
+                else
+                  Container()
               ],
             ),
           ),
           onPressed: widget.onPressed),
     );
   }
-
-  // @override
-  // Widget build(BuildContext context) {
-  //   final color = (widget.color) ?? Theme.of(context).accentColor;
-  //   final style = (widget.style) ?? UnderdogTheme.outlineButtonText;
-  //   final pbColor = (color == Theme.of(context).accentColor)
-  //       ? Colors.white
-  //       : Theme.of(context).accentColor;
-
-  //   return Transform.scale(
-  //     scale: _animation.value,
-  //     child: OutlineButton(
-  //         color: color,
-  //         borderSide: BorderSide(color: color),
-  //         child: AnimatedSize(
-  //           duration: Duration(milliseconds: 500),
-  //           curve: Curves.fastOutSlowIn,
-  //           vsync: this,
-  //           child: Row(
-  //             mainAxisSize: MainAxisSize.min,
-  //             children: <Widget>[
-  //               (widget.icon != null)
-  //                   ? Row(
-  //                       children: <Widget>[
-  //                         Icon(widget.icon, size: 20, color: color),
-  //                         SizedBox(
-  //                           width: 4,
-  //                         ),
-  //                       ],
-  //                     )
-  //                   : Container(),
-  //               Text(
-  //                 widget.label,
-  //                 style: style,
-  //               ),
-  //               (widget.isBusy)
-  //                   ? Row(
-  //                       mainAxisSize: MainAxisSize.min,
-  //                       children: <Widget>[
-  //                         SizedBox(
-  //                           width: 8,
-  //                         ),
-  //                         SizedBox(
-  //                           height: 10,
-  //                           width: 10,
-  //                           child: CircularProgressIndicator(
-  //                             backgroundColor: pbColor,
-  //                             strokeWidth: 2,
-  //                           ),
-  //                         )
-  //                       ],
-  //                     )
-  //                   : Container()
-  //             ],
-  //           ),
-  //         ),
-  //         onPressed: widget.onPressed),
-  //   );
-  // }
 }

@@ -16,6 +16,7 @@ import 'package:underdog/widgets/home_drawer.dart';
 import 'package:underdog/widgets/report_preview.dart';
 import 'package:underdog/widgets/scale_page_route.dart';
 
+import '../constants.dart';
 import '../service_locator.dart';
 
 class HomePage extends StatefulWidget {
@@ -29,7 +30,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   final double _zoom = 16;
 
   Timer _locationUpdateTimer;
-  final Completer<GoogleMapController> _controller = Completer();
+  final Completer<GoogleMapController> _controller =
+      Completer<GoogleMapController>();
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
   final MarkerId _userMarkerId = MarkerId('userMarkerId');
   final HomeModel _homeModel = locator<HomeModel>();
@@ -50,7 +52,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
     // Animations
     _appBarAnimationController =
-        AnimationController(vsync: this, duration: Duration(seconds: 1));
+        AnimationController(vsync: this, duration: const Duration(seconds: 1));
     _appBarAnimation =
         Tween<Offset>(begin: const Offset(0, -128), end: const Offset(0, 0))
             .animate(CurvedAnimation(
@@ -58,7 +60,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 curve: Curves.fastOutSlowIn));
 
     _bottomBarAnimationController =
-        AnimationController(vsync: this, duration: Duration(seconds: 1));
+        AnimationController(vsync: this, duration: const Duration(seconds: 1));
     _bottomBarAnimation =
         Tween<Offset>(begin: const Offset(0, 256), end: const Offset(0, 0))
             .animate(CurvedAnimation(
@@ -102,7 +104,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       onMapCreated: (GoogleMapController controller) {
                         _controller.complete(controller);
                         _locationUpdateTimer = Timer.periodic(
-                            Duration(seconds: 3), _updateUserMarker);
+                            const Duration(seconds: 3), _updateUserMarker);
                         _initializeUserMarker();
                         _animateToUserLocation();
                       },
@@ -160,7 +162,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: <Widget>[
                                       AnimatedSize(
-                                        duration: Duration(milliseconds: 500),
+                                        duration: const Duration(
+                                            milliseconds: Constants
+                                                .DEFAULT_ANIMATION_DURATION_MS),
                                         curve: Curves.fastOutSlowIn,
                                         vsync: this,
                                         child: Column(
@@ -201,7 +205,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                             builder: (BuildContext context) =>
                                                 IconButton(
                                                     icon: Icon(
-                                                      FontAwesomeIcons.list,
+                                                      FontAwesomeIcons.listAlt,
                                                       color: Theme.of(context)
                                                           .accentColor,
                                                     ),
@@ -212,7 +216,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                           ),
                                           IconButton(
                                             icon: Icon(
-                                              FontAwesomeIcons.paperPlane,
+                                              FontAwesomeIcons.fileAlt,
                                               color:
                                                   Theme.of(context).accentColor,
                                             ),
@@ -263,8 +267,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   void _navigateToSubmitReportPage() {
     // final result = Navigator.of(context)
     //     .push(MaterialPageRoute(builder: (context) => SubmitReportPage()));
-    final result = Navigator.of(context)
-        .push(ScalePageRoute<bool>(page: SubmitReportPage()));
+    final Future<bool> result = Navigator.of(context)
+        .push(ScalePageRoute<bool>(page: const SubmitReportPage()));
 
     // Update markers if a new report was successfully submitted
     result.then((bool value) {
@@ -274,7 +278,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     });
   }
 
-  void _initializeUserMarker() async {
+  Future<void> _initializeUserMarker() async {
     final UserLocation userLocation = Provider.of<UserLocation>(context);
 
     final Marker marker = Marker(
@@ -298,13 +302,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   // Called every 3 seconds by the location timer
-  void _updateUserMarker(Timer t) async {
+  Future<void> _updateUserMarker(Timer t) async {
     final UserLocation userLocation = Provider.of<UserLocation>(context);
 
     final Marker marker = Marker(
       markerId: _userMarkerId,
       position: LatLng(userLocation.latitude, userLocation.longitude),
-      infoWindow: InfoWindow(title: 'You are here'),
+      infoWindow: const InfoWindow(title: 'You are here'),
       onTap: () {},
     );
 
@@ -316,7 +320,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         'Updated user location to ${userLocation.latitude}, ${userLocation.longitude}');
   }
 
-  void _animateToUserLocation() async {
+  Future<void> _animateToUserLocation() async {
     final GoogleMapController controller = await _controller.future;
     final UserLocation userLocation = Provider.of<UserLocation>(context);
 
@@ -326,7 +330,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     controller.animateCamera(CameraUpdate.newCameraPosition(newPosition));
   }
 
-  void _animateToLocation(LatLng location) async {
+  Future<void> _animateToLocation(LatLng location) async {
     final GoogleMapController controller = await _controller.future;
 
     final CameraPosition newPosition = CameraPosition(
@@ -334,7 +338,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     controller.animateCamera(CameraUpdate.newCameraPosition(newPosition));
   }
 
-  void _initializeReportsMarkers() async {
+  Future<void> _initializeReportsMarkers() async {
     final List<Report> reports = await _homeModel.getReports();
 
     const ImageConfiguration imageConfig =
@@ -342,7 +346,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     final BitmapDescriptor icon = await BitmapDescriptor.fromAssetImage(
         imageConfig, 'assets/service-dog.png');
 
-    reports.forEach((Report report) {
+    for (Report report in reports) {
       final MarkerId markerId = MarkerId(report.uid);
       final Marker marker = Marker(
         markerId: markerId,
@@ -357,6 +361,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       setState(() {
         markers[markerId] = marker;
       });
-    });
+    }
   }
 }

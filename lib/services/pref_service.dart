@@ -8,13 +8,13 @@ enum PrefType { Bool, Double, Int, String, StringList }
 class PrefService {
   SharedPreferences prefs;
 
-  void initializePrefs() async {
+  Future<void> initializePrefs() async {
     prefs = await SharedPreferences.getInstance();
   }
 
   Future<dynamic> getPref(String key, PrefType type) async {
     if (prefs == null) {
-      initializePrefs();
+      await initializePrefs();
     }
 
     switch (type) {
@@ -38,7 +38,7 @@ class PrefService {
 
   Future<void> setPref(String key, dynamic value, PrefType type) async {
     if (prefs == null) {
-      initializePrefs();
+      await initializePrefs();
     }
 
     switch (type) {

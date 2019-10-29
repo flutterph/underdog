@@ -154,9 +154,7 @@ class _LoginPageState extends State<LoginPage>
 
   void _navigateToRegisterPage(BuildContext context) async {
     final String result = await Navigator.push(
-        context,
-        MaterialPageRoute<String>(
-            builder: (BuildContext context) => const RegisterPage()));
+        context, ScalePageRoute<String>(page: const RegisterPage()));
 
     if (result != null) {
       Scaffold.of(context)

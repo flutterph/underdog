@@ -12,7 +12,7 @@ class HomeAppBar extends StatelessWidget {
     return AppBar(
       leading: IconButton(
         icon: Icon(
-          FontAwesomeIcons.hamburger,
+          FontAwesomeIcons.user,
           color: Theme.of(context).accentColor,
         ),
         onPressed: () {

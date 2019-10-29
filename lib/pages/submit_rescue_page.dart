@@ -4,12 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:underdog/data/models/location_info.dart';
+import 'package:underdog/data/models/report.dart';
 import 'package:underdog/pages/select_location_page.dart';
+import 'package:underdog/widgets/animated_flat_button.dart';
+import 'package:underdog/widgets/animated_raised_button.dart';
+import 'package:underdog/widgets/scale_page_route.dart';
 
 import '../underdog_theme.dart';
 
 class SubmitRescuePage extends StatefulWidget {
-  const SubmitRescuePage({Key key}) : super(key: key);
+  const SubmitRescuePage({Key key, this.report}) : super(key: key);
+
+  final Report report;
 
   @override
   _SubmitRescuePageState createState() => _SubmitRescuePageState();
@@ -88,9 +94,7 @@ class _SubmitRescuePageState extends State<SubmitRescuePage>
                                   ),
                           ),
                         ),
-                        const SizedBox(
-                          height: 16
-                        ),
+                        const SizedBox(height: 16),
                         Center(
                           child: Text(
                             'LAST SEEN',
@@ -108,11 +112,12 @@ class _SubmitRescuePageState extends State<SubmitRescuePage>
                             IconButton(
                               icon: Icon(FontAwesomeIcons.mapMarkerAlt),
                               onPressed: () {
-                                final Future<LocationInfo> result = Navigator.push(
-                                    context,
-                                    MaterialPageRoute<LocationInfo>(
-                                        builder: (BuildContext context) =>
-                                            const SelectLocationPage()));
+                                final Future<LocationInfo> result =
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute<LocationInfo>(
+                                            builder: (BuildContext context) =>
+                                                const SelectLocationPage()));
 
                                 result.then((LocationInfo value) {
                                   if (value != null) {}
@@ -121,9 +126,7 @@ class _SubmitRescuePageState extends State<SubmitRescuePage>
                             )
                           ],
                         ),
-                        const SizedBox(
-                          height: 16
-                        ),
+                        const SizedBox(height: 16),
                         Center(
                           child: Text(
                             'ADDITIONAL INFO',
@@ -134,7 +137,7 @@ class _SubmitRescuePageState extends State<SubmitRescuePage>
                           controller: _additionalInfoController,
                           maxLines: 1,
                           textCapitalization: TextCapitalization.sentences,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                               hintText:
                                   '(Optional) Any other additional valuable information'),
                         ),
@@ -142,22 +145,25 @@ class _SubmitRescuePageState extends State<SubmitRescuePage>
                     ),
                   ),
                 ),
-                const SizedBox(
-                  height: 24
-                ),
+                const SizedBox(height: 24),
                 // ! Fix when model is ready
-                // AnimatedRaisedButton(
-                //   isBusy: model.state == PageState.Busy,
-                //   label: (model.state == PageState.Idle)
-                //       ? 'Submit Rescue'
-                //       : 'Submitting Rescue',
-                //   delay: 125,
-                //   onPressed:
-                //       (model.state == PageState.Busy) ? null : () async {},
-                // ),
-                const SizedBox(
-                  height: 64
+                const SizedBox(height: 16),
+                AnimatedRaisedButton(
+                  label: 'Submit Rescue',
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  delay: 125,
                 ),
+                const SizedBox(height: 8),
+                AnimatedFlatButton(
+                  label: 'Cancel',
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  delay: 250,
+                ),
+                const SizedBox(height: 64),
               ],
             ),
           ),
@@ -196,9 +202,7 @@ class _SubmitRescuePageState extends State<SubmitRescuePage>
                           FontAwesomeIcons.cameraRetro,
                           color: Colors.white,
                         ),
-                        const SizedBox(
-                          height: 8
-                        ),
+                        const SizedBox(height: 8),
                         Text(
                           'Camera',
                           style: UnderdogTheme.raisedButtonText,
@@ -210,9 +214,7 @@ class _SubmitRescuePageState extends State<SubmitRescuePage>
                     Navigator.pop(context);
                     selectImage(ImageSource.camera);
                   }),
-              const SizedBox(
-                width: 8
-              ),
+              const SizedBox(width: 8),
               RaisedButton(
                   child: Container(
                       padding: const EdgeInsets.symmetric(
@@ -224,9 +226,7 @@ class _SubmitRescuePageState extends State<SubmitRescuePage>
                             FontAwesomeIcons.images,
                             color: Colors.white,
                           ),
-                          const SizedBox(
-                            height: 8
-                          ),
+                          const SizedBox(height: 8),
                           Text(
                             'Gallery',
                             style: UnderdogTheme.raisedButtonText,
