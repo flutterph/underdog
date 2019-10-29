@@ -4,9 +4,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:underdog/hero_tag.dart';
 
 class ViewImagePage extends StatelessWidget {
-  final url;
-  final uid;
   const ViewImagePage({Key key, this.url, this.uid}) : super(key: key);
+
+  final String url;
+  final String uid;
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +21,10 @@ class ViewImagePage extends StatelessWidget {
               child: CachedNetworkImage(
                 imageUrl: url,
                 fit: BoxFit.contain,
-                placeholder: (context, url) => Center(
-                  child: CircularProgressIndicator(),
+                placeholder: (BuildContext context, String url) => Center(
+                  child: const CircularProgressIndicator(),
                 ),
-                errorWidget: (context, url, error) =>
+                errorWidget: (BuildContext context, String url, Object error) =>
                     Icon(FontAwesomeIcons.frown),
               ),
             ),

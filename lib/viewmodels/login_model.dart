@@ -17,7 +17,7 @@ class LoginModel extends ChangeNotifier {
 
   Future<String> login(String email, String password) async {
     setState(PageState.Busy);
-    final result = await _authService.login(email, password);
+    final String result = await _authService.login(email, password);
 
     setState(PageState.Idle);
     return result;

@@ -4,17 +4,17 @@ import 'package:provider/provider.dart';
 import 'package:underdog/hero_tag.dart';
 import 'package:underdog/pages/register_page.dart';
 import 'package:underdog/viewmodels/login_model.dart';
+import 'package:underdog/widgets/animated_flat_button.dart';
 import 'package:underdog/widgets/animated_raised_button.dart';
 import 'package:underdog/widgets/error_snackbar.dart';
 import 'package:underdog/widgets/scale_page_route.dart';
 import 'package:underdog/widgets/success_snackbar.dart';
 
 import '../service_locator.dart';
-import '../underdog_theme.dart';
 import 'home_page.dart';
 
 class LoginPage extends StatefulWidget {
-  LoginPage({Key key}) : super(key: key);
+  const LoginPage({Key key}) : super(key: key);
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -22,24 +22,24 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage>
     with SingleTickerProviderStateMixin {
-  TextEditingController _emailController =
+  final TextEditingController _emailController =
       TextEditingController(text: 'oliatienza@gmail.com');
-  TextEditingController _passwordController =
+  final TextEditingController _passwordController =
       TextEditingController(text: 'password');
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<LoginModel>(
-      builder: (context) => locator<LoginModel>(),
+      builder: (BuildContext context) => locator<LoginModel>(),
       child: Consumer<LoginModel>(
-        builder: (context, model, child) {
-          final isBusy = model.state == PageState.Busy;
+        builder: (BuildContext context, LoginModel model, Widget child) {
+          final bool isBusy = model.state == PageState.Busy;
 
           return Scaffold(
             body: Center(
               child: Container(
-                constraints: BoxConstraints(maxWidth: 256),
+                constraints: const BoxConstraints(maxWidth: 256),
                 child: Form(
                   key: _formKey,
                   child: Column(
@@ -56,7 +56,7 @@ class _LoginPageState extends State<LoginPage>
                           ),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 32,
                       ),
                       TextFormField(
@@ -66,13 +66,13 @@ class _LoginPageState extends State<LoginPage>
                             hintText: 'E-mail',
                             contentPadding: const EdgeInsets.symmetric(
                                 horizontal: 8, vertical: 16)),
-                        validator: (value) {
+                        validator: (String value) {
                           if (value.isNotEmpty) {
-                            bool emailValid = RegExp(
-                                    r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                            final bool emailValid = RegExp(
+                                    r'^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+')
                                 .hasMatch(value);
 
-                            return (emailValid)
+                            return emailValid
                                 ? null
                                 : 'Please enter a valid e-mail';
                           }
@@ -88,7 +88,7 @@ class _LoginPageState extends State<LoginPage>
                             hintText: 'Password',
                             contentPadding: const EdgeInsets.symmetric(
                                 horizontal: 8, vertical: 16)),
-                        validator: (value) {
+                        validator: (String value) {
                           if (value.isNotEmpty) {
                             if (value.length < 8)
                               return 'Must be 8 or more characters';
@@ -99,11 +99,9 @@ class _LoginPageState extends State<LoginPage>
                           return 'You cannot leave this field blank';
                         },
                       ),
-                      SizedBox(
-                        height: 24,
-                      ),
+                      const SizedBox(height: 24),
                       Builder(
-                        builder: (context) => AnimatedRaisedButton(
+                        builder: (BuildContext context) => AnimatedRaisedButton(
                           isBusy: isBusy,
                           label: !isBusy ? 'Log In' : 'Logging In',
                           delay: 125,
@@ -113,10 +111,12 @@ class _LoginPageState extends State<LoginPage>
                                     model
                                         .login(_emailController.text.trim(),
                                             _passwordController.text)
-                                        .then((value) {
+                                        .then((String value) {
                                       if (value == null)
-                                        Navigator.pushReplacement(context,
-                                            ScalePageRoute(page: HomePage()));
+                                        Navigator.pushReplacement(
+                                            context,
+                                            ScalePageRoute<void>(
+                                                page: const HomePage()));
                                       else {
                                         Scaffold.of(context)
                                             .showSnackBar(ErrorSnackBar(
@@ -129,80 +129,11 @@ class _LoginPageState extends State<LoginPage>
                               : null,
                         ),
                       ),
-                      // Builder(
-                      //   builder: (context) => RaisedButton(
-                      //     color: Theme.of(context).accentColor,
-                      //     disabledColor: Theme.of(context).accentColor,
-                      //     shape: RoundedRectangleBorder(
-                      //         borderRadius: BorderRadius.circular(16)),
-                      //     child: AnimatedSize(
-                      //       duration: Duration(milliseconds: 500),
-                      //       curve: Curves.fastOutSlowIn,
-                      //       vsync: this,
-                      //       child: Row(
-                      //         mainAxisSize: MainAxisSize.min,
-                      //         children: <Widget>[
-                      //           Text(
-                      //             !isBusy ? 'Log In' : 'Logging In',
-                      //             style: UnderdogTheme.raisedButtonText,
-                      //           ),
-                      //           isBusy
-                      //               ? Row(
-                      //                   mainAxisSize: MainAxisSize.min,
-                      //                   children: <Widget>[
-                      //                     SizedBox(
-                      //                       width: 8,
-                      //                     ),
-                      //                     SizedBox(
-                      //                       height: 10,
-                      //                       width: 10,
-                      //                       child: CircularProgressIndicator(
-                      //                         backgroundColor: Colors.white,
-                      //                         strokeWidth: 2,
-                      //                       ),
-                      //                     )
-                      //                   ],
-                      //                 )
-                      //               : Container()
-                      //         ],
-                      //       ),
-                      //     ),
-                      //     onPressed: !isBusy
-                      //         ? () {
-                      //             if (_formKey.currentState.validate()) {
-                      //               model
-                      //                   .login(_emailController.text.trim(),
-                      //                       _passwordController.text)
-                      //                   .then((value) {
-                      //                 if (value == null)
-                      //                   Navigator.pushReplacement(
-                      //                       context,
-                      //                       MaterialPageRoute(
-                      //                           builder: (context) =>
-                      //                               HomePage()));
-                      //                 else {
-                      //                   Scaffold.of(context)
-                      //                       .showSnackBar(ErrorSnackBar(
-                      //                     content: Text(value),
-                      //                   ));
-                      //                 }
-                      //               });
-                      //             }
-                      //           }
-                      //         : null,
-                      //   ),
-                      // ),
-                      SizedBox(
-                        height: 8,
-                      ),
+                      const SizedBox(height: 8),
                       Builder(
-                        builder: (BuildContext context) => FlatButton(
-                          child: Text(
-                            'Sign Up',
-                            style: UnderdogTheme.outlineButtonText,
-                          ),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16)),
+                        builder: (BuildContext context) => AnimatedFlatButton(
+                          label: 'Sign Up',
+                          delay: 250,
                           onPressed: !isBusy
                               ? () {
                                   _navigateToRegisterPage(context);
@@ -222,10 +153,12 @@ class _LoginPageState extends State<LoginPage>
   }
 
   void _navigateToRegisterPage(BuildContext context) async {
-    final result = await Navigator.push(
-        context, MaterialPageRoute(builder: (context) => RegisterPage()));
+    final String result = await Navigator.push(
+        context,
+        MaterialPageRoute<String>(
+            builder: (BuildContext context) => const RegisterPage()));
 
-    if (result is String) {
+    if (result != null) {
       Scaffold.of(context)
         ..removeCurrentSnackBar()
         ..showSnackBar(SuccessSnackBar(content: Text('$result')));

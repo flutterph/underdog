@@ -14,9 +14,10 @@ class HomeDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<HomeDrawerModel>(
-      builder: (context) => locator<HomeDrawerModel>(),
+      builder: (BuildContext context) => locator<HomeDrawerModel>(),
       child: Consumer<HomeDrawerModel>(
-        builder: (context, model, child) => Card(
+        builder: (BuildContext context, HomeDrawerModel model, Widget child) =>
+            Card(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -45,12 +46,13 @@ class HomeDrawer extends StatelessWidget {
                   icon: Icon(FontAwesomeIcons.doorOpen),
                   onPressed: () {
                     Provider.of<HomeModel>(context).logout().then(
-                      (value) {
+                      (bool value) {
                         if (value) {
                           Navigator.pushReplacement(
                               context,
-                              MaterialPageRoute(
-                                  builder: (context) => LoginPage()));
+                              MaterialPageRoute<void>(
+                                  builder: (BuildContext context) =>
+                                      const LoginPage()));
                         }
                       },
                     );

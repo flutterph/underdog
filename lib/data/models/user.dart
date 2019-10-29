@@ -1,19 +1,6 @@
-// import 'package:floor/floor.dart';
-
-// @entity
 import 'package:firebase_database/firebase_database.dart';
 
 class User {
-  // @primaryKey
-  String uid;
-  String email;
-  String displayPhotoUrl;
-  String firstName;
-  String lastName;
-  String address;
-  String birthdate;
-  String type;
-
   User(
       {this.uid,
       this.email,
@@ -23,18 +10,6 @@ class User {
       this.address,
       this.birthdate,
       this.type});
-
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'email': email,
-      'display_photo_url': displayPhotoUrl,
-      'first_name': firstName,
-      'last_name': lastName,
-      'address': address,
-      'birthdate': birthdate,
-      'type': type
-    };
-  }
 
   factory User.fromMap(Map<dynamic, dynamic> map) {
     return User(
@@ -48,7 +23,7 @@ class User {
   }
 
   factory User.fromSnapshot(DataSnapshot snapshot) {
-    final user = User(
+    final User user = User(
         email: snapshot.value['email'],
         displayPhotoUrl: snapshot.value['display_photo_url'],
         firstName: snapshot.value['first_name'],
@@ -60,5 +35,26 @@ class User {
     user.uid = snapshot.key;
 
     return user;
+  }
+
+  String uid;
+  String email;
+  String displayPhotoUrl;
+  String firstName;
+  String lastName;
+  String address;
+  String birthdate;
+  String type;
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'email': email,
+      'display_photo_url': displayPhotoUrl,
+      'first_name': firstName,
+      'last_name': lastName,
+      'address': address,
+      'birthdate': birthdate,
+      'type': type
+    };
   }
 }

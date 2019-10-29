@@ -13,7 +13,9 @@ class PrefService {
   }
 
   Future<dynamic> getPref(String key, PrefType type) async {
-    if (prefs == null) initializePrefs();
+    if (prefs == null) {
+      initializePrefs();
+    }
 
     switch (type) {
       case PrefType.Bool:
@@ -35,7 +37,9 @@ class PrefService {
   }
 
   Future<void> setPref(String key, dynamic value, PrefType type) async {
-    if (prefs == null) initializePrefs();
+    if (prefs == null) {
+      initializePrefs();
+    }
 
     switch (type) {
       case PrefType.Bool:

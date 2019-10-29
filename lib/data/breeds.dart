@@ -1,4 +1,4 @@
-final breeds = [
+final List<String> breeds = <String>[
   'Aspin',
   'Affenpinscher',
   'Afghan Hound',

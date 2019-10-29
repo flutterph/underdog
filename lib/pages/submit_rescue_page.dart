@@ -3,24 +3,25 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:underdog/data/models/location_info.dart';
 import 'package:underdog/pages/select_location_page.dart';
-import 'package:underdog/viewmodels/submit_report_model.dart';
-import 'package:underdog/widgets/animated_raised_button.dart';
 
 import '../underdog_theme.dart';
 
 class SubmitRescuePage extends StatefulWidget {
-  SubmitRescuePage({Key key}) : super(key: key);
+  const SubmitRescuePage({Key key}) : super(key: key);
 
+  @override
   _SubmitRescuePageState createState() => _SubmitRescuePageState();
 }
 
 class _SubmitRescuePageState extends State<SubmitRescuePage>
     with SingleTickerProviderStateMixin {
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  TextEditingController _codeNameController = TextEditingController();
-  TextEditingController _additionalInfoController = TextEditingController();
-  File _selectedImage1, _selectedImage2;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _additionalInfoController =
+      TextEditingController();
+  File _selectedImage1;
+  // File _selectedImage2;
 
   @override
   Widget build(BuildContext context) {
@@ -37,12 +38,10 @@ class _SubmitRescuePageState extends State<SubmitRescuePage>
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  'Let\'s Rescue!',
+                  'Thank you!',
                   style: UnderdogTheme.pageTitle,
                 ),
-                SizedBox(
-                  height: 8,
-                ),
+                const SizedBox(height: 8),
                 SizedBox(
                   width: 280,
                   child: Form(
@@ -89,8 +88,8 @@ class _SubmitRescuePageState extends State<SubmitRescuePage>
                                   ),
                           ),
                         ),
-                        SizedBox(
-                          height: 16,
+                        const SizedBox(
+                          height: 16
                         ),
                         Center(
                           child: Text(
@@ -109,21 +108,21 @@ class _SubmitRescuePageState extends State<SubmitRescuePage>
                             IconButton(
                               icon: Icon(FontAwesomeIcons.mapMarkerAlt),
                               onPressed: () {
-                                final result = Navigator.push(
+                                final Future<LocationInfo> result = Navigator.push(
                                     context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            SelectLocationPage()));
+                                    MaterialPageRoute<LocationInfo>(
+                                        builder: (BuildContext context) =>
+                                            const SelectLocationPage()));
 
-                                result.then((value) {
+                                result.then((LocationInfo value) {
                                   if (value != null) {}
                                 });
                               },
                             )
                           ],
                         ),
-                        SizedBox(
-                          height: 16,
+                        const SizedBox(
+                          height: 16
                         ),
                         Center(
                           child: Text(
@@ -143,8 +142,8 @@ class _SubmitRescuePageState extends State<SubmitRescuePage>
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: 24,
+                const SizedBox(
+                  height: 24
                 ),
                 // ! Fix when model is ready
                 // AnimatedRaisedButton(
@@ -156,8 +155,8 @@ class _SubmitRescuePageState extends State<SubmitRescuePage>
                 //   onPressed:
                 //       (model.state == PageState.Busy) ? null : () async {},
                 // ),
-                SizedBox(
-                  height: 64,
+                const SizedBox(
+                  height: 64
                 ),
               ],
             ),
@@ -168,7 +167,7 @@ class _SubmitRescuePageState extends State<SubmitRescuePage>
   }
 
   Future<void> selectImage(ImageSource source) async {
-    var selectedImage = await ImagePicker.pickImage(source: source);
+    final File selectedImage = await ImagePicker.pickImage(source: source);
 
     setState(() {
       _selectedImage1 = selectedImage;
@@ -176,13 +175,13 @@ class _SubmitRescuePageState extends State<SubmitRescuePage>
   }
 
   void _showImageSourceSelectionDialog() {
-    showDialog(
+    showDialog<void>(
       context: context,
-      builder: (context) {
+      builder: (BuildContext context) {
         return AlertDialog(
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          title: Text('Choose a source'),
+          title: const Text('Choose a source'),
           content: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
@@ -197,8 +196,8 @@ class _SubmitRescuePageState extends State<SubmitRescuePage>
                           FontAwesomeIcons.cameraRetro,
                           color: Colors.white,
                         ),
-                        SizedBox(
-                          height: 8,
+                        const SizedBox(
+                          height: 8
                         ),
                         Text(
                           'Camera',
@@ -211,8 +210,8 @@ class _SubmitRescuePageState extends State<SubmitRescuePage>
                     Navigator.pop(context);
                     selectImage(ImageSource.camera);
                   }),
-              SizedBox(
-                width: 8,
+              const SizedBox(
+                width: 8
               ),
               RaisedButton(
                   child: Container(
@@ -225,8 +224,8 @@ class _SubmitRescuePageState extends State<SubmitRescuePage>
                             FontAwesomeIcons.images,
                             color: Colors.white,
                           ),
-                          SizedBox(
-                            height: 8,
+                          const SizedBox(
+                            height: 8
                           ),
                           Text(
                             'Gallery',

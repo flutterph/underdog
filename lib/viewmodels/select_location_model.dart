@@ -6,7 +6,7 @@ import 'package:underdog/services/location_service.dart';
 import '../service_locator.dart';
 
 class SelectLocationModel extends ChangeNotifier {
-  LocationService _locationService = locator<LocationService>();
+  final LocationService _locationService = locator<LocationService>();
 
   // States
   String _addressLine;

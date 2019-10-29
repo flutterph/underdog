@@ -13,7 +13,11 @@ import '../service_locator.dart';
 enum PageState { Idle, Busy }
 
 class SubmitReportModel extends ChangeNotifier {
-  final _authService = locator<AuthService>();
+  SubmitReportModel() {
+    getLocationInfoFromCurrentLocation();
+  }
+
+  final AuthService _authService = locator<AuthService>();
   final StorageService _storageService = locator<StorageService>();
   final LocationService _locationService = locator<LocationService>();
   final ReportsDatabaseService _reportsDatabaseService =
@@ -29,10 +33,6 @@ class SubmitReportModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  SubmitReportModel() {
-    getLocationInfoFromCurrentLocation();
-  }
-
   Future<String> submitReport(
     File image,
     String codeName,
@@ -43,10 +43,10 @@ class SubmitReportModel extends ChangeNotifier {
     String additionalInfo,
   ) async {
     setState(PageState.Busy);
-    final imageUrl = await _storageService.uploadImage(image);
+    final String imageUrl = await _storageService.uploadImage(image);
     if (imageUrl != null) {
-      final newReport = Report(
-          (await _authService.getUserId()),
+      final Report newReport = Report(
+          await _authService.getUserId(),
           null,
           false,
           codeName,
@@ -72,7 +72,7 @@ class SubmitReportModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  updateLocationInfo(LocationInfo locationInfo) {
+  void updateLocationInfo(LocationInfo locationInfo) {
     _locationInfo = locationInfo;
     notifyListeners();
   }

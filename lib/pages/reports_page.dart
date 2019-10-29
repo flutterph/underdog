@@ -40,12 +40,12 @@ class _ReportsPageState extends State<ReportsPage>
           Container(
             child: Column(
               children: <Widget>[
-                SizedBox(height: 96),
+                const SizedBox(height: 96),
                 Text(
                   'Reports',
                   style: UnderdogTheme.pageTitle,
                 ),
-                SizedBox(height: 32),
+                const SizedBox(height: 32),
                 TabBar(
                   controller: _tabController,
                   labelPadding: const EdgeInsets.all(16),
@@ -63,10 +63,12 @@ class _ReportsPageState extends State<ReportsPage>
                   ],
                 ),
                 Expanded(
-                    child: TabBarView(controller: _tabController, children: [
-                  UnrescuedReportsList(),
-                  RescuedReportsList(),
-                ]))
+                    child: TabBarView(
+                        controller: _tabController,
+                        children: const <Widget>[
+                      UnrescuedReportsList(),
+                      RescuedReportsList(),
+                    ]))
               ],
             ),
           ),

@@ -16,27 +16,29 @@ class UnrescuedReportsList extends StatelessWidget {
     return FirebaseAnimatedList(
       query: locator<UnrescuedReportsListModel>().getRescued(),
       shrinkWrap: true,
-      defaultChild: Center(child: CircularProgressIndicator()),
+      defaultChild: Center(child: const CircularProgressIndicator()),
       itemBuilder: _buildItem,
     );
   }
 
   Widget _buildItem(BuildContext context, DataSnapshot snapshot,
-      Animation animation, int index) {
-    final report = Report.fromSnapshot(snapshot);
+      Animation<double> animation, int index) {
+    final Report report = Report.fromSnapshot(snapshot);
 
     return InkWell(
       onTap: () {
-        final result = Navigator.push(
+        final Future<Report> result = Navigator.push(
             context,
-            MaterialPageRoute(
-                builder: (context) => ViewReportPage(
+            MaterialPageRoute<Report>(
+                builder: (BuildContext context) => ViewReportPage(
                       report: report,
                     )));
 
         // Navigate back to home page if a report has been selected
-        result.then((report) {
-          if (report != null) Navigator.pop(context, report);
+        result.then((Report report) {
+          if (report != null) {
+            Navigator.pop(context, report);
+          }
         });
       },
       child: ReportItem(

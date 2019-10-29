@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:underdog/service_locator.dart';
 import 'package:underdog/services/auth_service.dart';
@@ -20,7 +19,7 @@ class RegisterModel extends ChangeNotifier {
       String email, String password, String firstName, String lastName) async {
     setState(PageState.Busy);
 
-    final result = await _authService.createUserWithEmailAndPassword(
+    final String result = await _authService.createUserWithEmailAndPassword(
         email, password, firstName, lastName);
 
     setState(PageState.Idle);

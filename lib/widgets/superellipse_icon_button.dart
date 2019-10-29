@@ -2,10 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:superellipse_shape/superellipse_shape.dart';
 
 class SuperellipseIconButton extends StatelessWidget {
-  final IconData iconData;
-  final Function onTap;
-  final Color bgColor;
-  final Color iconColor;
   const SuperellipseIconButton({
     Key key,
     @required this.iconData,
@@ -13,6 +9,11 @@ class SuperellipseIconButton extends StatelessWidget {
     @required this.bgColor,
     @required this.iconColor,
   }) : super(key: key);
+
+  final IconData iconData;
+  final Function onTap;
+  final Color bgColor;
+  final Color iconColor;
 
   @override
   Widget build(BuildContext context) {

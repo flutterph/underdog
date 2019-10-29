@@ -1,3 +1,4 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:underdog/data/models/report.dart';
 import 'package:underdog/services/auth_service.dart';
@@ -22,14 +23,15 @@ class HomeModel extends ChangeNotifier {
   }
 
   Future<List<Report>> getReports() async {
-    _reports = List<Report>();
-    var snapshot = await _reportsDatabaseService.databaseReference.once();
+    _reports = <Report>[];
+    final DataSnapshot snapshot =
+        await _reportsDatabaseService.databaseReference.once();
 
     print('SNAPSHOT: ${snapshot.value}');
 
-    Map<dynamic, dynamic> maps = snapshot.value;
-    maps.forEach((key, value) {
-      final report = Report.fromMap(maps[key]);
+    final Map<dynamic, dynamic> maps = snapshot.value;
+    maps.forEach((dynamic key, dynamic value) {
+      final Report report = Report.fromMap(maps[key]);
       report.uid = key;
       _reports.add(report);
     });

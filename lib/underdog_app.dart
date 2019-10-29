@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:underdog/pages/root_page.dart';
+import 'package:underdog/pages/splash_screen_page.dart';
 import 'package:underdog/service_locator.dart';
 import 'package:underdog/services/location_service.dart';
 import 'package:underdog/underdog_theme.dart';
@@ -50,7 +50,7 @@ class UnderdogApp extends StatelessWidget {
                 focusElevation: 0,
                 highlightElevation: 0,
                 shape: CircleBorder(side: BorderSide(color: Colors.black12)))),
-        home: RootPage(),
+        home: SplashScreenPage(),
       ),
     );
   }

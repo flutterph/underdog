@@ -6,6 +6,10 @@ import 'package:underdog/services/pref_service.dart';
 enum ViewState { Idle, Busy }
 
 class HomeDrawerModel extends ChangeNotifier {
+  HomeDrawerModel() {
+    getUser();
+  }
+
   final PrefService _prefService = locator<PrefService>();
 
   ViewState _state = ViewState.Idle;
@@ -14,10 +18,6 @@ class HomeDrawerModel extends ChangeNotifier {
   void setState(ViewState state) {
     _state = state;
     notifyListeners();
-  }
-
-  HomeDrawerModel() {
-    getUser();
   }
 
   Future<void> getUser() async {

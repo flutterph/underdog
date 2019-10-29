@@ -4,7 +4,7 @@ import 'package:underdog/services/reports_database_service.dart';
 import '../service_locator.dart';
 
 class ReportsModel {
-  ReportsDatabaseService _reportsDatabaseService =
+  final ReportsDatabaseService _reportsDatabaseService =
       locator<ReportsDatabaseService>();
 
   DatabaseReference getReports() {

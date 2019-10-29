@@ -6,8 +6,9 @@ import 'package:underdog/date_time_utils.dart';
 import 'package:underdog/hero_tag.dart';
 
 class ReportItem extends StatelessWidget {
-  final Report report;
   const ReportItem({Key key, this.report}) : super(key: key);
+
+  final Report report;
 
   @override
   Widget build(BuildContext context) {
@@ -34,16 +35,15 @@ class ReportItem extends StatelessWidget {
                           imageUrl: report.imageUrl,
                           fit: BoxFit.cover,
                           useOldImageOnUrlChange: true,
-                          placeholder: (context, url) =>
-                              Center(child: CircularProgressIndicator()),
-                          errorWidget: (context, url, error) =>
+                          placeholder: (BuildContext context, String url) =>
+                              Center(child: const CircularProgressIndicator()),
+                          errorWidget: (BuildContext context, String url,
+                                  Object error) =>
                               Icon(FontAwesomeIcons.frown),
                         ),
                       ),
                     )),
-                SizedBox(
-                  width: 16,
-                ),
+                const SizedBox(width: 16),
                 Expanded(
                   flex: 2,
                   child: Column(
@@ -60,9 +60,7 @@ class ReportItem extends StatelessWidget {
                       Hero(
                           tag: HeroTag.REPORT_BREED_ + report.uid,
                           child: Text(report.breed)),
-                      SizedBox(
-                        height: 16,
-                      ),
+                      const SizedBox(height: 16),
                       Row(
                         children: <Widget>[
                           Icon(
@@ -70,9 +68,7 @@ class ReportItem extends StatelessWidget {
                             color: Theme.of(context).accentColor,
                             size: 16,
                           ),
-                          SizedBox(
-                            width: 6,
-                          ),
+                          const SizedBox(width: 6),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -94,9 +90,7 @@ class ReportItem extends StatelessWidget {
                           )
                         ],
                       ),
-                      SizedBox(
-                        height: 8,
-                      ),
+                      const SizedBox(height: 8),
                       Row(
                         children: <Widget>[
                           Icon(
@@ -104,9 +98,7 @@ class ReportItem extends StatelessWidget {
                             color: Theme.of(context).accentColor,
                             size: 16,
                           ),
-                          SizedBox(
-                            width: 6,
-                          ),
+                          const SizedBox(width: 6),
                           Expanded(
                             child: Text(
                               DateTimeUtils.dateStringToDisplayString(

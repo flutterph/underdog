@@ -10,11 +10,12 @@ import 'package:underdog/widgets/animated_raised_button.dart';
 import '../underdog_theme.dart';
 
 class ViewReportPage extends StatelessWidget {
-  final Report report;
   const ViewReportPage({
     Key key,
     this.report,
   }) : super(key: key);
+
+  final Report report;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +29,7 @@ class ViewReportPage extends StatelessWidget {
           Material(
             child: Center(
               child: Container(
-                constraints: BoxConstraints(maxWidth: 280),
+                constraints: const BoxConstraints(maxWidth: 280),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -37,15 +38,14 @@ class ViewReportPage extends StatelessWidget {
                         tag: HeroTag.REPORT_CODE_NAME_ + report.uid,
                         child: Text(report.codeName,
                             style: UnderdogTheme.pageTitle)),
-                    SizedBox(
-                      height: 8,
-                    ),
+                    const SizedBox(height: 8),
                     InkWell(
                       onTap: () {
                         Navigator.push(
                             context,
-                            MaterialPageRoute(
-                                builder: (context) => ViewImagePage(
+                            MaterialPageRoute<void>(
+                                builder: (BuildContext context) =>
+                                    ViewImagePage(
                                       url: report.imageUrl,
                                       uid: report.uid,
                                     )));
@@ -65,19 +65,20 @@ class ViewReportPage extends StatelessWidget {
                                   imageUrl: report.imageUrl,
                                   fit: BoxFit.cover,
                                   useOldImageOnUrlChange: true,
-                                  placeholder: (context, url) => Center(
-                                    child: CircularProgressIndicator(),
+                                  placeholder:
+                                      (BuildContext context, String url) =>
+                                          Center(
+                                    child: const CircularProgressIndicator(),
                                   ),
-                                  errorWidget: (context, url, error) =>
+                                  errorWidget: (BuildContext context,
+                                          String url, Object error) =>
                                       Icon(FontAwesomeIcons.frown),
                                 ),
                               ),
                             ),
                           )),
                     ),
-                    SizedBox(
-                      height: 16,
-                    ),
+                    const SizedBox(height: 16),
                     Text(
                       'BREED',
                       style: UnderdogTheme.labelStyle,
@@ -85,9 +86,7 @@ class ViewReportPage extends StatelessWidget {
                     Hero(
                         tag: HeroTag.REPORT_BREED_ + report.uid,
                         child: Text(report.breed)),
-                    SizedBox(
-                      height: 16,
-                    ),
+                    const SizedBox(height: 16),
                     Text(
                       'LAST SEEN',
                       style: UnderdogTheme.labelStyle,
@@ -95,22 +94,19 @@ class ViewReportPage extends StatelessWidget {
                     Hero(
                         tag: HeroTag.REPORT_LANDMARK_ + report.uid,
                         child: Text(report.address)),
-                    SizedBox(
-                      height: 16,
-                    ),
+                    const SizedBox(height: 16),
                     Text(
                       'ADDITIONAL INFO',
                       style: UnderdogTheme.labelStyle,
                     ),
-                    (report.additionalInfo.isEmpty)
-                        ? Text(
-                            'None',
-                            style: TextStyle(fontStyle: FontStyle.italic),
-                          )
-                        : Text(report.additionalInfo),
-                    SizedBox(
-                      height: 16,
-                    ),
+                    if (report.additionalInfo.isEmpty)
+                      Text(
+                        'None',
+                        style: TextStyle(fontStyle: FontStyle.italic),
+                      )
+                    else
+                      Text(report.additionalInfo),
+                    const SizedBox(height: 16),
                     AnimatedRaisedButton(
                       label: 'Get Directions',
                       onPressed: () {
@@ -118,9 +114,7 @@ class ViewReportPage extends StatelessWidget {
                       },
                       delay: 125,
                     ),
-                    SizedBox(
-                      height: 8,
-                    ),
+                    const SizedBox(height: 8),
                     AnimatedOutlineButton(
                       label: 'I rescued this pup!',
                       onPressed: () {},

@@ -15,24 +15,28 @@ import 'package:underdog/widgets/error_snackbar.dart';
 import '../underdog_theme.dart';
 
 class SubmitReportPage extends StatefulWidget {
-  SubmitReportPage({Key key}) : super(key: key);
+  const SubmitReportPage({Key key}) : super(key: key);
 
+  @override
   _SubmitReportPageState createState() => _SubmitReportPageState();
 }
 
 class _SubmitReportPageState extends State<SubmitReportPage>
     with SingleTickerProviderStateMixin {
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  TextEditingController _codeNameController = TextEditingController();
-  TextEditingController _additionalInfoController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _codeNameController = TextEditingController();
+  final TextEditingController _additionalInfoController =
+      TextEditingController();
   File _selectedImage;
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<SubmitReportModel>(
-      builder: (context) => locator<SubmitReportModel>(),
+      builder: (BuildContext context) => locator<SubmitReportModel>(),
       child: Consumer<SubmitReportModel>(
-        builder: (context, model, child) {
+        builder: (BuildContext context, SubmitReportModel model, Widget child) {
+          final bool isBusy = model.state == PageState.Busy;
+
           return Scaffold(
             appBar: AppBar(
               elevation: 0,
@@ -49,9 +53,7 @@ class _SubmitReportPageState extends State<SubmitReportPage>
                         'Let\'s Rescue!',
                         style: UnderdogTheme.pageTitle,
                       ),
-                      SizedBox(
-                        height: 8,
-                      ),
+                      const SizedBox(height: 8),
                       SizedBox(
                         width: 280,
                         child: Form(
@@ -61,7 +63,9 @@ class _SubmitReportPageState extends State<SubmitReportPage>
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               InkWell(
-                                onTap: _showImageSourceSelectionDialog,
+                                onTap: isBusy
+                                    ? null
+                                    : _showImageSourceSelectionDialog,
                                 child: Material(
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(16),
@@ -102,9 +106,7 @@ class _SubmitReportPageState extends State<SubmitReportPage>
                                         ),
                                 ),
                               ),
-                              SizedBox(
-                                height: 16,
-                              ),
+                              const SizedBox(height: 16),
                               Center(
                                 child: Text(
                                   'CODENAME',
@@ -114,11 +116,12 @@ class _SubmitReportPageState extends State<SubmitReportPage>
                               TextFormField(
                                 controller: _codeNameController,
                                 maxLines: 1,
+                                enabled: !isBusy,
                                 textCapitalization: TextCapitalization.words,
                                 decoration: InputDecoration(
                                     hintText:
                                         'Give him or her a codename for now'),
-                                validator: (value) {
+                                validator: (String value) {
                                   if (value.isEmpty) {
                                     return 'Please provide a codename';
                                   }
@@ -126,9 +129,7 @@ class _SubmitReportPageState extends State<SubmitReportPage>
                                   return null;
                                 },
                               ),
-                              SizedBox(
-                                height: 16,
-                              ),
+                              const SizedBox(height: 16),
                               Center(
                                 child: Text(
                                   'BREED',
@@ -137,22 +138,22 @@ class _SubmitReportPageState extends State<SubmitReportPage>
                               ),
                               DropdownButton<String>(
                                 value: model.breed,
-                                items: breeds
-                                    .map<DropdownMenuItem<String>>((value) {
+                                items: breeds.map<DropdownMenuItem<String>>(
+                                    (String value) {
                                   return DropdownMenuItem<String>(
                                     value: value,
                                     child: Text(value),
                                   );
                                 }).toList(),
-                                onChanged: (value) {
-                                  setState(() {
-                                    model.breed = value;
-                                  });
-                                },
+                                onChanged: isBusy
+                                    ? null
+                                    : (String value) {
+                                        setState(() {
+                                          model.breed = value;
+                                        });
+                                      },
                               ),
-                              SizedBox(
-                                height: 16,
-                              ),
+                              const SizedBox(height: 16),
                               Center(
                                 child: Text(
                                   'LAST SEEN',
@@ -169,25 +170,24 @@ class _SubmitReportPageState extends State<SubmitReportPage>
                                   IconButton(
                                     icon: Icon(FontAwesomeIcons.mapMarkerAlt),
                                     onPressed: () {
-                                      final result = Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  SelectLocationPage()));
+                                      final Future<LocationInfo> result =
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute<LocationInfo>(
+                                                  builder: (BuildContext
+                                                          context) =>
+                                                      const SelectLocationPage()));
 
-                                      result.then((value) {
+                                      result.then((LocationInfo value) {
                                         if (value != null) {
-                                          model.updateLocationInfo(
-                                              value as LocationInfo);
+                                          model.updateLocationInfo(value);
                                         }
                                       });
                                     },
                                   )
                                 ],
                               ),
-                              SizedBox(
-                                height: 16,
-                              ),
+                              const SizedBox(height: 16),
                               Center(
                                 child: Text(
                                   'ADDITIONAL INFO',
@@ -197,6 +197,7 @@ class _SubmitReportPageState extends State<SubmitReportPage>
                               TextFormField(
                                 controller: _additionalInfoController,
                                 maxLines: 1,
+                                enabled: !isBusy,
                                 textCapitalization:
                                     TextCapitalization.sentences,
                                 decoration: InputDecoration(
@@ -207,22 +208,18 @@ class _SubmitReportPageState extends State<SubmitReportPage>
                           ),
                         ),
                       ),
-                      SizedBox(
-                        height: 24,
-                      ),
+                      const SizedBox(height: 24),
                       AnimatedRaisedButton(
-                        isBusy: model.state == PageState.Busy,
-                        label: (model.state == PageState.Idle)
-                            ? 'Submit Report'
-                            : 'Submitting Report',
+                        isBusy: isBusy,
+                        label: !isBusy ? 'Submit Report' : 'Submitting Report',
                         delay: 125,
-                        onPressed: (model.state == PageState.Busy)
+                        onPressed: isBusy
                             ? null
                             : () async {
                                 if (_formKey.currentState.validate()) {
                                   if (_selectedImage != null) {
                                     if (model.locationInfo != null) {
-                                      final submitStatus =
+                                      final String submitStatus =
                                           await model.submitReport(
                                               _selectedImage,
                                               _codeNameController.text,
@@ -244,7 +241,7 @@ class _SubmitReportPageState extends State<SubmitReportPage>
                                     } else {
                                       Scaffold.of(context).showSnackBar(
                                         ErrorSnackBar(
-                                          content: Text(
+                                          content: const Text(
                                               'There was an error retrieving the location. Please turn on LOCATION service'),
                                         ),
                                       );
@@ -252,7 +249,7 @@ class _SubmitReportPageState extends State<SubmitReportPage>
                                   } else {
                                     Scaffold.of(context).showSnackBar(
                                       ErrorSnackBar(
-                                        content: Text(
+                                        content: const Text(
                                             'Please select an image with the dog in it'),
                                       ),
                                     );
@@ -260,9 +257,7 @@ class _SubmitReportPageState extends State<SubmitReportPage>
                                 }
                               },
                       ),
-                      SizedBox(
-                        height: 64,
-                      ),
+                      const SizedBox(height: 64),
                     ],
                   ),
                 ),
@@ -275,7 +270,7 @@ class _SubmitReportPageState extends State<SubmitReportPage>
   }
 
   Future<void> selectImage(ImageSource source) async {
-    var selectedImage = await ImagePicker.pickImage(source: source);
+    final File selectedImage = await ImagePicker.pickImage(source: source);
 
     setState(() {
       _selectedImage = selectedImage;
@@ -283,13 +278,13 @@ class _SubmitReportPageState extends State<SubmitReportPage>
   }
 
   void _showImageSourceSelectionDialog() {
-    showDialog(
+    showDialog<void>(
       context: context,
-      builder: (context) {
+      builder: (BuildContext context) {
         return AlertDialog(
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          title: Text('Choose a source'),
+          title: const Text('Choose a source'),
           content: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
@@ -304,9 +299,7 @@ class _SubmitReportPageState extends State<SubmitReportPage>
                           FontAwesomeIcons.cameraRetro,
                           color: Colors.white,
                         ),
-                        SizedBox(
-                          height: 8,
-                        ),
+                        const SizedBox(height: 8),
                         Text(
                           'Camera',
                           style: UnderdogTheme.raisedButtonText,
@@ -318,9 +311,7 @@ class _SubmitReportPageState extends State<SubmitReportPage>
                     Navigator.pop(context);
                     selectImage(ImageSource.camera);
                   }),
-              SizedBox(
-                width: 8,
-              ),
+              const SizedBox(width: 8),
               RaisedButton(
                   child: Container(
                       padding: const EdgeInsets.symmetric(
@@ -332,9 +323,7 @@ class _SubmitReportPageState extends State<SubmitReportPage>
                             FontAwesomeIcons.images,
                             color: Colors.white,
                           ),
-                          SizedBox(
-                            height: 8,
-                          ),
+                          const SizedBox(height: 8),
                           Text(
                             'Gallery',
                             style: UnderdogTheme.raisedButtonText,

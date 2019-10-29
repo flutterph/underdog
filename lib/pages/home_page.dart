@@ -1,14 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:underdog/camera_positions.dart';
 import 'package:underdog/data/models/report.dart';
 import 'package:underdog/data/models/user_location.dart';
-import 'package:underdog/hero_tag.dart';
 import 'package:underdog/pages/reports_page.dart';
 import 'package:underdog/pages/submit_report_page.dart';
 import 'package:underdog/pages/view_report_page.dart';
@@ -16,11 +14,12 @@ import 'package:underdog/viewmodels/home_app_bar.dart';
 import 'package:underdog/viewmodels/home_model.dart';
 import 'package:underdog/widgets/home_drawer.dart';
 import 'package:underdog/widgets/report_preview.dart';
+import 'package:underdog/widgets/scale_page_route.dart';
 
 import '../service_locator.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({Key key}) : super(key: key);
+  const HomePage({Key key}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -30,17 +29,20 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   final double _zoom = 16;
 
   Timer _locationUpdateTimer;
-  Completer<GoogleMapController> _controller = Completer();
+  final Completer<GoogleMapController> _controller = Completer();
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
-  MarkerId _userMarkerId = MarkerId('userMarkerId');
-  HomeModel _homeModel = locator<HomeModel>();
+  final MarkerId _userMarkerId = MarkerId('userMarkerId');
+  final HomeModel _homeModel = locator<HomeModel>();
 
   // Animation variables
   AnimationController _appBarAnimationController;
-  Animation _appBarAnimation;
+  Animation<Offset> _appBarAnimation;
 
   AnimationController _bottomBarAnimationController;
-  Animation _bottomBarAnimation;
+  Animation<Offset> _bottomBarAnimation;
+
+  // AnimationController _fabAnimationController;
+  // Animation _fabAnimation;
 
   @override
   void initState() {
@@ -49,17 +51,24 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     // Animations
     _appBarAnimationController =
         AnimationController(vsync: this, duration: Duration(seconds: 1));
-    _appBarAnimation = Tween<Offset>(begin: Offset(0, -128), end: Offset(0, 0))
-        .animate(CurvedAnimation(
-            parent: _appBarAnimationController, curve: Curves.fastOutSlowIn));
+    _appBarAnimation =
+        Tween<Offset>(begin: const Offset(0, -128), end: const Offset(0, 0))
+            .animate(CurvedAnimation(
+                parent: _appBarAnimationController,
+                curve: Curves.fastOutSlowIn));
 
     _bottomBarAnimationController =
         AnimationController(vsync: this, duration: Duration(seconds: 1));
     _bottomBarAnimation =
-        Tween<Offset>(begin: Offset(0, 128), end: Offset(0, 0)).animate(
-            CurvedAnimation(
+        Tween<Offset>(begin: const Offset(0, 256), end: const Offset(0, 0))
+            .animate(CurvedAnimation(
                 parent: _bottomBarAnimationController,
                 curve: Curves.fastOutSlowIn));
+
+    // _fabAnimationController =
+    //     AnimationController(vsync: this, duration: Duration(seconds: 1));
+    // _fabAnimation = Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
+    //     parent: _bottomBarAnimationController, curve: Curves.fastOutSlowIn));
 
     _appBarAnimationController.forward();
     _bottomBarAnimationController.forward();
@@ -75,15 +84,15 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      builder: (context) => _homeModel,
+    return ChangeNotifierProvider<HomeModel>(
+      builder: (BuildContext context) => _homeModel,
       child: Consumer<HomeModel>(
-        child: HomeAppBar(),
-        builder: (context, model, consumerChild) {
+        child: const HomeAppBar(),
+        builder: (BuildContext context, HomeModel model, Widget consumerChild) {
           return Stack(
             children: <Widget>[
               Scaffold(
-                drawer: HomeDrawer(),
+                drawer: const HomeDrawer(),
                 backgroundColor: Colors.transparent,
                 body: Stack(
                   children: <Widget>[
@@ -106,7 +115,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       child: AnimatedBuilder(
                           animation: _appBarAnimation,
                           child: consumerChild,
-                          builder: (context, animatedChild) {
+                          builder:
+                              (BuildContext context, Widget animatedChild) {
                             return Transform.translate(
                               offset: _appBarAnimation.value,
                               child: animatedChild,
@@ -121,21 +131,25 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           animation: _bottomBarAnimation,
                           child: Column(
                             children: <Widget>[
-                              FloatingActionButton(
-                                child: Icon(
-                                  FontAwesomeIcons.mapMarkerAlt,
-                                  color: Theme.of(context).accentColor,
+                              Align(
+                                alignment: Alignment.bottomRight,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      right: 16.0, bottom: 16),
+                                  child: FloatingActionButton(
+                                    child: Icon(
+                                      FontAwesomeIcons.mapMarkerAlt,
+                                      color: Theme.of(context).accentColor,
+                                    ),
+                                    onPressed: _animateToUserLocation,
+                                  ),
                                 ),
-                                onPressed: _animateToUserLocation,
-                              ),
-                              SizedBox(
-                                height: 16,
                               ),
                               Card(
                                 margin: EdgeInsets.zero,
                                 shape: RoundedRectangleBorder(
                                     side: BorderSide(color: Colors.black12),
-                                    borderRadius: BorderRadius.only(
+                                    borderRadius: const BorderRadius.only(
                                         topLeft: Radius.circular(16),
                                         topRight: Radius.circular(16))),
                                 child: Container(
@@ -151,27 +165,29 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                         vsync: this,
                                         child: Column(
                                           children: <Widget>[
-                                            (model.selectedReport == null)
-                                                ? Container()
-                                                : InkWell(
-                                                    onTap: () {
-                                                      Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  ViewReportPage(
-                                                                    report: model
-                                                                        .selectedReport,
-                                                                  )));
-                                                    },
-                                                    child: ReportPreview(
-                                                        report: model
-                                                            .selectedReport)),
-                                            (model.selectedReport == null)
-                                                ? Container()
-                                                : Divider(
-                                                    height: 2,
-                                                  ),
+                                            if (model.selectedReport == null)
+                                              Container()
+                                            else
+                                              InkWell(
+                                                  onTap: () {
+                                                    Navigator.push<dynamic>(
+                                                        context,
+                                                        MaterialPageRoute<
+                                                                dynamic>(
+                                                            builder: (BuildContext
+                                                                    context) =>
+                                                                ViewReportPage(
+                                                                  report: model
+                                                                      .selectedReport,
+                                                                )));
+                                                  },
+                                                  child: ReportPreview(
+                                                      report: model
+                                                          .selectedReport)),
+                                            if (model.selectedReport == null)
+                                              Container()
+                                            else
+                                              const Divider(height: 2),
                                           ],
                                         ),
                                       ),
@@ -182,15 +198,17 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                             MainAxisAlignment.spaceEvenly,
                                         children: <Widget>[
                                           Builder(
-                                            builder: (context) => IconButton(
-                                                icon: Icon(
-                                                  FontAwesomeIcons.list,
-                                                  color: Theme.of(context)
-                                                      .accentColor,
-                                                ),
-                                                onPressed: () {
-                                                  _navigateToReportsPage(model);
-                                                }),
+                                            builder: (BuildContext context) =>
+                                                IconButton(
+                                                    icon: Icon(
+                                                      FontAwesomeIcons.list,
+                                                      color: Theme.of(context)
+                                                          .accentColor,
+                                                    ),
+                                                    onPressed: () {
+                                                      _navigateToReportsPage(
+                                                          model);
+                                                    }),
                                           ),
                                           IconButton(
                                             icon: Icon(
@@ -209,7 +227,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                               ),
                             ],
                           ),
-                          builder: (context, animatedChild) {
+                          builder:
+                              (BuildContext context, Widget animatedChild) {
                             return Transform.translate(
                               offset: _bottomBarAnimation.value,
                               child: animatedChild,
@@ -227,27 +246,31 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   void _navigateToReportsPage(HomeModel model) {
-    final result = Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => ReportsPage()));
+    // final result = Navigator.of(context)
+    //     .push(MaterialPageRoute(builder: (context) => ReportsPage()));
+    final Future<Report> result = Navigator.of(context)
+        .push(ScalePageRoute<Report>(page: const ReportsPage()));
 
     // Animate Maps camera if a report has been selected
-    result.then((report) {
+    result.then((Report report) {
       if (report != null) {
-        model.selectReport(report as Report);
-        _animateToLocation(
-            LatLng((report as Report).latitude, (report as Report).longitude));
+        model.selectReport(report);
+        _animateToLocation(LatLng(report.latitude, report.longitude));
       }
     });
   }
 
   void _navigateToSubmitReportPage() {
+    // final result = Navigator.of(context)
+    //     .push(MaterialPageRoute(builder: (context) => SubmitReportPage()));
     final result = Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => SubmitReportPage()));
+        .push(ScalePageRoute<bool>(page: SubmitReportPage()));
 
     // Update markers if a new report was successfully submitted
-    result.then((value) {
-      if (value != null) if ((value as bool) == true)
+    result.then((bool value) {
+      if (value != null && value == true) {
         _initializeReportsMarkers();
+      }
     });
   }
 
@@ -257,7 +280,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     final Marker marker = Marker(
       markerId: _userMarkerId,
       position: LatLng(userLocation.latitude, userLocation.longitude),
-      infoWindow: InfoWindow(title: 'You are here'),
+      infoWindow: const InfoWindow(title: 'You are here'),
       onTap: () {},
     );
 
@@ -312,14 +335,15 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   void _initializeReportsMarkers() async {
-    final reports = await _homeModel.getReports();
+    final List<Report> reports = await _homeModel.getReports();
 
-    ImageConfiguration imageConfig = ImageConfiguration(size: Size(48, 48));
-    final icon = await BitmapDescriptor.fromAssetImage(
+    const ImageConfiguration imageConfig =
+        ImageConfiguration(size: Size(48, 48));
+    final BitmapDescriptor icon = await BitmapDescriptor.fromAssetImage(
         imageConfig, 'assets/service-dog.png');
 
-    reports.forEach((report) {
-      final markerId = MarkerId(report.uid);
+    reports.forEach((Report report) {
+      final MarkerId markerId = MarkerId(report.uid);
       final Marker marker = Marker(
         markerId: markerId,
         position: LatLng(report.latitude, report.longitude),

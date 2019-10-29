@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../constants.dart';
 import '../underdog_theme.dart';
 
-class AnimatedRaisedButton extends StatefulWidget {
+class AnimatedFlatButton extends StatefulWidget {
   final Function onPressed;
   final String label;
   final bool isBusy;
@@ -13,7 +13,7 @@ class AnimatedRaisedButton extends StatefulWidget {
   final IconData icon;
   final Color color;
   final TextStyle style;
-  AnimatedRaisedButton(
+  AnimatedFlatButton(
       {Key key,
       @required this.onPressed,
       @required this.label,
@@ -25,10 +25,10 @@ class AnimatedRaisedButton extends StatefulWidget {
       : super(key: key);
 
   @override
-  _AnimatedRaisedButtonState createState() => _AnimatedRaisedButtonState();
+  _AnimatedFlatButtonState createState() => _AnimatedFlatButtonState();
 }
 
-class _AnimatedRaisedButtonState extends State<AnimatedRaisedButton>
+class _AnimatedFlatButtonState extends State<AnimatedFlatButton>
     with TickerProviderStateMixin {
   Animation _animation;
   AnimationController _animationController;
@@ -62,9 +62,9 @@ class _AnimatedRaisedButtonState extends State<AnimatedRaisedButton>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // Theme and colors
+    // Theme and color
     _color = (widget.color) ?? Theme.of(context).accentColor;
-    _style = (widget.style) ?? UnderdogTheme.raisedButtonText;
+    _style = (widget.style) ?? UnderdogTheme.flatButtonText;
     _pbColor = (_color == Theme.of(context).accentColor)
         ? Colors.white
         : Theme.of(context).accentColor;
@@ -72,10 +72,11 @@ class _AnimatedRaisedButtonState extends State<AnimatedRaisedButton>
 
   @override
   Widget build(BuildContext context) {
-    return ScaleTransition(
-      scale: _animation,
-      child: RaisedButton(
-          disabledColor: _color,
+    return Transform.scale(
+      scale: _animation.value,
+      child: FlatButton(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           child: AnimatedSize(
             duration:
                 Duration(milliseconds: Constants.DEFAULT_ANIMATION_DURATION_MS),
@@ -87,9 +88,9 @@ class _AnimatedRaisedButtonState extends State<AnimatedRaisedButton>
                 (widget.icon != null)
                     ? Row(
                         children: <Widget>[
-                          Icon(widget.icon, size: 20, color: _pbColor),
+                          Icon(widget.icon, size: 20, color: _color),
                           SizedBox(
-                            width: 12,
+                            width: 4,
                           ),
                         ],
                       )
@@ -126,15 +127,16 @@ class _AnimatedRaisedButtonState extends State<AnimatedRaisedButton>
   // @override
   // Widget build(BuildContext context) {
   //   final color = (widget.color) ?? Theme.of(context).accentColor;
-  //   final style = (widget.style) ?? UnderdogTheme.raisedButtonText;
+  //   final style = (widget.style) ?? UnderdogTheme.outlineButtonText;
   //   final pbColor = (color == Theme.of(context).accentColor)
   //       ? Colors.white
   //       : Theme.of(context).accentColor;
 
   //   return Transform.scale(
   //     scale: _animation.value,
-  //     child: RaisedButton(
-  //         disabledColor: color,
+  //     child: OutlineButton(
+  //         color: color,
+  //         borderSide: BorderSide(color: color),
   //         child: AnimatedSize(
   //           duration: Duration(milliseconds: 500),
   //           curve: Curves.fastOutSlowIn,
@@ -145,7 +147,7 @@ class _AnimatedRaisedButtonState extends State<AnimatedRaisedButton>
   //               (widget.icon != null)
   //                   ? Row(
   //                       children: <Widget>[
-  //                         Icon(widget.icon, size: 20, color: Colors.white),
+  //                         Icon(widget.icon, size: 20, color: color),
   //                         SizedBox(
   //                           width: 4,
   //                         ),

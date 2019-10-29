@@ -1,24 +1,6 @@
-// import 'package:floor/floor.dart';
-
-// @entity
 import 'package:firebase_database/firebase_database.dart';
 
 class Report {
-  // @primaryKey
-  String uid;
-  String reporterId;
-  String rescuerId;
-
-  bool isRescued;
-  String codeName;
-  String imageUrl;
-  String breed;
-  String address;
-  double latitude;
-  double longitude;
-  String additionalInfo;
-  String date;
-
   Report(
       this.reporterId,
       this.rescuerId,
@@ -31,22 +13,6 @@ class Report {
       this.longitude,
       this.additionalInfo,
       this.date);
-
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'reporter_id': reporterId,
-      'rescuer_id': rescuerId,
-      'is_rescued': isRescued,
-      'code_name': codeName,
-      'image_url': imageUrl,
-      'breed': breed,
-      'address': address,
-      'latitude': latitude,
-      'longitude': longitude,
-      'additional_info': additionalInfo,
-      'date': date
-    };
-  }
 
   factory Report.fromMap(Map<dynamic, dynamic> map) {
     return Report(
@@ -65,7 +31,7 @@ class Report {
   }
 
   factory Report.fromSnapshot(DataSnapshot snapshot) {
-    final report = Report(
+    final Report report = Report(
       snapshot.value['reporter_id'],
       snapshot.value['rescuer_id'],
       snapshot.value['is_rescued'],
@@ -82,5 +48,35 @@ class Report {
     report.uid = snapshot.key;
 
     return report;
+  }
+
+  String uid;
+  String reporterId;
+  String rescuerId;
+
+  bool isRescued;
+  String codeName;
+  String imageUrl;
+  String breed;
+  String address;
+  double latitude;
+  double longitude;
+  String additionalInfo;
+  String date;
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'reporter_id': reporterId,
+      'rescuer_id': rescuerId,
+      'is_rescued': isRescued,
+      'code_name': codeName,
+      'image_url': imageUrl,
+      'breed': breed,
+      'address': address,
+      'latitude': latitude,
+      'longitude': longitude,
+      'additional_info': additionalInfo,
+      'date': date
+    };
   }
 }

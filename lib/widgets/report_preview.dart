@@ -5,6 +5,7 @@ import 'package:maps_launcher/maps_launcher.dart';
 import 'package:provider/provider.dart';
 import 'package:underdog/data/models/report.dart';
 import 'package:underdog/viewmodels/home_model.dart';
+import 'package:underdog/widgets/animated_flat_button.dart';
 import 'package:underdog/widgets/animated_raised_button.dart';
 
 import '../underdog_theme.dart';
@@ -98,16 +99,12 @@ class ReportPreview extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              FlatButton(
-                child: Text(
-                  'Cancel',
-                  style: UnderdogTheme.outlineButtonText,
-                ),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16)),
+              AnimatedFlatButton(
+                label: 'Cancel',
                 onPressed: () {
                   Provider.of<HomeModel>(context).clearSelectedReport();
                 },
+                delay: 125,
               ),
               SizedBox(
                 width: 8,
@@ -122,6 +119,7 @@ class ReportPreview extends StatelessWidget {
                     MapsLauncher.launchCoordinates(
                         report.latitude, report.longitude);
                 },
+                delay: 250,
               ),
             ],
           )

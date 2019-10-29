@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:underdog/service_locator.dart';
@@ -17,24 +16,25 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage>
     with SingleTickerProviderStateMixin {
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  TextEditingController _fnController = TextEditingController();
-  TextEditingController _lnController = TextEditingController();
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
-  TextEditingController _confirmPasswordController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _fnController = TextEditingController();
+  final TextEditingController _lnController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
-  final _enabledBorder = UnderlineInputBorder(
+  final UnderlineInputBorder _enabledBorder = UnderlineInputBorder(
       borderSide: BorderSide(color: Colors.white70, width: 1));
-  final _focusedBorder = UnderlineInputBorder(
+  final UnderlineInputBorder _focusedBorder = UnderlineInputBorder(
       borderSide: BorderSide(color: Colors.white, width: 2));
-  final _textStyle = TextStyle(color: Colors.white);
-  final _cursorColor = Colors.white;
+  final TextStyle _textStyle = TextStyle(color: Colors.white);
+  final Color _cursorColor = Colors.white;
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<RegisterModel>(
-      builder: (context) => locator<RegisterModel>(),
+      builder: (BuildContext context) => locator<RegisterModel>(),
       child: Consumer<RegisterModel>(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -47,13 +47,11 @@ class _RegisterPageState extends State<RegisterPage>
                 style: UnderdogTheme.pageTitle.copyWith(color: Colors.white),
               ),
             ),
-            SizedBox(
-              height: 32,
-            ),
+            const SizedBox(height: 32),
           ],
         ),
-        builder: (context, model, child) {
-          final isBusy = (model.state == PageState.Busy);
+        builder: (BuildContext context, RegisterModel model, Widget child) {
+          final bool isBusy = model.state == PageState.Busy;
 
           return Scaffold(
             backgroundColor: Theme.of(context).accentColor,
@@ -61,7 +59,7 @@ class _RegisterPageState extends State<RegisterPage>
               tag: HeroTag.SIGN_UP,
               child: Center(
                 child: Container(
-                  constraints: BoxConstraints(maxWidth: 280),
+                  constraints: const BoxConstraints(maxWidth: 280),
                   child: Form(
                     key: _formKey,
                     child: Column(
@@ -85,16 +83,16 @@ class _RegisterPageState extends State<RegisterPage>
                                     hintStyle: UnderdogTheme.hintTextDark,
                                     contentPadding: const EdgeInsets.symmetric(
                                         horizontal: 8, vertical: 16)),
-                                validator: (value) {
-                                  if (value.isNotEmpty) return null;
+                                validator: (String value) {
+                                  if (value.isNotEmpty) {
+                                    return null;
+                                  }
 
                                   return 'This field is required';
                                 },
                               ),
                             ),
-                            SizedBox(
-                              width: 16,
-                            ),
+                            const SizedBox(width: 16),
                             Expanded(
                               child: TextFormField(
                                 enabled: !isBusy,
@@ -109,8 +107,10 @@ class _RegisterPageState extends State<RegisterPage>
                                     hintStyle: UnderdogTheme.hintTextDark,
                                     contentPadding: const EdgeInsets.symmetric(
                                         horizontal: 8, vertical: 16)),
-                                validator: (value) {
-                                  if (value.isNotEmpty) return null;
+                                validator: (String value) {
+                                  if (value.isNotEmpty) {
+                                    return null;
+                                  }
 
                                   return 'This field is required';
                                 },
@@ -130,13 +130,13 @@ class _RegisterPageState extends State<RegisterPage>
                               hintStyle: UnderdogTheme.hintTextDark,
                               contentPadding: const EdgeInsets.symmetric(
                                   horizontal: 8, vertical: 16)),
-                          validator: (value) {
+                          validator: (String value) {
                             if (value.isNotEmpty) {
-                              bool emailValid = RegExp(
-                                      r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                              final bool emailValid = RegExp(
+                                      r'^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+')
                                   .hasMatch(value);
 
-                              return (emailValid)
+                              return emailValid
                                   ? null
                                   : 'Please enter a valid e-mail';
                             }
@@ -157,7 +157,7 @@ class _RegisterPageState extends State<RegisterPage>
                               hintStyle: UnderdogTheme.hintTextDark,
                               contentPadding: const EdgeInsets.symmetric(
                                   horizontal: 8, vertical: 16)),
-                          validator: (value) {
+                          validator: (String value) {
                             if (value.isNotEmpty) {
                               if (value.length < 8)
                                 return 'Must be 8 or more characters';
@@ -181,24 +181,23 @@ class _RegisterPageState extends State<RegisterPage>
                               hintStyle: UnderdogTheme.hintTextDark,
                               contentPadding: const EdgeInsets.symmetric(
                                   horizontal: 8, vertical: 16)),
-                          validator: (value) {
+                          validator: (String value) {
                             if (value != _passwordController.text)
                               return 'Passwords must match';
 
                             return null;
                           },
                         ),
-                        SizedBox(
-                          height: 24,
-                        ),
+                        const SizedBox(height: 24),
                         Builder(
-                          builder: (context) => AnimatedRaisedButton(
+                          builder: (BuildContext context) =>
+                              AnimatedRaisedButton(
                             isBusy: isBusy,
                             label: !isBusy ? 'Register' : 'Registering',
                             color: Colors.white,
                             style: UnderdogTheme.raisedButtonTextDark,
                             delay: 125,
-                            onPressed: (isBusy)
+                            onPressed: isBusy
                                 ? null
                                 : () {
                                     if (_formKey.currentState.validate()) {
@@ -209,7 +208,7 @@ class _RegisterPageState extends State<RegisterPage>
                                               _fnController.text,
                                               _lnController.text)
                                           .then(
-                                        (value) {
+                                        (String value) {
                                           if (value == null) {
                                             Navigator.pop(context,
                                                 'Successfully registered! Let\'s start rescuing');
@@ -226,9 +225,7 @@ class _RegisterPageState extends State<RegisterPage>
                                   },
                           ),
                         ),
-                        SizedBox(
-                          height: 8,
-                        ),
+                        const SizedBox(height: 8),
                         FlatButton(
                           child: Text(
                             'Cancel',

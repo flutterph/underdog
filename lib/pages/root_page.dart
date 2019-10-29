@@ -4,35 +4,36 @@ import 'package:underdog/hero_tag.dart';
 import 'package:underdog/pages/home_page.dart';
 import 'package:underdog/pages/login_page.dart';
 import 'package:underdog/services/auth_service.dart';
-import 'package:underdog/underdog_theme.dart';
 
 import '../service_locator.dart';
 
 class RootPage extends StatefulWidget {
-  RootPage({Key key}) : super(key: key);
+  const RootPage({Key key}) : super(key: key);
 
+  @override
   _RootPageState createState() => _RootPageState();
 }
 
 class _RootPageState extends State<RootPage> {
-  AuthStatus _authStatus = AuthStatus.NOT_DETERMINED;
-
   @override
   void initState() {
     super.initState();
-    final _authService = locator<AuthService>();
-    _authService.checkAuthStatus().then((value) {
+    final AuthService _authService = locator<AuthService>();
+    _authService.checkAuthStatus().then((AuthStatus value) {
       switch (value) {
         case AuthStatus.NOT_DETERMINED:
-          // TODO: Handle this case.
           break;
         case AuthStatus.NOT_LOGGED_IN:
           Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => LoginPage()));
+              context,
+              MaterialPageRoute<void>(
+                  builder: (BuildContext context) => const LoginPage()));
           break;
         case AuthStatus.LOGGED_IN:
           Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => HomePage()));
+              context,
+              MaterialPageRoute<void>(
+                  builder: (BuildContext context) => const HomePage()));
           break;
       }
     });

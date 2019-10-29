@@ -19,9 +19,10 @@ class SelectLocationPage extends StatefulWidget {
 }
 
 class _SelectLocationPageState extends State<SelectLocationPage> {
-  Completer<GoogleMapController> _controller = Completer();
-  double _zoom = 16;
-  final _markerSize = 44.0;
+  final Completer<GoogleMapController> _controller =
+      Completer<GoogleMapController>();
+  final double _zoom = 16;
+  final double _markerSize = 44.0;
 
   @override
   void initState() {
@@ -31,9 +32,10 @@ class _SelectLocationPageState extends State<SelectLocationPage> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<SelectLocationModel>(
-      builder: (context) => locator<SelectLocationModel>(),
+      builder: (BuildContext context) => locator<SelectLocationModel>(),
       child: Consumer<SelectLocationModel>(
-        builder: (context, model, child) {
+        builder:
+            (BuildContext context, SelectLocationModel model, Widget child) {
           return Scaffold(
             extendBody: true,
             body: Stack(
@@ -76,9 +78,7 @@ class _SelectLocationPageState extends State<SelectLocationPage> {
                               'SELECT LOCATION',
                               style: UnderdogTheme.labelStyle,
                             ),
-                            SizedBox(
-                              height: 8,
-                            ),
+                            const SizedBox(height: 8),
                             Text(model.addressLine ?? ''),
                           ],
                         )),
@@ -109,7 +109,7 @@ class _SelectLocationPageState extends State<SelectLocationPage> {
   }
 
   CameraPosition _initCameraPosition() {
-    final userLocation = Provider.of<UserLocation>(context);
+    final UserLocation userLocation = Provider.of<UserLocation>(context);
     return CameraPosition(
         target: LatLng(userLocation.latitude, userLocation.longitude),
         zoom: _zoom);

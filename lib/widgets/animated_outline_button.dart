@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../constants.dart';
 import '../underdog_theme.dart';
 
 class AnimatedOutlineButton extends StatefulWidget {
@@ -39,16 +40,11 @@ class _AnimatedOutlineButtonState extends State<AnimatedOutlineButton>
   void initState() {
     super.initState();
 
-    // Theme and color
-    _color = (widget.color) ?? Theme.of(context).accentColor;
-    _style = (widget.style) ?? UnderdogTheme.outlineButtonText;
-    _pbColor = (_color == Theme.of(context).accentColor)
-        ? Colors.white
-        : Theme.of(context).accentColor;
-
     // Animation
-    _animationController =
-        AnimationController(duration: Duration(milliseconds: 500), vsync: this);
+    _animationController = AnimationController(
+        duration:
+            Duration(milliseconds: Constants.DEFAULT_ANIMATION_DURATION_MS),
+        vsync: this);
     _animationController.addListener(() {
       setState(() {});
     });
@@ -64,6 +60,17 @@ class _AnimatedOutlineButtonState extends State<AnimatedOutlineButton>
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Theme and color
+    _color = (widget.color) ?? Theme.of(context).accentColor;
+    _style = (widget.style) ?? UnderdogTheme.outlineButtonText;
+    _pbColor = (_color == Theme.of(context).accentColor)
+        ? Colors.white
+        : Theme.of(context).accentColor;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Transform.scale(
       scale: _animation.value,
@@ -71,7 +78,8 @@ class _AnimatedOutlineButtonState extends State<AnimatedOutlineButton>
           color: _color,
           borderSide: BorderSide(color: _color),
           child: AnimatedSize(
-            duration: Duration(milliseconds: 500),
+            duration:
+                Duration(milliseconds: Constants.DEFAULT_ANIMATION_DURATION_MS),
             curve: Curves.fastOutSlowIn,
             vsync: this,
             child: Row(

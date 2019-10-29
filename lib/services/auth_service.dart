@@ -22,7 +22,7 @@ class AuthService {
   }
 
   Future<FirebaseUser> getFirebaseUser() async {
-    return (await _auth.currentUser());
+    return await _auth.currentUser();
   }
 
   Future<AuthStatus> checkAuthStatus() async {
@@ -51,7 +51,7 @@ class AuthService {
   Future<bool> logout() async {
     try {
       await _auth.signOut();
-      this.user = null;
+      user = null;
 
       return true;
     } catch (e) {
@@ -66,7 +66,7 @@ class AuthService {
       final FirebaseUser user = (await _auth.createUserWithEmailAndPassword(
               email: email, password: password))
           .user;
-      final newUser = User()
+      final User newUser = User()
         ..uid = user.uid
         ..email = email
         ..firstName = firstName

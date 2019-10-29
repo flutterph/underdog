@@ -5,7 +5,7 @@ enum PageState { Idle, Busy }
 class SubmitRescueModel extends ChangeNotifier {
   PageState _state = PageState.Idle;
 
-  setState(PageState state) {
+  void setState(PageState state) {
     _state = state;
     notifyListeners();
   }
