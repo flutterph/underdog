@@ -5,6 +5,7 @@ import 'package:underdog/data/models/report.dart';
 import 'package:underdog/pages/view_report_page.dart';
 import 'package:underdog/service_locator.dart';
 import 'package:underdog/viewmodels/rescued_reports_list_model.dart';
+import 'package:underdog/widgets/scale_page_route.dart';
 
 import 'item_report.dart';
 
@@ -33,10 +34,10 @@ class RescuedReportsList extends StatelessWidget {
       onTap: () {
         final Future<Report> result = Navigator.push(
             context,
-            MaterialPageRoute<Report>(
-                builder: (BuildContext context) => ViewReportPage(
-                      report: report,
-                    )));
+            ScalePageRoute<Report>(
+                page: ViewReportPage(
+              report: report,
+            )));
 
         // Navigate back to home page if a report has been selected
         result.then((Report report) {

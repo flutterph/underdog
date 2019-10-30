@@ -11,13 +11,14 @@ import 'package:underdog/widgets/animated_raised_button.dart';
 import '../underdog_theme.dart';
 
 class ReportPreview extends StatelessWidget {
-  final Report report;
   const ReportPreview({Key key, this.report}) : super(key: key);
+
+  final Report report;
 
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
-      duration: Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 500),
       curve: Curves.fastOutSlowIn,
       padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
       child: Column(
@@ -25,24 +26,25 @@ class ReportPreview extends StatelessWidget {
           Row(
             children: <Widget>[
               SizedBox(
-                height: 96,
-                width: 96,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
+                height: 104,
+                width: 104,
+                child: Material(
+                  borderOnForeground: true,
+                  shape: ContinuousRectangleBorder(
+                      side: BorderSide(color: Colors.black12)),
                   child: CachedNetworkImage(
                     imageUrl: report.imageUrl,
                     fit: BoxFit.cover,
                     useOldImageOnUrlChange: true,
-                    placeholder: (context, url) =>
-                        Center(child: CircularProgressIndicator()),
-                    errorWidget: (context, url, error) =>
-                        Icon(FontAwesomeIcons.frown),
+                    placeholder: (BuildContext context, String url) =>
+                        const Center(child: CircularProgressIndicator()),
+                    errorWidget:
+                        (BuildContext context, String url, Object error) =>
+                            Icon(FontAwesomeIcons.frown),
                   ),
                 ),
               ),
-              SizedBox(
-                width: 16,
-              ),
+              const SizedBox(width: 16),
               Expanded(
                 flex: 2,
                 child: Column(
@@ -54,26 +56,22 @@ class ReportPreview extends StatelessWidget {
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     Text(report.breed),
-                    SizedBox(
-                      height: 16,
-                    ),
+                    const SizedBox(height: 16),
                     Row(
                       children: <Widget>[
                         Icon(
                           FontAwesomeIcons.mapMarkerAlt,
                           size: 16,
-                          color: Theme.of(context).accentColor,
+                          color: UnderdogTheme.mustard,
                         ),
-                        SizedBox(
-                          width: 6,
-                        ),
+                        const SizedBox(width: 6),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Text(
                                 report.address,
-                                style: TextStyle(fontSize: 12),
+                                style: const TextStyle(fontSize: 12),
                                 overflow: TextOverflow.fade,
                                 maxLines: 1,
                                 softWrap: false,
@@ -93,9 +91,7 @@ class ReportPreview extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(
-            height: 16,
-          ),
+          const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -106,12 +102,11 @@ class ReportPreview extends StatelessWidget {
                 },
                 delay: 125,
               ),
-              SizedBox(
-                width: 8,
-              ),
+              const SizedBox(width: 8),
               AnimatedRaisedButton(
                 label: 'Navigate',
                 icon: FontAwesomeIcons.mapMarkedAlt,
+                color: UnderdogTheme.teal,
                 onPressed: () {
                   if (report.address != null)
                     MapsLauncher.launchQuery(report.address);

@@ -52,11 +52,12 @@ class _SubmitReportPageState extends State<SubmitReportPage>
                     children: <Widget>[
                       Text(
                         'Let\'s Rescue!',
-                        style: UnderdogTheme.pageTitle,
+                        style: UnderdogTheme.pageTitle
+                            .copyWith(color: UnderdogTheme.darkTeal),
                       ),
                       const SizedBox(height: 8),
                       SizedBox(
-                        width: 280,
+                        width: 300,
                         child: Form(
                           key: _formKey,
                           autovalidate: false,
@@ -69,12 +70,11 @@ class _SubmitReportPageState extends State<SubmitReportPage>
                                     : _showImageSourceSelectionDialog,
                                 child: Material(
                                   shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(16),
                                       side: BorderSide(color: Colors.black12)),
                                   child: (_selectedImage == null)
                                       ? Container(
-                                          height: 280,
-                                          width: 280,
+                                          height: 300,
+                                          width: 300,
                                           child: Center(
                                             child: Padding(
                                               padding:
@@ -90,16 +90,12 @@ class _SubmitReportPageState extends State<SubmitReportPage>
                                           ),
                                           decoration: BoxDecoration(
                                             color: Colors.black12,
-                                            borderRadius:
-                                                BorderRadius.circular(16),
                                           ),
                                         )
                                       : Container(
                                           height: 280,
                                           width: 280,
                                           decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(16),
                                               image: DecorationImage(
                                                   fit: BoxFit.cover,
                                                   image: FileImage(
@@ -107,7 +103,7 @@ class _SubmitReportPageState extends State<SubmitReportPage>
                                         ),
                                 ),
                               ),
-                              const SizedBox(height: 16),
+                              const SizedBox(height: 24),
                               Center(
                                 child: Text(
                                   'CODENAME',
@@ -119,7 +115,7 @@ class _SubmitReportPageState extends State<SubmitReportPage>
                                 maxLines: 1,
                                 enabled: !isBusy,
                                 textCapitalization: TextCapitalization.words,
-                                decoration: InputDecoration(
+                                decoration: const InputDecoration(
                                     hintText:
                                         'Give him or her a codename for now'),
                                 validator: (String value) {
@@ -138,6 +134,7 @@ class _SubmitReportPageState extends State<SubmitReportPage>
                                 ),
                               ),
                               DropdownButton<String>(
+                                isExpanded: true,
                                 value: model.breed,
                                 items: breeds.map<DropdownMenuItem<String>>(
                                     (String value) {
@@ -146,13 +143,11 @@ class _SubmitReportPageState extends State<SubmitReportPage>
                                     child: Text(value),
                                   );
                                 }).toList(),
-                                onChanged: isBusy
-                                    ? null
-                                    : (String value) {
-                                        setState(() {
-                                          model.breed = value;
-                                        });
-                                      },
+                                onChanged: (String value) {
+                                  setState(() {
+                                    model.breed = value;
+                                  });
+                                },
                               ),
                               const SizedBox(height: 16),
                               Center(
@@ -166,7 +161,11 @@ class _SubmitReportPageState extends State<SubmitReportPage>
                                   Expanded(
                                     child: (model.locationInfo == null)
                                         ? Container()
-                                        : Text(model.locationInfo.addressLine),
+                                        : Text(
+                                            model.locationInfo.addressLine,
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
                                   ),
                                   IconButton(
                                     icon: Icon(FontAwesomeIcons.mapMarkerAlt),

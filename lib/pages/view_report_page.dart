@@ -22,25 +22,58 @@ class ViewReportPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const TextStyle _body = TextStyle(fontSize: 18, color: UnderdogTheme.black);
+    const double radius = 56;
+
     return Scaffold(
+      backgroundColor: UnderdogTheme.teal,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        iconTheme: IconThemeData(color: Colors.white),
+      ),
+      extendBodyBehindAppBar: true,
       body: Stack(
         children: <Widget>[
-          AppBar(
-            elevation: 0,
-            backgroundColor: Colors.transparent,
+          Material(
+            color: Colors.white,
+            child: Container(
+              height: MediaQuery.of(context).size.height * 0.89,
+              width: double.infinity,
+            ),
+            shape: RoundedRectangleBorder(
+                borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(radius),
+                    bottomRight: Radius.circular(radius)),
+                side: BorderSide(color: Colors.white12)),
           ),
           Material(
+            color: UnderdogTheme.mustard,
+            child: Container(
+              height: MediaQuery.of(context).size.height * 0.33,
+              width: double.infinity,
+            ),
+            shape: RoundedRectangleBorder(
+                borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(radius),
+                    bottomRight: Radius.circular(radius)),
+                side: BorderSide(color: Colors.white12)),
+          ),
+          Material(
+            type: MaterialType.transparency,
             child: Center(
               child: Container(
-                constraints: const BoxConstraints(maxWidth: 280),
+                constraints: const BoxConstraints(maxWidth: 300),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Hero(
-                        tag: HeroTag.REPORT_CODE_NAME_ + report.uid,
-                        child: Text(report.codeName,
-                            style: UnderdogTheme.pageTitle)),
+                    Center(
+                      child: Hero(
+                          tag: HeroTag.REPORT_CODE_NAME_ + report.uid,
+                          child: Text(report.codeName,
+                              style: UnderdogTheme.pageTitle)),
+                    ),
                     const SizedBox(height: 8),
                     InkWell(
                       onTap: () {
@@ -56,90 +89,119 @@ class ViewReportPage extends StatelessWidget {
                           tag: HeroTag.REPORT_IMAGE_ + report.uid,
                           child: Material(
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16),
                                 side: BorderSide(color: Colors.black12)),
                             child: SizedBox(
-                              height: 280,
-                              width: 280,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(16),
-                                child: CachedNetworkImage(
-                                  imageUrl: report.imageUrl,
-                                  fit: BoxFit.cover,
-                                  useOldImageOnUrlChange: true,
-                                  placeholder: (BuildContext context,
-                                          String url) =>
-                                      const Center(
-                                          child: CircularProgressIndicator()),
-                                  errorWidget: (BuildContext context,
-                                          String url, Object error) =>
-                                      Icon(FontAwesomeIcons.frown),
-                                ),
+                              height: 300,
+                              width: 300,
+                              child: CachedNetworkImage(
+                                imageUrl: report.imageUrl,
+                                fit: BoxFit.cover,
+                                useOldImageOnUrlChange: true,
+                                placeholder:
+                                    (BuildContext context, String url) =>
+                                        const Center(
+                                            child: CircularProgressIndicator()),
+                                errorWidget: (BuildContext context, String url,
+                                        Object error) =>
+                                    Icon(FontAwesomeIcons.frown),
                               ),
                             ),
                           )),
                     ),
-                    const SizedBox(height: 16),
-                    Text(
-                      'BREED',
-                      style: UnderdogTheme.labelStyle,
-                    ),
-                    Text(report.breed),
-                    const SizedBox(height: 16),
-                    Text(
-                      'LAST SEEN',
-                      style: UnderdogTheme.labelStyle,
-                    ),
-                    Hero(
-                        tag: HeroTag.REPORT_LANDMARK_ + report.uid,
-                        child: Text(
-                          report.address,
-                          textAlign: TextAlign.center,
-                        )),
-                    const SizedBox(height: 16),
-                    Text(
-                      'ADDITIONAL INFO',
-                      style: UnderdogTheme.labelStyle,
-                    ),
-                    if (report.additionalInfo.isEmpty)
-                      const Text(
-                        'None',
-                        style: TextStyle(fontStyle: FontStyle.italic),
-                      )
-                    else
-                      Text(report.additionalInfo),
                     const SizedBox(height: 24),
-                    if (!report.isRescued)
-                      Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          AnimatedRaisedButton(
-                            label: 'Get Directions',
-                            onPressed: () {
-                              Navigator.pop(context, report);
-                            },
-                            delay: 125,
-                          ),
-                          const SizedBox(height: 8),
-                          AnimatedOutlineButton(
-                            label: 'I rescued this pup!',
-                            onPressed: () async {
-                              final bool didSubmitRescue = await Navigator.push(
-                                  context,
-                                  ScalePageRoute<bool>(
-                                      page: SubmitRescuePage(report: report)));
+                    Center(
+                      child: Container(
+                        constraints: const BoxConstraints(maxWidth: 280),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              'BREED',
+                              style: UnderdogTheme.labelStyle,
+                            ),
+                            Text(
+                              report.breed,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: _body,
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              'LAST SEEN',
+                              style: UnderdogTheme.labelStyle,
+                            ),
+                            Hero(
+                                tag: HeroTag.REPORT_LANDMARK_ + report.uid,
+                                child: Text(
+                                  report.address,
+                                  maxLines: 3,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: _body,
+                                )),
+                            const SizedBox(height: 16),
+                            Text(
+                              'ADDITIONAL INFO',
+                              style: UnderdogTheme.labelStyle,
+                            ),
+                            if (report.additionalInfo.isEmpty)
+                              Text(
+                                'None',
+                                style:
+                                    _body.copyWith(fontStyle: FontStyle.italic),
+                              )
+                            else
+                              Text(
+                                report.additionalInfo,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: _body,
+                              ),
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 22.0),
+              child: (!report.isRescued)
+                  ? Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        AnimatedRaisedButton(
+                          label: 'Get Directions',
+                          onPressed: () {
+                            Navigator.pop(context, report);
+                          },
+                          delay: 125,
+                        ),
+                        const SizedBox(width: 8),
+                        AnimatedOutlineButton(
+                          label: 'I rescued this pup!',
+                          onPressed: () async {
+                            final bool didSubmitRescue = await Navigator.push(
+                                context,
+                                ScalePageRoute<bool>(
+                                    page: SubmitRescuePage(report: report)));
 
-                              if (didSubmitRescue) {
-                                Navigator.pop(context);
-                              }
-                            },
-                            delay: 250,
-                          ),
-                        ],
-                      )
-                    else
-                      AnimatedRaisedButton(
+                            if (didSubmitRescue) {
+                              Navigator.pop(context);
+                            }
+                          },
+                          delay: 250,
+                        ),
+                      ],
+                    )
+                  : FittedBox(
+                      child: AnimatedRaisedButton(
                         label: 'View Rescue',
+                        color: Colors.white,
+                        style: UnderdogTheme.darkRaisedButtonText,
                         onPressed: () {
                           Navigator.push(
                               context,
@@ -150,11 +212,9 @@ class ViewReportPage extends StatelessWidget {
                         },
                         delay: 125,
                       ),
-                  ],
-                ),
-              ),
+                    ),
             ),
-          )
+          ),
         ],
       ),
     );

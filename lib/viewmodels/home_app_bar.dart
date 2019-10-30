@@ -13,7 +13,6 @@ class HomeAppBar extends StatelessWidget {
       leading: IconButton(
         icon: Icon(
           FontAwesomeIcons.user,
-          color: Theme.of(context).accentColor,
         ),
         onPressed: () {
           Scaffold.of(context).openDrawer();

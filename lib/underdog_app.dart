@@ -11,30 +11,32 @@ import 'data/models/user_location.dart';
 class UnderdogApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setEnabledSystemUIOverlays([]);
-
-    // TODO: Remove this when the theme is decided
-    final color = Colors.pink;
-    UnderdogTheme.color = color;
+    SystemChrome.setEnabledSystemUIOverlays(<SystemUiOverlay>[]);
 
     return MultiProvider(
-      providers: [
+      providers: <SingleChildCloneableWidget>[
         StreamProvider<UserLocation>(
-          builder: (context) => locator<LocationService>().locationStream,
+          builder: (BuildContext context) =>
+              locator<LocationService>().locationStream,
         ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Underdog',
         theme: ThemeData(
+            appBarTheme: AppBarTheme(
+                iconTheme: IconThemeData(color: UnderdogTheme.mustard)),
+            iconTheme: IconThemeData(color: UnderdogTheme.mustard),
+            // cardColor: UnderdogTheme.dirtyWhite,
+            // scaffoldBackgroundColor: UnderdogTheme.dirtyWhite,
             fontFamily: 'Lato',
             inputDecorationTheme:
                 InputDecorationTheme(hintStyle: UnderdogTheme.hintText),
-            primarySwatch: color,
-            accentColor: color,
-            cursorColor: color,
+            primarySwatch: UnderdogTheme.tealMaterialColor,
+            accentColor: UnderdogTheme.teal,
+            cursorColor: UnderdogTheme.teal,
             buttonTheme: ButtonThemeData(
-              buttonColor: color,
+              buttonColor: UnderdogTheme.mustard,
               padding: const EdgeInsets.all(16),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
@@ -44,13 +46,13 @@ class UnderdogApp extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16))),
             floatingActionButtonTheme: FloatingActionButtonThemeData(
-                foregroundColor: color,
-                backgroundColor: Colors.white,
+                foregroundColor: Colors.white,
+                backgroundColor: UnderdogTheme.mustard,
                 elevation: 0,
                 focusElevation: 0,
                 highlightElevation: 0,
                 shape: CircleBorder(side: BorderSide(color: Colors.black12)))),
-        home: SplashScreenPage(),
+        home: const SplashScreenPage(),
       ),
     );
   }

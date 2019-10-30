@@ -63,11 +63,11 @@ class _AnimatedOutlineButtonState extends State<AnimatedOutlineButton>
   void didChangeDependencies() {
     super.didChangeDependencies();
     // Theme and color
-    _color = (widget.color) ?? Theme.of(context).accentColor;
+    _color = (widget.color) ?? UnderdogTheme.mustard;
     _style = (widget.style) ?? UnderdogTheme.outlineButtonText;
-    _pbColor = (_color == Theme.of(context).accentColor)
+    _pbColor = (_color == UnderdogTheme.mustard)
         ? Colors.white
-        : Theme.of(context).accentColor;
+        : UnderdogTheme.mustard;
   }
 
   @override

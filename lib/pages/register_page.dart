@@ -81,7 +81,7 @@ class _RegisterPageState extends State<RegisterPage>
                                     enabledBorder: _enabledBorder,
                                     focusedBorder: _focusedBorder,
                                     hintText: 'First Name',
-                                    hintStyle: UnderdogTheme.hintTextDark,
+                                    hintStyle: UnderdogTheme.darkHintText,
                                     contentPadding: const EdgeInsets.symmetric(
                                         horizontal: 8, vertical: 16)),
                                 validator: (String value) {
@@ -105,7 +105,7 @@ class _RegisterPageState extends State<RegisterPage>
                                     enabledBorder: _enabledBorder,
                                     focusedBorder: _focusedBorder,
                                     hintText: 'Last Name',
-                                    hintStyle: UnderdogTheme.hintTextDark,
+                                    hintStyle: UnderdogTheme.darkHintText,
                                     contentPadding: const EdgeInsets.symmetric(
                                         horizontal: 8, vertical: 16)),
                                 validator: (String value) {
@@ -128,7 +128,7 @@ class _RegisterPageState extends State<RegisterPage>
                               enabledBorder: _enabledBorder,
                               focusedBorder: _focusedBorder,
                               hintText: 'E-mail',
-                              hintStyle: UnderdogTheme.hintTextDark,
+                              hintStyle: UnderdogTheme.darkHintText,
                               contentPadding: const EdgeInsets.symmetric(
                                   horizontal: 8, vertical: 16)),
                           validator: (String value) {
@@ -155,7 +155,7 @@ class _RegisterPageState extends State<RegisterPage>
                               enabledBorder: _enabledBorder,
                               focusedBorder: _focusedBorder,
                               hintText: 'Password (8 or more characters)',
-                              hintStyle: UnderdogTheme.hintTextDark,
+                              hintStyle: UnderdogTheme.darkHintText,
                               contentPadding: const EdgeInsets.symmetric(
                                   horizontal: 8, vertical: 16)),
                           validator: (String value) {
@@ -179,7 +179,7 @@ class _RegisterPageState extends State<RegisterPage>
                               enabledBorder: _enabledBorder,
                               focusedBorder: _focusedBorder,
                               hintText: 'Confirm Password',
-                              hintStyle: UnderdogTheme.hintTextDark,
+                              hintStyle: UnderdogTheme.darkHintText,
                               contentPadding: const EdgeInsets.symmetric(
                                   horizontal: 8, vertical: 16)),
                           validator: (String value) {
@@ -196,7 +196,7 @@ class _RegisterPageState extends State<RegisterPage>
                             isBusy: isBusy,
                             label: !isBusy ? 'Register' : 'Registering',
                             color: Colors.white,
-                            style: UnderdogTheme.raisedButtonTextDark,
+                            style: UnderdogTheme.darkRaisedButtonText,
                             delay: 125,
                             onPressed: isBusy
                                 ? null

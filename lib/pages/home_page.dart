@@ -141,7 +141,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                   child: FloatingActionButton(
                                     child: Icon(
                                       FontAwesomeIcons.mapMarkerAlt,
-                                      color: Theme.of(context).accentColor,
+                                      // color: Theme.of(context).accentColor,
                                     ),
                                     onPressed: _animateToUserLocation,
                                   ),
@@ -152,8 +152,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                 shape: RoundedRectangleBorder(
                                     side: BorderSide(color: Colors.black12),
                                     borderRadius: const BorderRadius.only(
-                                        topLeft: Radius.circular(16),
-                                        topRight: Radius.circular(16))),
+                                        topLeft: Radius.circular(8),
+                                        topRight: Radius.circular(8))),
                                 child: Container(
                                   padding:
                                       const EdgeInsets.symmetric(vertical: 4),
@@ -172,7 +172,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                             if (model.selectedReport == null)
                                               Container()
                                             else
-                                              InkWell(
+                                              GestureDetector(
                                                   onTap: () {
                                                     Navigator.push<dynamic>(
                                                         context,
@@ -206,8 +206,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                 IconButton(
                                                     icon: Icon(
                                                       FontAwesomeIcons.listAlt,
-                                                      color: Theme.of(context)
-                                                          .accentColor,
                                                     ),
                                                     onPressed: () {
                                                       _navigateToReportsPage(
@@ -217,8 +215,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                           IconButton(
                                             icon: Icon(
                                               FontAwesomeIcons.fileAlt,
-                                              color:
-                                                  Theme.of(context).accentColor,
                                             ),
                                             onPressed:
                                                 _navigateToSubmitReportPage,

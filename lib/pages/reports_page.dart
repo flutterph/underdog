@@ -14,8 +14,6 @@ class _ReportsPageState extends State<ReportsPage>
     with SingleTickerProviderStateMixin {
   TabController _tabController;
 
-  TextStyle _tabStyle;
-
   @override
   void initState() {
     super.initState();
@@ -24,42 +22,63 @@ class _ReportsPageState extends State<ReportsPage>
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    _tabStyle = TextStyle(
-        color: Theme.of(context).accentColor, fontWeight: FontWeight.bold);
-  }
-
-  @override
   Widget build(BuildContext context) {
+    const double radius = 56;
+
     return Scaffold(
+      backgroundColor: UnderdogTheme.dirtyWhite,
       body: Stack(
         children: <Widget>[
-          AppBar(elevation: 0, backgroundColor: Colors.transparent),
+          Material(
+            color: Colors.white,
+            child: Container(
+              height: MediaQuery.of(context).size.height * 0.94,
+              width: double.infinity,
+            ),
+            shape: RoundedRectangleBorder(
+                borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(radius),
+                    bottomRight: Radius.circular(radius)),
+                side: BorderSide(color: Colors.white12)),
+          ),
+          Material(
+            color: UnderdogTheme.teal,
+            child: Container(
+              height: MediaQuery.of(context).size.height * 0.29,
+              width: double.infinity,
+            ),
+            shape: RoundedRectangleBorder(
+                borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(radius),
+                    bottomRight: Radius.circular(radius)),
+                side: BorderSide(color: Colors.white12)),
+          ),
+          AppBar(
+            elevation: 0,
+            backgroundColor: Colors.transparent,
+            iconTheme: const IconThemeData(color: Colors.white),
+          ),
           Container(
             child: Column(
               children: <Widget>[
                 const SizedBox(height: 96),
-                Text(
+                const Text(
                   'Reports',
                   style: UnderdogTheme.pageTitle,
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: 8),
                 TabBar(
                   controller: _tabController,
                   labelPadding: const EdgeInsets.all(16),
-                  indicatorColor: Theme.of(context).accentColor,
+                  indicatorColor: Colors.white,
+                  indicatorWeight: 2,
                   indicatorSize: TabBarIndicatorSize.label,
-                  tabs: <Widget>[
+                  labelColor: Colors.white,
+                  tabs: const <Widget>[
                     Text(
                       'Unrescued',
-                      style: _tabStyle,
                     ),
-                    Text(
-                      'Rescued',
-                      style: _tabStyle,
-                    ),
+                    Text('Rescued'),
                   ],
                 ),
                 Expanded(

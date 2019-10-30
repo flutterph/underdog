@@ -66,7 +66,7 @@ class _AnimatedRaisedButtonState extends State<AnimatedRaisedButton>
   void didChangeDependencies() {
     super.didChangeDependencies();
     // Theme and colors
-    _color = (widget.color) ?? Theme.of(context).accentColor;
+    _color = (widget.color) ?? UnderdogTheme.mustard;
     _style = (widget.style) ?? UnderdogTheme.raisedButtonText;
     _progressColor = (widget.progressColor) ?? Colors.white;
   }

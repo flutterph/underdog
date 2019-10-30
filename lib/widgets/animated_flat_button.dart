@@ -6,14 +6,7 @@ import '../constants.dart';
 import '../underdog_theme.dart';
 
 class AnimatedFlatButton extends StatefulWidget {
-  final Function onPressed;
-  final String label;
-  final bool isBusy;
-  final int delay;
-  final IconData icon;
-  final Color color;
-  final TextStyle style;
-  AnimatedFlatButton(
+  const AnimatedFlatButton(
       {Key key,
       @required this.onPressed,
       @required this.label,
@@ -23,6 +16,14 @@ class AnimatedFlatButton extends StatefulWidget {
       this.color,
       this.style})
       : super(key: key);
+
+  final Function onPressed;
+  final String label;
+  final bool isBusy;
+  final int delay;
+  final IconData icon;
+  final Color color;
+  final TextStyle style;
 
   @override
   _AnimatedFlatButtonState createState() => _AnimatedFlatButtonState();
@@ -63,7 +64,7 @@ class _AnimatedFlatButtonState extends State<AnimatedFlatButton>
   void didChangeDependencies() {
     super.didChangeDependencies();
     // Theme and color
-    _color = (widget.color) ?? Theme.of(context).accentColor;
+    _color = (widget.color) ?? UnderdogTheme.mustard;
     _style = (widget.style) ?? UnderdogTheme.flatButtonText;
     _pbColor = (_color == Theme.of(context).accentColor)
         ? Colors.white

@@ -170,7 +170,7 @@ class _SubmitRescuePageState extends State<SubmitRescuePage>
                                     focusedBorder: _focusedBorder,
                                     hintText:
                                         '(Optional) Any other additional valuable information',
-                                    hintStyle: UnderdogTheme.hintTextDark),
+                                    hintStyle: UnderdogTheme.darkHintText),
                               ),
                             ],
                           ),
@@ -180,7 +180,7 @@ class _SubmitRescuePageState extends State<SubmitRescuePage>
                       AnimatedRaisedButton(
                         label: 'Submit Rescue',
                         color: Colors.white,
-                        style: UnderdogTheme.raisedButtonTextDark,
+                        style: UnderdogTheme.darkRaisedButtonText,
                         onPressed: () async {
                           final String result = await model.submitRescue(
                               widget.report.uid,
