@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:underdog/data/breeds.dart';
@@ -209,53 +210,61 @@ class _SubmitReportPageState extends State<SubmitReportPage>
                         ),
                       ),
                       const SizedBox(height: 24),
-                      AnimatedRaisedButton(
-                        isBusy: isBusy,
-                        label: !isBusy ? 'Submit Report' : 'Submitting Report',
-                        delay: 125,
-                        onPressed: isBusy
-                            ? null
-                            : () async {
-                                if (_formKey.currentState.validate()) {
-                                  if (_selectedImage != null) {
-                                    if (model.locationInfo != null) {
-                                      final String submitStatus =
-                                          await model.submitReport(
-                                              _selectedImage,
-                                              _codeNameController.text,
-                                              model.breed,
-                                              model.locationInfo.addressLine,
-                                              model.locationInfo.latitude,
-                                              model.locationInfo.longitude,
-                                              _additionalInfoController.text);
+                      Builder(
+                        builder: (BuildContext context) => AnimatedRaisedButton(
+                          isBusy: isBusy,
+                          label:
+                              !isBusy ? 'Submit Report' : 'Submitting Report',
+                          delay: 125,
+                          onPressed: isBusy
+                              ? null
+                              : () async {
+                                  if (_formKey.currentState.validate()) {
+                                    if (_selectedImage != null) {
+                                      if (model.locationInfo != null) {
+                                        final String submitStatus =
+                                            await model.submitReport(
+                                                _selectedImage,
+                                                _codeNameController.text,
+                                                model.breed,
+                                                model.locationInfo.addressLine,
+                                                model.locationInfo.latitude,
+                                                model.locationInfo.longitude,
+                                                _additionalInfoController.text);
 
-                                      if (submitStatus != null) {
+                                        if (submitStatus != null) {
+                                          Scaffold.of(context).showSnackBar(
+                                            ErrorSnackBar(
+                                              content: Text(submitStatus),
+                                            ),
+                                          );
+                                        } else {
+                                          Navigator.pop(
+                                              context,
+                                              LatLng(
+                                                  model.locationInfo.latitude,
+                                                  model
+                                                      .locationInfo.longitude));
+                                        }
+                                      } else {
                                         Scaffold.of(context).showSnackBar(
                                           ErrorSnackBar(
-                                            content: Text(submitStatus),
+                                            content: const Text(
+                                                'There was an error retrieving the location. Please turn on LOCATION service'),
                                           ),
                                         );
-                                      } else {
-                                        Navigator.pop(context, true);
                                       }
                                     } else {
                                       Scaffold.of(context).showSnackBar(
                                         ErrorSnackBar(
                                           content: const Text(
-                                              'There was an error retrieving the location. Please turn on LOCATION service'),
+                                              'Please select an image with the dog in it'),
                                         ),
                                       );
                                     }
-                                  } else {
-                                    Scaffold.of(context).showSnackBar(
-                                      ErrorSnackBar(
-                                        content: const Text(
-                                            'Please select an image with the dog in it'),
-                                      ),
-                                    );
                                   }
-                                }
-                              },
+                                },
+                        ),
                       ),
                       const SizedBox(height: 64),
                     ],

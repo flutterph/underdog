@@ -57,9 +57,7 @@ class ReportItem extends StatelessWidget {
                               fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                       ),
-                      Hero(
-                          tag: HeroTag.REPORT_BREED_ + report.uid,
-                          child: Text(report.breed)),
+                      Text(report.breed),
                       const SizedBox(height: 16),
                       Row(
                         children: <Widget>[

@@ -90,22 +90,6 @@ flutter:
       fonts:
         - asset: assets/fonts/jua/Jua-Regular.ttf
 
-    - family: OpenSans
-      fonts:
-        - asset: assets/fonts/open_sans/OpenSans-Regular.ttf
-        - asset: assets/fonts/open_sans/OpenSans-Italic.ttf
-          style: italic
-        - asset: assets/fonts/open_sans/OpenSans-Bold.ttf
-          weight: 700
-        - asset: assets/fonts/open_sans/OpenSans-BoldItalic.ttf
-          weight: 700
-          style: italic
-        - asset: assets/fonts/open_sans/OpenSans-Light.ttf
-          weight: 300
-        - asset: assets/fonts/open_sans/OpenSans-LightItalic.ttf
-          weight: 300
-          style: italic
-
     - family: Manjari
       fonts:
         - asset: assets/fonts/manjari/Manjari-Regular.ttf

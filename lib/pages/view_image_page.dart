@@ -21,8 +21,8 @@ class ViewImagePage extends StatelessWidget {
               child: CachedNetworkImage(
                 imageUrl: url,
                 fit: BoxFit.contain,
-                placeholder: (BuildContext context, String url) => Center(
-                  child: const CircularProgressIndicator(),
+                placeholder: (BuildContext context, String url) => const Center(
+                  child: CircularProgressIndicator(),
                 ),
                 errorWidget: (BuildContext context, String url, Object error) =>
                     Icon(FontAwesomeIcons.frown),

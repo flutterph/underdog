@@ -13,11 +13,15 @@ class RescuedReportsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FirebaseAnimatedList(
-      query: locator<RescuedReportsListModel>().getRescued(),
-      shrinkWrap: true,
-      defaultChild: Center(child: const CircularProgressIndicator()),
-      itemBuilder: _buildItem,
+    return MediaQuery.removePadding(
+      context: context,
+      removeTop: true,
+      child: FirebaseAnimatedList(
+        query: locator<RescuedReportsListModel>().getRescued(),
+        shrinkWrap: true,
+        defaultChild: const Center(child: CircularProgressIndicator()),
+        itemBuilder: _buildItem,
+      ),
     );
   }
 

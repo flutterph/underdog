@@ -267,13 +267,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   void _navigateToSubmitReportPage() {
     // final result = Navigator.of(context)
     //     .push(MaterialPageRoute(builder: (context) => SubmitReportPage()));
-    final Future<bool> result = Navigator.of(context)
-        .push(ScalePageRoute<bool>(page: const SubmitReportPage()));
+    final Future<LatLng> result = Navigator.of(context)
+        .push(ScalePageRoute<LatLng>(page: const SubmitReportPage()));
 
     // Update markers if a new report was successfully submitted
-    result.then((bool value) {
-      if (value != null && value == true) {
+    result.then((LatLng value) {
+      if (value != null) {
         _initializeReportsMarkers();
+        _animateToLocation(value);
       }
     });
   }

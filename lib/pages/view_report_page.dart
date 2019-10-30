@@ -5,7 +5,7 @@ import 'package:underdog/data/models/report.dart';
 import 'package:underdog/hero_tag.dart';
 import 'package:underdog/pages/submit_rescue_page.dart';
 import 'package:underdog/pages/view_image_page.dart';
-import 'package:underdog/widgets/animated_flat_button.dart';
+import 'package:underdog/pages/view_rescue_page.dart';
 import 'package:underdog/widgets/animated_outline_button.dart';
 import 'package:underdog/widgets/animated_raised_button.dart';
 import 'package:underdog/widgets/scale_page_route.dart';
@@ -46,12 +46,11 @@ class ViewReportPage extends StatelessWidget {
                       onTap: () {
                         Navigator.push(
                             context,
-                            MaterialPageRoute<void>(
-                                builder: (BuildContext context) =>
-                                    ViewImagePage(
-                                      url: report.imageUrl,
-                                      uid: report.uid,
-                                    )));
+                            ScalePageRoute<void>(
+                                page: ViewImagePage(
+                              url: report.imageUrl,
+                              uid: report.uid,
+                            )));
                       },
                       child: Hero(
                           tag: HeroTag.REPORT_IMAGE_ + report.uid,
@@ -85,9 +84,7 @@ class ViewReportPage extends StatelessWidget {
                       'BREED',
                       style: UnderdogTheme.labelStyle,
                     ),
-                    Hero(
-                        tag: HeroTag.REPORT_BREED_ + report.uid,
-                        child: Text(report.breed)),
+                    Text(report.breed),
                     const SizedBox(height: 16),
                     Text(
                       'LAST SEEN',
@@ -95,7 +92,10 @@ class ViewReportPage extends StatelessWidget {
                     ),
                     Hero(
                         tag: HeroTag.REPORT_LANDMARK_ + report.uid,
-                        child: Text(report.address)),
+                        child: Text(
+                          report.address,
+                          textAlign: TextAlign.center,
+                        )),
                     const SizedBox(height: 16),
                     Text(
                       'ADDITIONAL INFO',
@@ -108,25 +108,48 @@ class ViewReportPage extends StatelessWidget {
                       )
                     else
                       Text(report.additionalInfo),
-                    const SizedBox(height: 16),
-                    AnimatedRaisedButton(
-                      label: 'Get Directions',
-                      onPressed: () {
-                        Navigator.pop(context, report);
-                      },
-                      delay: 125,
-                    ),
-                    const SizedBox(height: 8),
-                    AnimatedOutlineButton(
-                      label: 'I rescued this pup!',
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            ScalePageRoute<bool>(
-                                page: SubmitRescuePage(report: report)));
-                      },
-                      delay: 250,
-                    ),
+                    const SizedBox(height: 24),
+                    if (!report.isRescued)
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          AnimatedRaisedButton(
+                            label: 'Get Directions',
+                            onPressed: () {
+                              Navigator.pop(context, report);
+                            },
+                            delay: 125,
+                          ),
+                          const SizedBox(height: 8),
+                          AnimatedOutlineButton(
+                            label: 'I rescued this pup!',
+                            onPressed: () async {
+                              final bool didSubmitRescue = await Navigator.push(
+                                  context,
+                                  ScalePageRoute<bool>(
+                                      page: SubmitRescuePage(report: report)));
+
+                              if (didSubmitRescue) {
+                                Navigator.pop(context);
+                              }
+                            },
+                            delay: 250,
+                          ),
+                        ],
+                      )
+                    else
+                      AnimatedRaisedButton(
+                        label: 'View Rescue',
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              ScalePageRoute<void>(
+                                  page: ViewRescuePage(
+                                report: report,
+                              )));
+                        },
+                        delay: 125,
+                      ),
                   ],
                 ),
               ),

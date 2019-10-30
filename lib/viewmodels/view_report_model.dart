@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
 
-enum ViewState { Idle, Busy }
+enum PageState { Idle, Busy }
 
 class ViewReportModel extends ChangeNotifier {}

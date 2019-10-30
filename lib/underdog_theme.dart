@@ -32,4 +32,5 @@ class UnderdogTheme {
     fontSize: 12,
     color: Colors.black54,
   );
+  static TextStyle darkLabelStyle = labelStyle.copyWith(color: Colors.white70);
 }

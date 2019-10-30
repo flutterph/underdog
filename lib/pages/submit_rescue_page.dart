@@ -2,14 +2,18 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:underdog/data/models/location_info.dart';
 import 'package:underdog/data/models/report.dart';
 import 'package:underdog/pages/select_location_page.dart';
+import 'package:underdog/viewmodels/submit_rescue_model.dart';
 import 'package:underdog/widgets/animated_flat_button.dart';
 import 'package:underdog/widgets/animated_raised_button.dart';
-import 'package:underdog/widgets/scale_page_route.dart';
+import 'package:underdog/widgets/error_snackbar.dart';
 
+import '../service_locator.dart';
 import '../underdog_theme.dart';
 
 class SubmitRescuePage extends StatefulWidget {
@@ -26,148 +30,195 @@ class _SubmitRescuePageState extends State<SubmitRescuePage>
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _additionalInfoController =
       TextEditingController();
-  File _selectedImage1;
-  // File _selectedImage2;
+
+  final UnderlineInputBorder _enabledBorder = UnderlineInputBorder(
+      borderSide: BorderSide(color: Colors.white70, width: 1));
+  final UnderlineInputBorder _focusedBorder = UnderlineInputBorder(
+      borderSide: BorderSide(color: Colors.white, width: 2));
+  File _selectedImage;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-      ),
-      body: Center(
-        child: Container(
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  'Thank you!',
-                  style: UnderdogTheme.pageTitle,
-                ),
-                const SizedBox(height: 8),
-                SizedBox(
-                  width: 280,
-                  child: Form(
-                    key: _formKey,
-                    autovalidate: false,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        InkWell(
-                          onTap: _showImageSourceSelectionDialog,
-                          child: Material(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16),
-                                side: BorderSide(color: Colors.black12)),
-                            child: (_selectedImage1 == null)
-                                ? Container(
-                                    height: 280,
-                                    width: 280,
-                                    child: Center(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          'Upload an image to help with the rescue',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black45),
-                                        ),
-                                      ),
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: Colors.black12,
+    return ChangeNotifierProvider<SubmitRescueModel>(
+      builder: (BuildContext context) => locator<SubmitRescueModel>(),
+      child: Consumer<SubmitRescueModel>(
+        builder: (BuildContext context, SubmitRescueModel model, Widget child) {
+          return Scaffold(
+            backgroundColor: Theme.of(context).accentColor,
+            appBar: AppBar(
+              elevation: 0,
+              backgroundColor: Colors.transparent,
+            ),
+            body: Center(
+              child: Container(
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        'Thank you!',
+                        style: UnderdogTheme.pageTitle
+                            .copyWith(color: Colors.white),
+                      ),
+                      const SizedBox(height: 8),
+                      SizedBox(
+                        width: 280,
+                        child: Form(
+                          key: _formKey,
+                          autovalidate: false,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              InkWell(
+                                onTap: _showImageSourceSelectionDialog,
+                                child: Material(
+                                  shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(16),
-                                    ),
-                                  )
-                                : Container(
-                                    height: 280,
-                                    width: 280,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(16),
-                                        image: DecorationImage(
-                                            fit: BoxFit.cover,
-                                            image: FileImage(_selectedImage1))),
+                                      side: BorderSide(color: Colors.black12)),
+                                  child: (_selectedImage == null)
+                                      ? Container(
+                                          height: 280,
+                                          width: 280,
+                                          child: Center(
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Text(
+                                                'Upload proof of rescue (ideally a picture of you with the dog)',
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.black45),
+                                              ),
+                                            ),
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white12,
+                                            borderRadius:
+                                                BorderRadius.circular(16),
+                                          ),
+                                        )
+                                      : Container(
+                                          height: 280,
+                                          width: 280,
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(16),
+                                              image: DecorationImage(
+                                                  fit: BoxFit.cover,
+                                                  image: FileImage(
+                                                      _selectedImage))),
+                                        ),
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+                              Center(
+                                child: Text(
+                                  'FOUND AT',
+                                  style: UnderdogTheme.darkLabelStyle,
+                                ),
+                              ),
+                              Row(
+                                children: <Widget>[
+                                  Expanded(
+                                    child: (model.locationInfo == null)
+                                        ? Container()
+                                        : Text(
+                                            model.locationInfo.addressLine,
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
                                   ),
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        Center(
-                          child: Text(
-                            'LAST SEEN',
-                            style: UnderdogTheme.labelStyle,
-                          ),
-                        ),
-                        Row(
-                          children: <Widget>[
-                            // ! Fix when model is ready
-                            // Expanded(
-                            //   child: (model.locationInfo == null)
-                            //       ? Container()
-                            //       : Text(model.locationInfo.addressLine),
-                            // ),
-                            IconButton(
-                              icon: Icon(FontAwesomeIcons.mapMarkerAlt),
-                              onPressed: () {
-                                final Future<LocationInfo> result =
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute<LocationInfo>(
-                                            builder: (BuildContext context) =>
-                                                const SelectLocationPage()));
+                                  IconButton(
+                                    icon: Icon(
+                                      FontAwesomeIcons.mapMarkerAlt,
+                                      color: Colors.white,
+                                    ),
+                                    onPressed: () {
+                                      final Future<LocationInfo> result =
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute<LocationInfo>(
+                                                  builder: (BuildContext
+                                                          context) =>
+                                                      const SelectLocationPage()));
 
-                                result.then((LocationInfo value) {
-                                  if (value != null) {}
-                                });
-                              },
-                            )
-                          ],
-                        ),
-                        const SizedBox(height: 16),
-                        Center(
-                          child: Text(
-                            'ADDITIONAL INFO',
-                            style: UnderdogTheme.labelStyle,
+                                      result.then((LocationInfo value) {
+                                        if (value != null) {
+                                          model.updateLocationInfo(value);
+                                        }
+                                      });
+                                    },
+                                  )
+                                ],
+                              ),
+                              const SizedBox(height: 16),
+                              Center(
+                                child: Text(
+                                  'ADDITIONAL INFO',
+                                  style: UnderdogTheme.darkLabelStyle,
+                                ),
+                              ),
+                              TextFormField(
+                                controller: _additionalInfoController,
+                                maxLines: 1,
+                                textCapitalization:
+                                    TextCapitalization.sentences,
+                                decoration: InputDecoration(
+                                    enabledBorder: _enabledBorder,
+                                    focusedBorder: _focusedBorder,
+                                    hintText:
+                                        '(Optional) Any other additional valuable information',
+                                    hintStyle: UnderdogTheme.hintTextDark),
+                              ),
+                            ],
                           ),
                         ),
-                        TextFormField(
-                          controller: _additionalInfoController,
-                          maxLines: 1,
-                          textCapitalization: TextCapitalization.sentences,
-                          decoration: const InputDecoration(
-                              hintText:
-                                  '(Optional) Any other additional valuable information'),
-                        ),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(height: 24),
+                      AnimatedRaisedButton(
+                        label: 'Submit Rescue',
+                        color: Colors.white,
+                        style: UnderdogTheme.raisedButtonTextDark,
+                        onPressed: () async {
+                          final String result = await model.submitRescue(
+                              widget.report.uid,
+                              _selectedImage,
+                              model.locationInfo.addressLine,
+                              model.locationInfo.latitude,
+                              model.locationInfo.longitude,
+                              _additionalInfoController.text);
+
+                          if (result != null) {
+                            Scaffold.of(context).showSnackBar(
+                              ErrorSnackBar(
+                                content: Text(result),
+                              ),
+                            );
+                          } else {
+                            Navigator.pop(context, true);
+                          }
+                        },
+                        delay: 125,
+                      ),
+                      const SizedBox(height: 8),
+                      AnimatedFlatButton(
+                        label: 'Cancel',
+                        style: UnderdogTheme.darkFlatButtonText,
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        delay: 250,
+                      ),
+                      const SizedBox(height: 64),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 24),
-                // ! Fix when model is ready
-                const SizedBox(height: 16),
-                AnimatedRaisedButton(
-                  label: 'Submit Rescue',
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  delay: 125,
-                ),
-                const SizedBox(height: 8),
-                AnimatedFlatButton(
-                  label: 'Cancel',
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  delay: 250,
-                ),
-                const SizedBox(height: 64),
-              ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }
@@ -176,7 +227,7 @@ class _SubmitRescuePageState extends State<SubmitRescuePage>
     final File selectedImage = await ImagePicker.pickImage(source: source);
 
     setState(() {
-      _selectedImage1 = selectedImage;
+      _selectedImage = selectedImage;
     });
   }
 

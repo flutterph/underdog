@@ -15,13 +15,17 @@ class UnrescuedReportsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FirebaseAnimatedList(
-      query: locator<UnrescuedReportsListModel>().getRescued(),
-      shrinkWrap: true,
-      defaultChild: const Center(child: CircularProgressIndicator()),
-      duration:
-          const Duration(milliseconds: Constants.DEFAULT_ANIMATION_DURATION_MS),
-      itemBuilder: _buildItem,
+    return MediaQuery.removePadding(
+      context: context,
+      removeTop: true,
+      child: FirebaseAnimatedList(
+        query: locator<UnrescuedReportsListModel>().getRescued(),
+        shrinkWrap: true,
+        defaultChild: const Center(child: CircularProgressIndicator()),
+        duration: const Duration(
+            milliseconds: Constants.DEFAULT_ANIMATION_DURATION_MS),
+        itemBuilder: _buildItem,
+      ),
     );
   }
 
