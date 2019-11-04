@@ -36,22 +36,11 @@ class _LoginPageState extends State<LoginPage>
       child: Consumer<LoginModel>(
         builder: (BuildContext context, LoginModel model, Widget child) {
           final bool isBusy = model.state == PageState.Busy;
-          const double radius = 56;
 
           return Scaffold(
             backgroundColor: Colors.white,
             body: Stack(
               children: <Widget>[
-                // Material(
-                //   color: Colors.white,
-                //   child: Container(
-                //     height: MediaQuery.of(context).size.height * 0.8,
-                //     width: double.infinity,
-                //   ),
-                //   shape: RoundedRectangleBorder(
-                //       borderRadius: BorderRadius.circular(radius),
-                //       side: BorderSide(color: Colors.white12)),
-                // ),
                 Center(
                   child: Container(
                     constraints: const BoxConstraints(maxWidth: 256),

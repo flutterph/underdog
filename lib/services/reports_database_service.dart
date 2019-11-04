@@ -1,11 +1,17 @@
+import 'dart:async';
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:underdog/data/models/report.dart';
 import 'package:underdog/data/models/stats.dart';
+import 'package:underdog/data/streams/stats_stream.dart';
 
 class ReportsDatabaseService {
   ReportsDatabaseService() {
     FirebaseDatabase.instance.setPersistenceEnabled(true);
   }
+
+  StatsStream _statsStream;
+  StreamSubscription<Event> _statsStreamSubscription;
 
   final DatabaseReference _databaseReference =
       FirebaseDatabase.instance.reference().child('reports');
@@ -28,12 +34,18 @@ class ReportsDatabaseService {
     await _databaseReference.child(uid).child('is_rescued').set(isRescued);
   }
 
-  Future<Stats> getStats() async {
-    final Map<dynamic, dynamic> reportsMap =
-        (await getUnrescued().once()).value;
-    final Map<dynamic, dynamic> rescuesMap = (await getRescued().once()).value;
+  Stream<Stats> watchStats() {
+    _statsStreamSubscription =
+        _databaseReference.onChildChanged.listen((_) async {
+      final Map<dynamic, dynamic> reportsMap =
+          (await getUnrescued().once()).value;
+      final Map<dynamic, dynamic> rescuesMap =
+          (await getRescued().once()).value;
 
-    return Stats(reportsMap.length, rescuesMap.length);
+      _statsStream.updateStats(Stats(reportsMap.length, rescuesMap.length));
+    });
+
+    return _statsStream.value;
   }
 
   Query getRescued() {

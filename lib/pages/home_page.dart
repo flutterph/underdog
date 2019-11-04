@@ -108,7 +108,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             const Duration(seconds: 3), _updateUserMarker);
                         _initializeUserMarker();
                         _animateToUserLocation();
-                        model.getStats();
                       },
                       markers: Set<Marker>.of(markers.values),
                     ),

@@ -61,7 +61,7 @@ class _RegisterPageState extends State<RegisterPage>
               tag: HeroTag.SIGN_UP,
               child: Center(
                 child: Container(
-                  constraints: const BoxConstraints(maxWidth: 280),
+                  constraints: const BoxConstraints(maxWidth: 300),
                   child: Form(
                     key: _formKey,
                     child: SingleChildScrollView(

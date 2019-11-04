@@ -45,6 +45,8 @@ class _SubmitRescuePageState extends State<SubmitRescuePage>
       builder: (BuildContext context) => locator<SubmitRescueModel>(),
       child: Consumer<SubmitRescueModel>(
         builder: (BuildContext context, SubmitRescueModel model, Widget child) {
+          final bool isBusy = model.state == PageState.Busy;
+
           return Scaffold(
             backgroundColor: UnderdogTheme.teal,
             appBar: AppBar(
@@ -56,160 +58,165 @@ class _SubmitRescuePageState extends State<SubmitRescuePage>
             extendBodyBehindAppBar: true,
             body: Stack(
               children: <Widget>[
-                Container(
-                  height: double.infinity,
-                  width: double.infinity,
-                  constraints: BoxConstraints(
-                    maxHeight: MediaQuery.of(context).size.height -
-                        Constants.PAGE_BOTTOM_BAR_SIZE,
-                  ),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        ViewUtils.createTopSpacing(),
-                        Text(
-                          'You\'re a hero',
-                          style: UnderdogTheme.pageTitle
-                              .copyWith(color: Colors.white),
-                        ),
-                        const SizedBox(height: 8),
-                        SizedBox(
-                          width: 300,
-                          child: Form(
-                            key: _formKey,
-                            autovalidate: false,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                InkWell(
-                                  onTap: _showImageSourceSelectionDialog,
-                                  child: Material(
-                                    shape: RoundedRectangleBorder(
-                                        side:
-                                            BorderSide(color: Colors.black12)),
-                                    child: (_selectedImage == null)
-                                        ? Container(
-                                            height: 300,
-                                            width: 300,
-                                            child: Center(
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                child: Text(
-                                                  'Upload proof of rescue (ideally a picture of you with the dog)',
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.black45),
+                Positioned(
+                  bottom: Constants.PAGE_BOTTOM_BAR_SIZE,
+                  child: Container(
+                    height: double.infinity,
+                    width: double.infinity,
+                    constraints: BoxConstraints(
+                      maxHeight: MediaQuery.of(context).size.height -
+                          Constants.PAGE_BOTTOM_BAR_SIZE,
+                    ),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          ViewUtils.createTopSpacing(),
+                          Text(
+                            'You\'re a hero',
+                            style: UnderdogTheme.pageTitle
+                                .copyWith(color: Colors.white),
+                          ),
+                          const SizedBox(height: 8),
+                          SizedBox(
+                            width: 300,
+                            child: Form(
+                              key: _formKey,
+                              autovalidate: false,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  InkWell(
+                                    onTap: _showImageSourceSelectionDialog,
+                                    child: Material(
+                                      shape: RoundedRectangleBorder(
+                                          side: BorderSide(
+                                              color: Colors.black12)),
+                                      child: (_selectedImage == null)
+                                          ? Container(
+                                              height: 300,
+                                              width: 300,
+                                              child: Center(
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: Text(
+                                                    'Upload proof of rescue (ideally a picture of you with the dog)',
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.black45),
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                            decoration: BoxDecoration(
-                                              color: Colors.white12,
-                                              borderRadius:
-                                                  BorderRadius.circular(16),
-                                            ),
-                                          )
-                                        : Container(
-                                            height: 300,
-                                            width: 300,
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(16),
-                                                image: DecorationImage(
-                                                    fit: BoxFit.cover,
-                                                    image: FileImage(
-                                                        _selectedImage))),
-                                          ),
-                                  ),
-                                ),
-                                const SizedBox(height: 24),
-                                Center(
-                                  child: Container(
-                                    constraints:
-                                        const BoxConstraints(maxWidth: 280),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Text(
-                                          'FOUND AT',
-                                          style: UnderdogTheme.darkLabelStyle,
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        Row(
-                                          children: <Widget>[
-                                            Expanded(
-                                              child: (model.locationInfo ==
-                                                      null)
-                                                  ? Container()
-                                                  : Text(
-                                                      model.locationInfo
-                                                          .addressLine,
-                                                      style: const TextStyle(
-                                                          color: Colors.white),
-                                                    ),
-                                            ),
-                                            IconButton(
-                                              icon: Icon(
-                                                FontAwesomeIcons.mapMarkerAlt,
-                                                color: UnderdogTheme.darkTeal,
+                                              decoration: BoxDecoration(
+                                                color: Colors.white12,
+                                                // borderRadius:
+                                                //     BorderRadius.circular(16),
                                               ),
-                                              onPressed: () {
-                                                final Future<LocationInfo>
-                                                    result = Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute<
-                                                                LocationInfo>(
-                                                            builder: (BuildContext
-                                                                    context) =>
-                                                                const SelectLocationPage()));
-
-                                                result
-                                                    .then((LocationInfo value) {
-                                                  if (value != null) {
-                                                    model.updateLocationInfo(
-                                                        value);
-                                                  }
-                                                });
-                                              },
                                             )
-                                          ],
-                                        ),
-                                        const SizedBox(height: 12),
-                                        Text(
-                                          'ADDITIONAL INFO',
-                                          style: UnderdogTheme.darkLabelStyle,
-                                        ),
-                                        TextFormField(
-                                          controller: _additionalInfoController,
-                                          maxLines: 1,
-                                          textCapitalization:
-                                              TextCapitalization.sentences,
-                                          decoration: InputDecoration(
-                                              enabledBorder: _enabledBorder,
-                                              focusedBorder: _focusedBorder,
-                                              hintText:
-                                                  '(Optional) Any other additional valuable information',
-                                              hintStyle:
-                                                  UnderdogTheme.darkHintText),
-                                        ),
-                                      ],
+                                          : Container(
+                                              height: 300,
+                                              width: 300,
+                                              decoration: BoxDecoration(
+                                                  // borderRadius:
+                                                  //     BorderRadius.circular(16),
+                                                  image: DecorationImage(
+                                                      fit: BoxFit.cover,
+                                                      image: FileImage(
+                                                          _selectedImage))),
+                                            ),
                                     ),
                                   ),
-                                )
-                              ],
+                                  const SizedBox(height: 24),
+                                  Center(
+                                    child: Container(
+                                      constraints:
+                                          const BoxConstraints(maxWidth: 280),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text(
+                                            'FOUND AT',
+                                            style: UnderdogTheme.darkLabelStyle,
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          Row(
+                                            children: <Widget>[
+                                              Expanded(
+                                                child: (model.locationInfo ==
+                                                        null)
+                                                    ? Container()
+                                                    : Text(
+                                                        model.locationInfo
+                                                            .addressLine,
+                                                        style: const TextStyle(
+                                                            color:
+                                                                Colors.white),
+                                                      ),
+                                              ),
+                                              IconButton(
+                                                icon: Icon(
+                                                  FontAwesomeIcons.mapMarkerAlt,
+                                                  color: UnderdogTheme.darkTeal,
+                                                ),
+                                                onPressed: () {
+                                                  final Future<LocationInfo>
+                                                      result = Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute<
+                                                                  LocationInfo>(
+                                                              builder: (BuildContext
+                                                                      context) =>
+                                                                  const SelectLocationPage()));
+
+                                                  result.then(
+                                                      (LocationInfo value) {
+                                                    if (value != null) {
+                                                      model.updateLocationInfo(
+                                                          value);
+                                                    }
+                                                  });
+                                                },
+                                              )
+                                            ],
+                                          ),
+                                          const SizedBox(height: 12),
+                                          Text(
+                                            'ADDITIONAL INFO',
+                                            style: UnderdogTheme.darkLabelStyle,
+                                          ),
+                                          TextFormField(
+                                            controller:
+                                                _additionalInfoController,
+                                            maxLines: 1,
+                                            textCapitalization:
+                                                TextCapitalization.sentences,
+                                            decoration: InputDecoration(
+                                                enabledBorder: _enabledBorder,
+                                                focusedBorder: _focusedBorder,
+                                                hintText:
+                                                    '(Optional) Any other additional valuable information',
+                                                hintStyle:
+                                                    UnderdogTheme.darkHintText),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -237,6 +244,7 @@ class _SubmitRescuePageState extends State<SubmitRescuePage>
                           child: AnimatedRaisedButton(
                             label: 'Submit Rescue',
                             color: UnderdogTheme.darkTeal,
+                            isBusy: isBusy,
                             style: UnderdogTheme.raisedButtonText,
                             onPressed: () async {
                               final String result = await model.submitRescue(

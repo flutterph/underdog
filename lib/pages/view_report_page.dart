@@ -113,7 +113,7 @@ class ViewReportPage extends StatelessWidget {
                             )));
                       },
                       child: Hero(
-                          tag: HeroTag.REPORT_IMAGE_,
+                          tag: HeroTag.REPORT_IMAGE_ + report.uid,
                           child: Material(
                             shape: RoundedRectangleBorder(
                                 side: BorderSide(color: Colors.black12)),

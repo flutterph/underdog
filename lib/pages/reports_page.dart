@@ -34,7 +34,7 @@ class _ReportsPageState extends State<ReportsPage>
           Material(
             color: Colors.white,
             child: Container(
-              height: MediaQuery.of(context).size.height * 0.94,
+              height: MediaQuery.of(context).size.height * 0.93,
               width: double.infinity,
             ),
             shape: RoundedRectangleBorder(

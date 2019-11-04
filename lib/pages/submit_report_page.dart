@@ -78,190 +78,194 @@ class _SubmitReportPageState extends State<SubmitReportPage>
                           bottomRight: Radius.circular(radius)),
                       side: BorderSide(color: Colors.white12)),
                 ),
-                Container(
-                  alignment: Alignment.topCenter,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        ViewUtils.createTopSpacing(),
-                        Text(
-                          'Let\'s Rescue!',
-                          style: UnderdogTheme.pageTitle,
-                        ),
-                        SizedBox(
-                          width: 300,
-                          child: Form(
-                            key: _formKey,
-                            autovalidate: false,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                InkWell(
-                                  onTap: isBusy
-                                      ? null
-                                      : _showImageSourceSelectionDialog,
-                                  child: Material(
-                                    shape: RoundedRectangleBorder(
-                                        side:
-                                            BorderSide(color: Colors.black12)),
-                                    child: (_selectedImage == null)
-                                        ? Container(
-                                            height: 300,
-                                            width: 300,
-                                            child: Center(
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                child: Text(
-                                                  'Upload an image to help with the rescue',
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.black45),
+                Positioned(
+                  bottom: Constants.PAGE_BOTTOM_BAR_SIZE,
+                  child: Container(
+                    alignment: Alignment.topCenter,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          ViewUtils.createTopSpacing(),
+                          const Text(
+                            'Let\'s Rescue!',
+                            style: UnderdogTheme.pageTitle,
+                          ),
+                          SizedBox(
+                            width: 300,
+                            child: Form(
+                              key: _formKey,
+                              autovalidate: false,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  InkWell(
+                                    onTap: isBusy
+                                        ? null
+                                        : _showImageSourceSelectionDialog,
+                                    child: Material(
+                                      shape: RoundedRectangleBorder(
+                                          side: BorderSide(
+                                              color: Colors.black12)),
+                                      child: (_selectedImage == null)
+                                          ? Container(
+                                              height: 300,
+                                              width: 300,
+                                              child: Center(
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: Text(
+                                                    'Upload an image to help with the rescue',
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.black45),
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                            decoration: BoxDecoration(
-                                              color: Colors.black12,
-                                            ),
-                                          )
-                                        : Container(
-                                            height: 300,
-                                            width: 300,
-                                            decoration: BoxDecoration(
-                                                image: DecorationImage(
-                                                    fit: BoxFit.cover,
-                                                    image: FileImage(
-                                                        _selectedImage))),
-                                          ),
-                                  ),
-                                ),
-                                const SizedBox(height: 24),
-                                Center(
-                                  child: Container(
-                                    constraints:
-                                        const BoxConstraints(maxWidth: 280),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: <Widget>[
-                                        Text(
-                                          'CODENAME',
-                                          style: UnderdogTheme.labelStyle,
-                                        ),
-                                        TextFormField(
-                                          controller: _codeNameController,
-                                          maxLines: 1,
-                                          enabled: !isBusy,
-                                          textCapitalization:
-                                              TextCapitalization.words,
-                                          decoration: const InputDecoration(
-                                              hintText:
-                                                  'Give him or her a codename for now'),
-                                          validator: (String value) {
-                                            if (value.isEmpty) {
-                                              return 'Please provide a codename';
-                                            }
-
-                                            return null;
-                                          },
-                                        ),
-                                        const SizedBox(height: 12),
-                                        Text(
-                                          'BREED',
-                                          style: UnderdogTheme.labelStyle,
-                                        ),
-                                        DropdownButton<String>(
-                                          isExpanded: true,
-                                          value: model.breed,
-                                          items: breeds
-                                              .map<DropdownMenuItem<String>>(
-                                                  (String value) {
-                                            return DropdownMenuItem<String>(
-                                              value: value,
-                                              child: Text(value),
-                                            );
-                                          }).toList(),
-                                          onChanged: (String value) {
-                                            setState(() {
-                                              model.breed = value;
-                                            });
-                                          },
-                                        ),
-                                        const SizedBox(height: 12),
-                                        Text(
-                                          'LAST SEEN',
-                                          style: UnderdogTheme.labelStyle,
-                                        ),
-                                        Row(
-                                          children: <Widget>[
-                                            Expanded(
-                                              child: (model.locationInfo ==
-                                                      null)
-                                                  ? Container()
-                                                  : Text(
-                                                      model.locationInfo
-                                                          .addressLine,
-                                                      maxLines: 2,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                    ),
-                                            ),
-                                            IconButton(
-                                              icon: Icon(
-                                                FontAwesomeIcons.mapMarkerAlt,
-                                                color: UnderdogTheme.teal,
+                                              decoration: BoxDecoration(
+                                                color: Colors.black12,
                                               ),
-                                              onPressed: () {
-                                                final Future<LocationInfo>
-                                                    result = Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute<
-                                                                LocationInfo>(
-                                                            builder: (BuildContext
-                                                                    context) =>
-                                                                const SelectLocationPage()));
-
-                                                result
-                                                    .then((LocationInfo value) {
-                                                  if (value != null) {
-                                                    model.updateLocationInfo(
-                                                        value);
-                                                  }
-                                                });
-                                              },
                                             )
-                                          ],
-                                        ),
-                                        const SizedBox(height: 12),
-                                        Text(
-                                          'ADDITIONAL INFO',
-                                          style: UnderdogTheme.labelStyle,
-                                        ),
-                                        TextFormField(
-                                          controller: _additionalInfoController,
-                                          maxLines: 1,
-                                          enabled: !isBusy,
-                                          textCapitalization:
-                                              TextCapitalization.sentences,
-                                          decoration: const InputDecoration(
-                                              hintText:
-                                                  '(Optional) Any other additional valuable information'),
-                                        ),
-                                      ],
+                                          : Container(
+                                              height: 300,
+                                              width: 300,
+                                              decoration: BoxDecoration(
+                                                  image: DecorationImage(
+                                                      fit: BoxFit.cover,
+                                                      image: FileImage(
+                                                          _selectedImage))),
+                                            ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                  const SizedBox(height: 24),
+                                  Center(
+                                    child: Container(
+                                      constraints:
+                                          const BoxConstraints(maxWidth: 280),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: <Widget>[
+                                          Text(
+                                            'CODENAME',
+                                            style: UnderdogTheme.labelStyle,
+                                          ),
+                                          TextFormField(
+                                            controller: _codeNameController,
+                                            maxLines: 1,
+                                            enabled: !isBusy,
+                                            textCapitalization:
+                                                TextCapitalization.words,
+                                            decoration: const InputDecoration(
+                                                hintText:
+                                                    'Give him or her a codename for now'),
+                                            validator: (String value) {
+                                              if (value.isEmpty) {
+                                                return 'Please provide a codename';
+                                              }
+
+                                              return null;
+                                            },
+                                          ),
+                                          const SizedBox(height: 12),
+                                          Text(
+                                            'BREED',
+                                            style: UnderdogTheme.labelStyle,
+                                          ),
+                                          DropdownButton<String>(
+                                            isExpanded: true,
+                                            value: model.breed,
+                                            items: breeds
+                                                .map<DropdownMenuItem<String>>(
+                                                    (String value) {
+                                              return DropdownMenuItem<String>(
+                                                value: value,
+                                                child: Text(value),
+                                              );
+                                            }).toList(),
+                                            onChanged: (String value) {
+                                              setState(() {
+                                                model.breed = value;
+                                              });
+                                            },
+                                          ),
+                                          const SizedBox(height: 12),
+                                          Text(
+                                            'LAST SEEN',
+                                            style: UnderdogTheme.labelStyle,
+                                          ),
+                                          Row(
+                                            children: <Widget>[
+                                              Expanded(
+                                                child: (model.locationInfo ==
+                                                        null)
+                                                    ? Container()
+                                                    : Text(
+                                                        model.locationInfo
+                                                            .addressLine,
+                                                        maxLines: 2,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                      ),
+                                              ),
+                                              IconButton(
+                                                icon: Icon(
+                                                  FontAwesomeIcons.mapMarkerAlt,
+                                                  color: UnderdogTheme.teal,
+                                                ),
+                                                onPressed: () {
+                                                  final Future<LocationInfo>
+                                                      result = Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute<
+                                                                  LocationInfo>(
+                                                              builder: (BuildContext
+                                                                      context) =>
+                                                                  const SelectLocationPage()));
+
+                                                  result.then(
+                                                      (LocationInfo value) {
+                                                    if (value != null) {
+                                                      model.updateLocationInfo(
+                                                          value);
+                                                    }
+                                                  });
+                                                },
+                                              )
+                                            ],
+                                          ),
+                                          const SizedBox(height: 12),
+                                          Text(
+                                            'ADDITIONAL INFO',
+                                            style: UnderdogTheme.labelStyle,
+                                          ),
+                                          TextFormField(
+                                            controller:
+                                                _additionalInfoController,
+                                            maxLines: 1,
+                                            enabled: !isBusy,
+                                            textCapitalization:
+                                                TextCapitalization.sentences,
+                                            decoration: const InputDecoration(
+                                                hintText:
+                                                    '(Optional) Any other additional valuable information'),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),

@@ -60,9 +60,8 @@ class HomeModel extends ChangeNotifier {
     return _reports;
   }
 
-  Future<void> getStats() async {
-    _stats = await _reportsDatabaseService.getStats();
-    notifyListeners();
+  Stream<Stats> watchStats() {
+    return _reportsDatabaseService.watchStats();
   }
 
   void selectReport(Report report) {

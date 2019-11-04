@@ -96,13 +96,12 @@ class _ViewRescuePageState extends State<ViewRescuePage> {
                                         context,
                                         SlideLeftPageRoute<void>(
                                             page: ViewImagePage(
-                                          url: model.rescue.imageUrl,
+                                          // url: model.rescue.imageUrl,
                                           uid: widget.report.uid,
                                         )));
                                   },
                                   child: Hero(
-                                    tag: HeroTag.REPORT_IMAGE_ +
-                                        widget.report.uid,
+                                    tag: HeroTag.REPORT_IMAGE_,
                                     child: Material(
                                       borderOnForeground: true,
                                       shape: RoundedRectangleBorder(
