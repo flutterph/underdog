@@ -20,7 +20,10 @@ class HomeAppBar extends StatelessWidget {
       ),
       elevation: 0,
       backgroundColor: Colors.white,
-      shape: RoundedRectangleBorder(side: BorderSide(color: Colors.black12)),
+      shape: RoundedRectangleBorder(
+          side: BorderSide(color: Colors.black12),
+          borderRadius: const BorderRadius.only(
+              bottomLeft: Radius.circular(8), bottomRight: Radius.circular(8))),
       centerTitle: true,
       title: Hero(
         tag: HeroTag.MAIN_TITLE,

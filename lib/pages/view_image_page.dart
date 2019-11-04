@@ -12,28 +12,26 @@ class ViewImagePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        iconTheme: const IconThemeData(color: Colors.white),
+      ),
       backgroundColor: Colors.black,
-      body: Stack(
-        children: <Widget>[
-          Hero(
-            tag: HeroTag.REPORT_IMAGE_ + uid,
-            child: Center(
-              child: CachedNetworkImage(
-                imageUrl: url,
-                fit: BoxFit.contain,
-                placeholder: (BuildContext context, String url) => const Center(
-                  child: CircularProgressIndicator(),
-                ),
-                errorWidget: (BuildContext context, String url, Object error) =>
-                    Icon(FontAwesomeIcons.frown),
-              ),
+      extendBodyBehindAppBar: true,
+      body: Hero(
+        tag: HeroTag.REPORT_IMAGE_ + uid,
+        child: Center(
+          child: CachedNetworkImage(
+            imageUrl: url,
+            fit: BoxFit.contain,
+            placeholder: (BuildContext context, String url) => const Center(
+              child: CircularProgressIndicator(),
             ),
+            errorWidget: (BuildContext context, String url, Object error) =>
+                Icon(FontAwesomeIcons.frown),
           ),
-          AppBar(
-            elevation: 0,
-            backgroundColor: Colors.transparent,
-          ),
-        ],
+        ),
       ),
     );
   }

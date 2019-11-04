@@ -6,10 +6,13 @@ import 'package:underdog/hero_tag.dart';
 import 'package:underdog/pages/submit_rescue_page.dart';
 import 'package:underdog/pages/view_image_page.dart';
 import 'package:underdog/pages/view_rescue_page.dart';
+import 'package:underdog/view_utils.dart';
 import 'package:underdog/widgets/animated_outline_button.dart';
 import 'package:underdog/widgets/animated_raised_button.dart';
-import 'package:underdog/widgets/scale_page_route.dart';
+import 'package:underdog/widgets/slide_left_page_route.dart';
 
+import '../constants.dart';
+import '../date_time_utils.dart';
 import '../underdog_theme.dart';
 
 class ViewReportPage extends StatelessWidget {
@@ -30,7 +33,7 @@ class ViewReportPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       extendBodyBehindAppBar: true,
       body: Stack(
@@ -38,7 +41,8 @@ class ViewReportPage extends StatelessWidget {
           Material(
             color: Colors.white,
             child: Container(
-              height: MediaQuery.of(context).size.height * 0.89,
+              height: MediaQuery.of(context).size.height -
+                  Constants.PAGE_BOTTOM_BAR_SIZE,
               width: double.infinity,
             ),
             shape: RoundedRectangleBorder(
@@ -66,8 +70,9 @@ class ViewReportPage extends StatelessWidget {
                 constraints: const BoxConstraints(maxWidth: 300),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
+                    ViewUtils.createTopSpacing(),
                     Center(
                       child: Hero(
                           tag: HeroTag.REPORT_CODE_NAME_ + report.uid,
@@ -79,7 +84,7 @@ class ViewReportPage extends StatelessWidget {
                       onTap: () {
                         Navigator.push(
                             context,
-                            ScalePageRoute<void>(
+                            SlideLeftPageRoute<void>(
                                 page: ViewImagePage(
                               url: report.imageUrl,
                               uid: report.uid,
@@ -130,14 +135,45 @@ class ViewReportPage extends StatelessWidget {
                               'LAST SEEN',
                               style: UnderdogTheme.labelStyle,
                             ),
-                            Hero(
-                                tag: HeroTag.REPORT_LANDMARK_ + report.uid,
-                                child: Text(
-                                  report.address,
-                                  maxLines: 3,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: _body,
-                                )),
+                            Row(
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Icon(
+                                    FontAwesomeIcons.mapMarkerAlt,
+                                    size: 20,
+                                  ),
+                                ),
+                                Flexible(
+                                  child: Text(
+                                    report.address,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: _body.copyWith(fontSize: 16),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Icon(
+                                    FontAwesomeIcons.calendar,
+                                    size: 20,
+                                  ),
+                                ),
+                                Flexible(
+                                  child: Text(
+                                    DateTimeUtils.dateStringToDisplayString(
+                                        report.date),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: _body.copyWith(fontSize: 16),
+                                  ),
+                                ),
+                              ],
+                            ),
                             const SizedBox(height: 16),
                             Text(
                               'ADDITIONAL INFO',
@@ -168,32 +204,41 @@ class ViewReportPage extends StatelessWidget {
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
-              padding: const EdgeInsets.only(bottom: 22.0),
+              padding: const EdgeInsets.only(
+                  bottom: Constants.PAGE_BOTTOM_BAR_ITEMS_BOTTOM_PADDING),
               child: (!report.isRescued)
                   ? Row(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        AnimatedRaisedButton(
-                          label: 'Get Directions',
-                          onPressed: () {
-                            Navigator.pop(context, report);
-                          },
-                          delay: 125,
+                        FittedBox(
+                          child: AnimatedOutlineButton(
+                            label: 'I rescued this pup!',
+                            color: Colors.white,
+                            style: UnderdogTheme.outlineButtonTextDark,
+                            onPressed: () async {
+                              final bool didSubmitRescue = await Navigator.push(
+                                  context,
+                                  SlideLeftPageRoute<bool>(
+                                      page: SubmitRescuePage(report: report)));
+
+                              if (didSubmitRescue) {
+                                Navigator.pop(context);
+                              }
+                            },
+                            delay: 250,
+                          ),
                         ),
                         const SizedBox(width: 8),
-                        AnimatedOutlineButton(
-                          label: 'I rescued this pup!',
-                          onPressed: () async {
-                            final bool didSubmitRescue = await Navigator.push(
-                                context,
-                                ScalePageRoute<bool>(
-                                    page: SubmitRescuePage(report: report)));
-
-                            if (didSubmitRescue) {
-                              Navigator.pop(context);
-                            }
-                          },
-                          delay: 250,
+                        FittedBox(
+                          child: AnimatedRaisedButton(
+                            label: 'Get Directions',
+                            color: Colors.white,
+                            style: UnderdogTheme.darkRaisedButtonText,
+                            onPressed: () {
+                              Navigator.pop(context, report);
+                            },
+                            delay: 125,
+                          ),
                         ),
                       ],
                     )
@@ -205,7 +250,7 @@ class ViewReportPage extends StatelessWidget {
                         onPressed: () {
                           Navigator.push(
                               context,
-                              ScalePageRoute<void>(
+                              SlideLeftPageRoute<void>(
                                   page: ViewRescuePage(
                                 report: report,
                               )));

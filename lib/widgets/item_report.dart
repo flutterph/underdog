@@ -31,7 +31,9 @@ class ReportItem extends StatelessWidget {
                       height: 160,
                       width: 160,
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: const BorderRadius.only(
+                            bottomLeft: Radius.circular(8),
+                            topLeft: Radius.circular(8)),
                         child: CachedNetworkImage(
                           imageUrl: report.imageUrl,
                           fit: BoxFit.cover,

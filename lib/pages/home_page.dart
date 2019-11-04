@@ -14,7 +14,8 @@ import 'package:underdog/viewmodels/home_app_bar.dart';
 import 'package:underdog/viewmodels/home_model.dart';
 import 'package:underdog/widgets/home_drawer.dart';
 import 'package:underdog/widgets/report_preview.dart';
-import 'package:underdog/widgets/scale_page_route.dart';
+import 'package:underdog/widgets/slide_left_page_route.dart';
+import 'package:underdog/widgets/stats_overview.dart';
 
 import '../constants.dart';
 import '../service_locator.dart';
@@ -107,6 +108,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             const Duration(seconds: 3), _updateUserMarker);
                         _initializeUserMarker();
                         _animateToUserLocation();
+                        model.getStats();
                       },
                       markers: Set<Marker>.of(markers.values),
                     ),
@@ -170,7 +172,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                         child: Column(
                                           children: <Widget>[
                                             if (model.selectedReport == null)
-                                              Container()
+                                              const StatsOverview()
                                             else
                                               GestureDetector(
                                                   onTap: () {
@@ -188,10 +190,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                   child: ReportPreview(
                                                       report: model
                                                           .selectedReport)),
-                                            if (model.selectedReport == null)
-                                              Container()
-                                            else
-                                              const Divider(height: 2),
+                                            const Divider(
+                                              height: 2,
+                                              indent: 32,
+                                              endIndent: 32,
+                                            ),
                                           ],
                                         ),
                                       ),
@@ -249,7 +252,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     // final result = Navigator.of(context)
     //     .push(MaterialPageRoute(builder: (context) => ReportsPage()));
     final Future<Report> result = Navigator.of(context)
-        .push(ScalePageRoute<Report>(page: const ReportsPage()));
+        .push(SlideLeftPageRoute<Report>(page: const ReportsPage()));
 
     // Animate Maps camera if a report has been selected
     result.then((Report report) {
@@ -264,7 +267,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     // final result = Navigator.of(context)
     //     .push(MaterialPageRoute(builder: (context) => SubmitReportPage()));
     final Future<LatLng> result = Navigator.of(context)
-        .push(ScalePageRoute<LatLng>(page: const SubmitReportPage()));
+        .push(SlideLeftPageRoute<LatLng>(page: const SubmitReportPage()));
 
     // Update markers if a new report was successfully submitted
     result.then((LatLng value) {
@@ -280,6 +283,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
     final Marker marker = Marker(
       markerId: _userMarkerId,
+      icon: BitmapDescriptor.defaultMarkerWithHue(184.1),
       position: LatLng(userLocation.latitude, userLocation.longitude),
       infoWindow: const InfoWindow(title: 'You are here'),
       onTap: () {},
@@ -304,6 +308,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
     final Marker marker = Marker(
       markerId: _userMarkerId,
+      icon: BitmapDescriptor.defaultMarkerWithHue(184.1),
       position: LatLng(userLocation.latitude, userLocation.longitude),
       infoWindow: const InfoWindow(title: 'You are here'),
       onTap: () {},
@@ -336,7 +341,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   Future<void> _initializeReportsMarkers() async {
-    final List<Report> reports = await _homeModel.getReports();
+    final List<Report> reports = await _homeModel.getUnrescuedReports();
 
     const ImageConfiguration imageConfig =
         ImageConfiguration(size: Size(48, 48));

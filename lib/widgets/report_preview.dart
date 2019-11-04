@@ -8,6 +8,7 @@ import 'package:underdog/viewmodels/home_model.dart';
 import 'package:underdog/widgets/animated_flat_button.dart';
 import 'package:underdog/widgets/animated_raised_button.dart';
 
+import '../date_time_utils.dart';
 import '../underdog_theme.dart';
 
 class ReportPreview extends StatelessWidget {
@@ -82,6 +83,27 @@ class ReportPreview extends StatelessWidget {
                                     fontSize: 10, color: Colors.black54),
                               ),
                             ],
+                          ),
+                        )
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: <Widget>[
+                        Icon(
+                          FontAwesomeIcons.calendar,
+                          color: UnderdogTheme.mustard,
+                          size: 16,
+                        ),
+                        const SizedBox(width: 6),
+                        Expanded(
+                          child: Text(
+                            DateTimeUtils.dateStringToDisplayString(
+                                report.date),
+                            style: const TextStyle(fontSize: 12),
+                            overflow: TextOverflow.fade,
+                            maxLines: 1,
+                            softWrap: false,
                           ),
                         )
                       ],

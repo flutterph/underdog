@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:underdog/underdog_theme.dart';
+import 'package:underdog/view_utils.dart';
 import 'package:underdog/widgets/rescued_reports_list.dart';
 import 'package:underdog/widgets/unrescued_reports_list.dart';
 
@@ -61,7 +62,7 @@ class _ReportsPageState extends State<ReportsPage>
           Container(
             child: Column(
               children: <Widget>[
-                const SizedBox(height: 96),
+                ViewUtils.createTopSpacing(),
                 const Text(
                   'Reports',
                   style: UnderdogTheme.pageTitle,

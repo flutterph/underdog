@@ -3,12 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:underdog/data/models/report.dart';
+import 'package:underdog/hero_tag.dart';
 import 'package:underdog/pages/view_image_page.dart';
 import 'package:underdog/service_locator.dart';
+import 'package:underdog/view_utils.dart';
 import 'package:underdog/viewmodels/view_rescue_model.dart';
 import 'package:underdog/widgets/animated_outline_button.dart';
-import 'package:underdog/widgets/scale_page_route.dart';
+import 'package:underdog/widgets/animated_raised_button.dart';
+import 'package:underdog/widgets/slide_left_page_route.dart';
+import 'package:url_launcher/url_launcher.dart';
 
+import '../constants.dart';
+import '../date_time_utils.dart';
 import '../underdog_theme.dart';
 
 class ViewRescuePage extends StatefulWidget {
@@ -52,7 +58,8 @@ class _ViewRescuePageState extends State<ViewRescuePage> {
                   Material(
                     color: UnderdogTheme.teal,
                     child: Container(
-                      height: MediaQuery.of(context).size.height * 0.89,
+                      height: MediaQuery.of(context).size.height -
+                          Constants.PAGE_BOTTOM_BAR_SIZE,
                       width: double.infinity,
                     ),
                     shape: RoundedRectangleBorder(
@@ -73,14 +80,12 @@ class _ViewRescuePageState extends State<ViewRescuePage> {
                             ),
                           )
                         : Container(
-                            constraints: BoxConstraints(
-                                maxWidth: 300,
-                                maxHeight:
-                                    MediaQuery.of(context).size.height * 0.89),
+                            constraints: const BoxConstraints(maxWidth: 300),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
+                                ViewUtils.createTopSpacing(),
                                 Text(widget.report.codeName,
                                     style: UnderdogTheme.pageTitle
                                         .copyWith(color: Colors.white)),
@@ -89,32 +94,36 @@ class _ViewRescuePageState extends State<ViewRescuePage> {
                                   onTap: () {
                                     Navigator.push(
                                         context,
-                                        ScalePageRoute<void>(
+                                        SlideLeftPageRoute<void>(
                                             page: ViewImagePage(
                                           url: model.rescue.imageUrl,
                                           uid: widget.report.uid,
                                         )));
                                   },
-                                  child: Material(
-                                    borderOnForeground: true,
-                                    shape: RoundedRectangleBorder(
-                                        side:
-                                            BorderSide(color: Colors.black12)),
-                                    child: SizedBox(
-                                      height: 300,
-                                      width: 300,
-                                      child: CachedNetworkImage(
-                                        imageUrl: model.rescue.imageUrl,
-                                        fit: BoxFit.cover,
-                                        useOldImageOnUrlChange: true,
-                                        placeholder: (BuildContext context,
-                                                String url) =>
-                                            const Center(
-                                                child:
-                                                    CircularProgressIndicator()),
-                                        errorWidget: (BuildContext context,
-                                                String url, Object error) =>
-                                            Icon(FontAwesomeIcons.frown),
+                                  child: Hero(
+                                    tag: HeroTag.REPORT_IMAGE_ +
+                                        widget.report.uid,
+                                    child: Material(
+                                      borderOnForeground: true,
+                                      shape: RoundedRectangleBorder(
+                                          side: BorderSide(
+                                              color: Colors.black12)),
+                                      child: SizedBox(
+                                        height: 300,
+                                        width: 300,
+                                        child: CachedNetworkImage(
+                                          imageUrl: model.rescue.imageUrl,
+                                          fit: BoxFit.cover,
+                                          useOldImageOnUrlChange: true,
+                                          placeholder: (BuildContext context,
+                                                  String url) =>
+                                              const Center(
+                                                  child:
+                                                      CircularProgressIndicator()),
+                                          errorWidget: (BuildContext context,
+                                                  String url, Object error) =>
+                                              Icon(FontAwesomeIcons.frown),
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -144,11 +153,51 @@ class _ViewRescuePageState extends State<ViewRescuePage> {
                                           'FOUND AT',
                                           style: UnderdogTheme.darkLabelStyle,
                                         ),
-                                        Text(
-                                          model.rescue.address,
-                                          maxLines: 3,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: bodyStyle,
+                                        Row(
+                                          children: <Widget>[
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Icon(
+                                                FontAwesomeIcons.mapMarkerAlt,
+                                                color: UnderdogTheme.darkTeal,
+                                                size: 20,
+                                              ),
+                                            ),
+                                            Flexible(
+                                              child: Text(
+                                                model.rescue.address,
+                                                maxLines: 2,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: bodyStyle.copyWith(
+                                                    fontSize: 16),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: <Widget>[
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Icon(
+                                                FontAwesomeIcons.calendar,
+                                                color: UnderdogTheme.darkTeal,
+                                                size: 20,
+                                              ),
+                                            ),
+                                            Flexible(
+                                              child: Text(
+                                                DateTimeUtils
+                                                    .dateStringToDisplayString(
+                                                        model.rescue.date),
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: bodyStyle.copyWith(
+                                                    fontSize: 16),
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ],
                                     ),
@@ -161,17 +210,39 @@ class _ViewRescuePageState extends State<ViewRescuePage> {
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Padding(
-                      padding: const EdgeInsets.only(bottom: 22.0),
-                      child: FittedBox(
-                        child: AnimatedOutlineButton(
-                          label: 'Back',
-                          color: UnderdogTheme.teal,
-                          style: UnderdogTheme.flatButtonText,
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          delay: 125,
-                        ),
+                      padding: const EdgeInsets.only(
+                          bottom:
+                              Constants.PAGE_BOTTOM_BAR_ITEMS_BOTTOM_PADDING),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          FittedBox(
+                            child: AnimatedOutlineButton(
+                              label: 'Back',
+                              color: UnderdogTheme.darkTeal,
+                              style: UnderdogTheme.flatButtonText
+                                  .copyWith(color: UnderdogTheme.darkTeal),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              delay: 125,
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 8,
+                          ),
+                          FittedBox(
+                            child: AnimatedRaisedButton(
+                              label: 'Contact Rescuer',
+                              color: UnderdogTheme.teal,
+                              style: UnderdogTheme.darkFlatButtonText,
+                              onPressed: () {
+                                _showContactRescuerDialog();
+                              },
+                              delay: 125,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -180,5 +251,70 @@ class _ViewRescuePageState extends State<ViewRescuePage> {
             );
           },
         ));
+  }
+
+  void _showContactRescuerDialog() {
+    showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          title: const Text('Choose an option'),
+          content: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              RaisedButton(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 16, horizontal: 16),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Icon(
+                          FontAwesomeIcons.phone,
+                          color: Colors.white,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Phone',
+                          style: UnderdogTheme.raisedButtonText,
+                        ),
+                      ],
+                    ),
+                  ),
+                  // onPressed: () {
+                  //   Navigator.pop(context);
+                  //   launch('tel://09178796938');
+                  // }
+                  onPressed: null),
+              const SizedBox(width: 8),
+              RaisedButton(
+                  child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 16, horizontal: 16),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Icon(
+                            FontAwesomeIcons.envelopeOpen,
+                            color: Colors.white,
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'E-mail',
+                            style: UnderdogTheme.raisedButtonText,
+                          ),
+                        ],
+                      )),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    launch(
+                        'mailto:${_viewRescueModel.rescuer.email}?subject=Report User: ${_viewRescueModel.rescuer.firstName} ${_viewRescueModel.rescuer.lastName}&body=This user is bad');
+                  }),
+            ],
+          ),
+        );
+      },
+    );
   }
 }

@@ -5,7 +5,7 @@ import 'package:underdog/data/models/report.dart';
 import 'package:underdog/pages/view_report_page.dart';
 import 'package:underdog/service_locator.dart';
 import 'package:underdog/viewmodels/unrescued_reports_list_model.dart';
-import 'package:underdog/widgets/scale_page_route.dart';
+import 'package:underdog/widgets/slide_left_page_route.dart';
 
 import '../constants.dart';
 import 'item_report.dart';
@@ -37,7 +37,7 @@ class UnrescuedReportsList extends StatelessWidget {
         onTap: () {
           final Future<Report> result = Navigator.push(
             context,
-            ScalePageRoute<Report>(
+            SlideLeftPageRoute<Report>(
               page: ViewReportPage(report: report),
             ),
           );

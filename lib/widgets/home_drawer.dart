@@ -2,11 +2,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:share/share.dart';
 import 'package:underdog/pages/login_page.dart';
 import 'package:underdog/viewmodels/home_drawer_model.dart';
 import 'package:underdog/viewmodels/home_model.dart';
+import 'package:underdog/widgets/animated_flat_button.dart';
 import 'package:underdog/widgets/animated_raised_button.dart';
-import 'package:underdog/widgets/scale_page_route.dart';
+import 'package:underdog/widgets/slide_left_page_route.dart';
 
 import '../service_locator.dart';
 
@@ -56,6 +58,27 @@ class HomeDrawer extends StatelessWidget {
                       const SizedBox(height: 8),
                       Text('${model.user.firstName} ${model.user.lastName}'),
                       const SizedBox(height: 8),
+                      AnimatedFlatButton(
+                        label: 'Invite your friends',
+                        onPressed: () {
+                          Share.share(
+                              'Hello friends! Become a rescuer and help dogs find their forever home');
+                        },
+                        // icon: FontAwesomeIcons.connectdevelop,
+                      ),
+                      const SizedBox(height: 8),
+                      AnimatedFlatButton(
+                        label: 'Report a user',
+                        onPressed: () {},
+                        // icon: FontAwesomeIcons.connectdevelop,
+                      ),
+                      const SizedBox(height: 8),
+                      AnimatedFlatButton(
+                        label: 'About',
+                        onPressed: () {},
+                        // icon: FontAwesomeIcons.connectdevelop,
+                      ),
+                      const SizedBox(height: 8),
                       AnimatedRaisedButton(
                         delay: 125,
                         label: 'Log Out',
@@ -66,7 +89,7 @@ class HomeDrawer extends StatelessWidget {
                               if (value) {
                                 Navigator.pushReplacement(
                                   context,
-                                  ScalePageRoute<void>(
+                                  SlideLeftPageRoute<void>(
                                     page: const LoginPage(),
                                   ),
                                 );

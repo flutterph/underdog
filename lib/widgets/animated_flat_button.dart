@@ -86,38 +86,36 @@ class _AnimatedFlatButtonState extends State<AnimatedFlatButton>
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                (widget.icon != null)
-                    ? Row(
-                        children: <Widget>[
-                          Icon(widget.icon, size: 20, color: _color),
-                          SizedBox(
-                            width: 4,
-                          ),
-                        ],
-                      )
-                    : Container(),
+                if (widget.icon != null)
+                  Row(
+                    children: <Widget>[
+                      Icon(widget.icon, size: 20, color: _color),
+                      const SizedBox(width: 8),
+                    ],
+                  )
+                else
+                  Container(),
                 Text(
                   widget.label,
                   style: _style,
                 ),
-                (widget.isBusy)
-                    ? Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          SizedBox(
-                            width: 8,
-                          ),
-                          SizedBox(
-                            height: 10,
-                            width: 10,
-                            child: CircularProgressIndicator(
-                              backgroundColor: _pbColor,
-                              strokeWidth: 2,
-                            ),
-                          )
-                        ],
+                if (widget.isBusy)
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      const SizedBox(width: 8),
+                      SizedBox(
+                        height: 10,
+                        width: 10,
+                        child: CircularProgressIndicator(
+                          backgroundColor: _pbColor,
+                          strokeWidth: 2,
+                        ),
                       )
-                    : Container()
+                    ],
+                  )
+                else
+                  Container()
               ],
             ),
           ),

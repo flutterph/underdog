@@ -29,7 +29,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
         wordmarkAnim.start();
       });
 
-      Timer(Duration(milliseconds: 1500), () {
+      Timer(const Duration(milliseconds: 1500), () {
         Navigator.pushReplacement(
             context,
             MaterialPageRoute<void>(
