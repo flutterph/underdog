@@ -5,6 +5,8 @@ import 'package:underdog/data/models/report.dart';
 import 'package:underdog/date_time_utils.dart';
 import 'package:underdog/hero_tag.dart';
 import 'package:underdog/underdog_theme.dart';
+import 'package:underdog/widgets/shuttles/codename_shuttle.dart';
+import 'package:underdog/widgets/shuttles/hero_state.dart';
 
 class ReportItem extends StatelessWidget {
   const ReportItem({Key key, this.report}) : super(key: key);
@@ -26,26 +28,27 @@ class ReportItem extends StatelessWidget {
             child: Row(
               children: <Widget>[
                 Hero(
-                    tag: HeroTag.REPORT_IMAGE_ + report.uid,
-                    child: SizedBox(
-                      height: 160,
-                      width: 160,
-                      child: ClipRRect(
-                        borderRadius: const BorderRadius.only(
-                            bottomLeft: Radius.circular(8),
-                            topLeft: Radius.circular(8)),
-                        child: CachedNetworkImage(
-                          imageUrl: report.imageUrl,
-                          fit: BoxFit.cover,
-                          useOldImageOnUrlChange: true,
-                          placeholder: (BuildContext context, String url) =>
-                              const Center(child: CircularProgressIndicator()),
-                          errorWidget: (BuildContext context, String url,
-                                  Object error) =>
-                              Icon(FontAwesomeIcons.frown),
-                        ),
+                  tag: HeroTag.REPORT_IMAGE_ + report.uid,
+                  child: SizedBox(
+                    height: 160,
+                    width: 160,
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.only(
+                          bottomLeft: Radius.circular(8),
+                          topLeft: Radius.circular(8)),
+                      child: CachedNetworkImage(
+                        imageUrl: report.imageUrl,
+                        fit: BoxFit.cover,
+                        useOldImageOnUrlChange: true,
+                        placeholder: (BuildContext context, String url) =>
+                            const Center(child: CircularProgressIndicator()),
+                        errorWidget:
+                            (BuildContext context, String url, Object error) =>
+                                Icon(FontAwesomeIcons.frown),
                       ),
-                    )),
+                    ),
+                  ),
+                ),
                 const SizedBox(width: 16),
                 Expanded(
                   flex: 2,
@@ -57,11 +60,31 @@ class ReportItem extends StatelessWidget {
                       children: <Widget>[
                         Hero(
                           tag: HeroTag.REPORT_CODE_NAME_ + report.uid,
-                          child: Text(
-                            report.codeName,
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold),
+                          // child:
+                          // Text(
+                          //   report.codeName,
+                          //   style: TextStyle(
+                          //       fontSize: 20, fontWeight: FontWeight.bold),
+                          // ),
+                          child: CodeNameShuttle(
+                            content: report.codeName,
+                            heroState: HeroState.Popped,
                           ),
+                          flightShuttleBuilder: (
+                            BuildContext flightContext,
+                            Animation<double> animation,
+                            HeroFlightDirection flightDirection,
+                            BuildContext fromHeroContext,
+                            BuildContext toHeroContext,
+                          ) {
+                            return CodeNameShuttle(
+                              content: report.codeName,
+                              heroState:
+                                  flightDirection == HeroFlightDirection.push
+                                      ? HeroState.Pushing
+                                      : HeroState.Popping,
+                            );
+                          },
                         ),
                         Text(report.breed),
                         const SizedBox(height: 16),

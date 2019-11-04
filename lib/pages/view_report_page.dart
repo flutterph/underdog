@@ -9,6 +9,9 @@ import 'package:underdog/pages/view_rescue_page.dart';
 import 'package:underdog/view_utils.dart';
 import 'package:underdog/widgets/animated_outline_button.dart';
 import 'package:underdog/widgets/animated_raised_button.dart';
+import 'package:underdog/widgets/my_back_button.dart';
+import 'package:underdog/widgets/shuttles/codename_shuttle.dart';
+import 'package:underdog/widgets/shuttles/hero_state.dart';
 import 'package:underdog/widgets/slide_left_page_route.dart';
 
 import '../constants.dart';
@@ -34,6 +37,7 @@ class ViewReportPage extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
+        leading: const MyBackButton(),
       ),
       extendBodyBehindAppBar: true,
       body: Stack(
@@ -75,9 +79,27 @@ class ViewReportPage extends StatelessWidget {
                     ViewUtils.createTopSpacing(),
                     Center(
                       child: Hero(
-                          tag: HeroTag.REPORT_CODE_NAME_ + report.uid,
-                          child: Text(report.codeName,
-                              style: UnderdogTheme.pageTitle)),
+                        tag: HeroTag.REPORT_CODE_NAME_ + report.uid,
+                        child: CodeNameShuttle(
+                          content: report.codeName,
+                          heroState: HeroState.Pushed,
+                        ),
+                        flightShuttleBuilder: (
+                          BuildContext flightContext,
+                          Animation<double> animation,
+                          HeroFlightDirection flightDirection,
+                          BuildContext fromHeroContext,
+                          BuildContext toHeroContext,
+                        ) {
+                          return CodeNameShuttle(
+                            content: report.codeName,
+                            heroState:
+                                flightDirection == HeroFlightDirection.push
+                                    ? HeroState.Pushing
+                                    : HeroState.Popping,
+                          );
+                        },
+                      ),
                     ),
                     const SizedBox(height: 8),
                     InkWell(
@@ -87,11 +109,11 @@ class ViewReportPage extends StatelessWidget {
                             SlideLeftPageRoute<void>(
                                 page: ViewImagePage(
                               url: report.imageUrl,
-                              uid: report.uid,
+                              uid: '',
                             )));
                       },
                       child: Hero(
-                          tag: HeroTag.REPORT_IMAGE_ + report.uid,
+                          tag: HeroTag.REPORT_IMAGE_,
                           child: Material(
                             shape: RoundedRectangleBorder(
                                 side: BorderSide(color: Colors.black12)),

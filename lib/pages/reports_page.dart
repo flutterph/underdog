@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:underdog/underdog_theme.dart';
 import 'package:underdog/view_utils.dart';
+import 'package:underdog/widgets/my_back_button.dart';
 import 'package:underdog/widgets/rescued_reports_list.dart';
 import 'package:underdog/widgets/unrescued_reports_list.dart';
 
@@ -58,6 +59,7 @@ class _ReportsPageState extends State<ReportsPage>
             elevation: 0,
             backgroundColor: Colors.transparent,
             iconTheme: const IconThemeData(color: Colors.white),
+            leading: const MyBackButton(),
           ),
           Container(
             child: Column(

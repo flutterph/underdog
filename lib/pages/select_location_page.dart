@@ -67,7 +67,7 @@ class _SelectLocationPageState extends State<SelectLocationPage> {
                   right: 0,
                   child: Card(
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(8),
                         side: BorderSide(color: Colors.black12)),
                     child: Container(
                         padding: const EdgeInsets.all(16),
@@ -98,7 +98,7 @@ class _SelectLocationPageState extends State<SelectLocationPage> {
     );
   }
 
-  void _animateToUserLocation() async {
+  Future<void> _animateToUserLocation() async {
     final GoogleMapController controller = await _controller.future;
     final UserLocation userLocation = Provider.of<UserLocation>(context);
 

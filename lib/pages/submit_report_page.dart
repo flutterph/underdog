@@ -12,6 +12,7 @@ import 'package:underdog/service_locator.dart';
 import 'package:underdog/viewmodels/submit_report_model.dart';
 import 'package:underdog/widgets/animated_raised_button.dart';
 import 'package:underdog/widgets/error_snackbar.dart';
+import 'package:underdog/widgets/my_back_button.dart';
 
 import '../constants.dart';
 import '../underdog_theme.dart';
@@ -46,9 +47,8 @@ class _SubmitReportPageState extends State<SubmitReportPage>
             appBar: AppBar(
               elevation: 0,
               backgroundColor: Colors.transparent,
-              iconTheme: const IconThemeData(
-                color: Colors.white,
-              ),
+              iconTheme: const IconThemeData(color: Colors.white),
+              leading: const MyBackButton(),
             ),
             extendBodyBehindAppBar: true,
             body: Stack(

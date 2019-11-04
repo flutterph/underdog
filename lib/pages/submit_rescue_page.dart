@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:underdog/data/models/location_info.dart';
@@ -10,10 +9,10 @@ import 'package:underdog/data/models/report.dart';
 import 'package:underdog/pages/select_location_page.dart';
 import 'package:underdog/view_utils.dart';
 import 'package:underdog/viewmodels/submit_rescue_model.dart';
-import 'package:underdog/widgets/animated_flat_button.dart';
 import 'package:underdog/widgets/animated_outline_button.dart';
 import 'package:underdog/widgets/animated_raised_button.dart';
 import 'package:underdog/widgets/error_snackbar.dart';
+import 'package:underdog/widgets/my_back_button.dart';
 
 import '../constants.dart';
 import '../service_locator.dart';
@@ -36,7 +35,7 @@ class _SubmitRescuePageState extends State<SubmitRescuePage>
 
   final UnderlineInputBorder _enabledBorder = UnderlineInputBorder(
       borderSide: BorderSide(color: Colors.white70, width: 1));
-  final UnderlineInputBorder _focusedBorder = UnderlineInputBorder(
+  final UnderlineInputBorder _focusedBorder = const UnderlineInputBorder(
       borderSide: BorderSide(color: Colors.white, width: 2));
   File _selectedImage;
 
@@ -52,6 +51,7 @@ class _SubmitRescuePageState extends State<SubmitRescuePage>
               elevation: 0,
               backgroundColor: Colors.transparent,
               iconTheme: const IconThemeData(color: Colors.white),
+              leading: const MyBackButton(),
             ),
             extendBodyBehindAppBar: true,
             body: Stack(
@@ -153,7 +153,7 @@ class _SubmitRescuePageState extends State<SubmitRescuePage>
                                                   : Text(
                                                       model.locationInfo
                                                           .addressLine,
-                                                      style: TextStyle(
+                                                      style: const TextStyle(
                                                           color: Colors.white),
                                                     ),
                                             ),
