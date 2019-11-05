@@ -96,8 +96,8 @@ class _ViewRescuePageState extends State<ViewRescuePage> {
                                         context,
                                         SlideLeftPageRoute<void>(
                                             page: ViewImagePage(
-                                          // url: model.rescue.imageUrl,
-                                          uid: widget.report.uid,
+                                          url: model.rescue.imageUrl,
+                                          uid: '',
                                         )));
                                   },
                                   child: Hero(
@@ -262,54 +262,58 @@ class _ViewRescuePageState extends State<ViewRescuePage> {
           content: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              RaisedButton(
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 16, horizontal: 16),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Icon(
-                          FontAwesomeIcons.phone,
-                          color: Colors.white,
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'Phone',
-                          style: UnderdogTheme.raisedButtonText,
-                        ),
-                      ],
-                    ),
-                  ),
-                  // onPressed: () {
-                  //   Navigator.pop(context);
-                  //   launch('tel://09178796938');
-                  // }
-                  onPressed: null),
-              const SizedBox(width: 8),
-              RaisedButton(
-                  child: Container(
+              Expanded(
+                child: RaisedButton(
+                    child: Container(
                       padding: const EdgeInsets.symmetric(
                           vertical: 16, horizontal: 16),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           Icon(
-                            FontAwesomeIcons.envelopeOpen,
+                            FontAwesomeIcons.phone,
                             color: Colors.white,
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            'E-mail',
+                            'Phone',
                             style: UnderdogTheme.raisedButtonText,
                           ),
                         ],
-                      )),
-                  onPressed: () {
-                    Navigator.pop(context);
-                    launch(
-                        'mailto:${_viewRescueModel.rescuer.email}?subject=Report User: ${_viewRescueModel.rescuer.firstName} ${_viewRescueModel.rescuer.lastName}&body=This user is bad');
-                  }),
+                      ),
+                    ),
+                    // onPressed: () {
+                    //   Navigator.pop(context);
+                    //   launch('tel://09178796938');
+                    // }
+                    onPressed: null),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: RaisedButton(
+                    child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 16, horizontal: 16),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Icon(
+                              FontAwesomeIcons.envelopeOpen,
+                              color: Colors.white,
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'E-mail',
+                              style: UnderdogTheme.raisedButtonText,
+                            ),
+                          ],
+                        )),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      launch(
+                          'mailto:${_viewRescueModel.rescuer.email}?subject=Report User: ${_viewRescueModel.rescuer.firstName} ${_viewRescueModel.rescuer.lastName}&body=This user is bad');
+                    }),
+              ),
             ],
           ),
         );

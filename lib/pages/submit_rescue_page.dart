@@ -30,6 +30,7 @@ class SubmitRescuePage extends StatefulWidget {
 class _SubmitRescuePageState extends State<SubmitRescuePage>
     with SingleTickerProviderStateMixin {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _contactNoController = TextEditingController();
   final TextEditingController _additionalInfoController =
       TextEditingController();
 
@@ -92,7 +93,9 @@ class _SubmitRescuePageState extends State<SubmitRescuePage>
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
                                   InkWell(
-                                    onTap: _showImageSourceSelectionDialog,
+                                    onTap: !isBusy
+                                        ? _showImageSourceSelectionDialog
+                                        : null,
                                     child: Material(
                                       shape: RoundedRectangleBorder(
                                           side: BorderSide(
@@ -168,26 +171,62 @@ class _SubmitRescuePageState extends State<SubmitRescuePage>
                                                   FontAwesomeIcons.mapMarkerAlt,
                                                   color: UnderdogTheme.darkTeal,
                                                 ),
-                                                onPressed: () {
-                                                  final Future<LocationInfo>
-                                                      result = Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute<
-                                                                  LocationInfo>(
-                                                              builder: (BuildContext
-                                                                      context) =>
-                                                                  const SelectLocationPage()));
+                                                onPressed: !isBusy
+                                                    ? () {
+                                                        final Future<
+                                                                LocationInfo>
+                                                            result =
+                                                            Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute<
+                                                                        LocationInfo>(
+                                                                    builder: (BuildContext
+                                                                            context) =>
+                                                                        const SelectLocationPage()));
 
-                                                  result.then(
-                                                      (LocationInfo value) {
-                                                    if (value != null) {
-                                                      model.updateLocationInfo(
-                                                          value);
-                                                    }
-                                                  });
-                                                },
+                                                        result.then(
+                                                            (LocationInfo
+                                                                value) {
+                                                          if (value != null) {
+                                                            model
+                                                                .updateLocationInfo(
+                                                                    value);
+                                                          }
+                                                        });
+                                                      }
+                                                    : null,
                                               )
                                             ],
+                                          ),
+                                          const SizedBox(height: 12),
+                                          Text(
+                                            'CONTACT NO.',
+                                            style: UnderdogTheme.darkLabelStyle,
+                                          ),
+                                          TextFormField(
+                                            enabled: !isBusy,
+                                            controller:
+                                                _additionalInfoController,
+                                            maxLines: 1,
+                                            textCapitalization:
+                                                TextCapitalization.sentences,
+                                            cursorColor: Colors.white,
+                                            decoration: InputDecoration(
+                                                enabledBorder: _enabledBorder,
+                                                focusedBorder: _focusedBorder,
+                                                hintText: '09xxxxxxxxx',
+                                                hintStyle:
+                                                    UnderdogTheme.darkHintText),
+                                            validator: (String value) {
+                                              if (value.length != 11 ||
+                                                  int.tryParse(value) == null) {
+                                                return 'Please enter a valid mobile number';
+                                              } else if (value.isEmpty) {
+                                                return 'This field is required';
+                                              }
+
+                                              return null;
+                                            },
                                           ),
                                           const SizedBox(height: 12),
                                           Text(
@@ -195,6 +234,7 @@ class _SubmitRescuePageState extends State<SubmitRescuePage>
                                             style: UnderdogTheme.darkLabelStyle,
                                           ),
                                           TextFormField(
+                                            enabled: !isBusy,
                                             controller:
                                                 _additionalInfoController,
                                             maxLines: 1,
@@ -249,22 +289,25 @@ class _SubmitRescuePageState extends State<SubmitRescuePage>
                             isBusy: isBusy,
                             style: UnderdogTheme.raisedButtonText,
                             onPressed: () async {
-                              final String result = await model.submitRescue(
-                                  widget.report.uid,
-                                  _selectedImage,
-                                  model.locationInfo.addressLine,
-                                  model.locationInfo.latitude,
-                                  model.locationInfo.longitude,
-                                  _additionalInfoController.text);
+                              if (_formKey.currentState.validate()) {
+                                final String result = await model.submitRescue(
+                                    widget.report.uid,
+                                    _selectedImage,
+                                    model.locationInfo.addressLine,
+                                    model.locationInfo.latitude,
+                                    model.locationInfo.longitude,
+                                    _additionalInfoController.text);
 
-                              if (result != null) {
-                                Scaffold.of(context).showSnackBar(
-                                  ErrorSnackBar(
-                                    content: Text(result),
-                                  ),
-                                );
-                              } else {
-                                Navigator.pop(context, true);
+                                if (result != null) {
+                                  Scaffold.of(context).showSnackBar(
+                                    ErrorSnackBar(
+                                      content: Text(result),
+                                    ),
+                                  );
+                                } else {
+                                  await _showSubmissionSuccessDialog();
+                                  Navigator.pop(context, true);
+                                }
                               }
                             },
                             delay: 125,
@@ -351,5 +394,29 @@ class _SubmitRescuePageState extends State<SubmitRescuePage>
         );
       },
     );
+  }
+
+  Future<void> _showSubmissionSuccessDialog() async {
+    showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)),
+              title: const Text('Success'),
+              content: const Text(
+                'You have successfully submitted the rescue. Thank you so much for helping a dog find his/her forever home!',
+                textAlign: TextAlign.center,
+              ),
+              actions: <Widget>[
+                FlatButton(
+                  child: const Text('Okay'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                )
+              ]);
+        });
   }
 }

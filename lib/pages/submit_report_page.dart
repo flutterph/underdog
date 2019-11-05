@@ -427,7 +427,8 @@ class _SubmitReportPageState extends State<SubmitReportPage>
                   borderRadius: BorderRadius.circular(8)),
               title: const Text('Success'),
               content: const Text(
-                  'You have successfully submitted the report. Let\'s hope someone rescues the pup soon!'),
+                  'You have successfully submitted the report. Let\'s hope someone rescues the pup soon!',
+                  textAlign: TextAlign.center),
               actions: <Widget>[
                 FlatButton(
                   child: const Text('Okay'),

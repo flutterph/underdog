@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
+import 'package:underdog/constants.dart';
 import 'package:underdog/pages/login_page.dart';
 import 'package:underdog/viewmodels/home_drawer_model.dart';
 import 'package:underdog/viewmodels/home_model.dart';
@@ -46,7 +47,7 @@ class HomeDrawer extends StatelessWidget {
                             child: ClipOval(
                               child: CachedNetworkImage(
                                 imageUrl: model.user.displayPhotoUrl ??
-                                    'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/03-the-joker-w1200-h630-1562679871.jpg?crop=0.526xw:1.00xh;0.238xw,0&resize=480:*',
+                                    Constants.DP_PLACEHOLDER_URL,
                                 height: 96,
                                 width: 96,
                                 fit: BoxFit.contain,
@@ -64,19 +65,17 @@ class HomeDrawer extends StatelessWidget {
                           Share.share(
                               'Hello friends! Become a rescuer and help dogs find their forever home');
                         },
-                        // icon: FontAwesomeIcons.connectdevelop,
                       ),
-                      const SizedBox(height: 8),
-                      AnimatedFlatButton(
-                        label: 'Report a user',
-                        onPressed: () {},
-                        // icon: FontAwesomeIcons.connectdevelop,
-                      ),
+                      // const SizedBox(height: 8),
+                      // AnimatedFlatButton(
+                      //   label: 'Report a user',
+                      //   onPressed: () {},
+                      // icon: FontAwesomeIcons.connectdevelop,
+                      // ),
                       const SizedBox(height: 8),
                       AnimatedFlatButton(
                         label: 'About',
                         onPressed: () {},
-                        // icon: FontAwesomeIcons.connectdevelop,
                       ),
                       const SizedBox(height: 8),
                       AnimatedRaisedButton(

@@ -280,9 +280,15 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   Future<void> _initializeUserMarker() async {
     final UserLocation userLocation = Provider.of<UserLocation>(context);
 
+    const ImageConfiguration imageConfig =
+        ImageConfiguration(size: Size(48, 48));
+    final BitmapDescriptor icon =
+        await BitmapDescriptor.fromAssetImage(imageConfig, 'assets/marker.png');
+
     final Marker marker = Marker(
       markerId: _userMarkerId,
-      icon: BitmapDescriptor.defaultMarkerWithHue(184.1),
+      // icon: BitmapDescriptor.defaultMarkerWithHue(184.1),
+      icon: icon,
       position: LatLng(userLocation.latitude, userLocation.longitude),
       infoWindow: const InfoWindow(title: 'You are here'),
       onTap: () {},
@@ -305,9 +311,15 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   Future<void> _updateUserMarker(Timer t) async {
     final UserLocation userLocation = Provider.of<UserLocation>(context);
 
+    const ImageConfiguration imageConfig =
+        ImageConfiguration(size: Size(48, 48));
+    final BitmapDescriptor icon =
+        await BitmapDescriptor.fromAssetImage(imageConfig, 'assets/marker.png');
+
     final Marker marker = Marker(
       markerId: _userMarkerId,
-      icon: BitmapDescriptor.defaultMarkerWithHue(184.1),
+      // icon: BitmapDescriptor.defaultMarkerWithHue(184.1),
+      icon: icon,
       position: LatLng(userLocation.latitude, userLocation.longitude),
       infoWindow: const InfoWindow(title: 'You are here'),
       onTap: () {},
