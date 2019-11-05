@@ -48,6 +48,7 @@ class _SubmitRescuePageState extends State<SubmitRescuePage>
           final bool isBusy = model.state == PageState.Busy;
 
           return Scaffold(
+            // resizeToAvoidBottomInset: false,
             backgroundColor: UnderdogTheme.teal,
             appBar: AppBar(
               elevation: 0,
@@ -62,7 +63,7 @@ class _SubmitRescuePageState extends State<SubmitRescuePage>
                   bottom: Constants.PAGE_BOTTOM_BAR_SIZE,
                   child: Container(
                     height: double.infinity,
-                    width: double.infinity,
+                    width: MediaQuery.of(context).size.width,
                     constraints: BoxConstraints(
                       maxHeight: MediaQuery.of(context).size.height -
                           Constants.PAGE_BOTTOM_BAR_SIZE,
@@ -199,6 +200,7 @@ class _SubmitRescuePageState extends State<SubmitRescuePage>
                                             maxLines: 1,
                                             textCapitalization:
                                                 TextCapitalization.sentences,
+                                            cursorColor: Colors.white,
                                             decoration: InputDecoration(
                                                 enabledBorder: _enabledBorder,
                                                 focusedBorder: _focusedBorder,

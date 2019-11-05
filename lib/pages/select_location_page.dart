@@ -25,11 +25,6 @@ class _SelectLocationPageState extends State<SelectLocationPage> {
   final double _markerSize = 44.0;
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<SelectLocationModel>(
       builder: (BuildContext context) => locator<SelectLocationModel>(),
@@ -86,11 +81,25 @@ class _SelectLocationPageState extends State<SelectLocationPage> {
                 ),
               ],
             ),
-            floatingActionButton: FloatingActionButton(
-              child: Icon(FontAwesomeIcons.check),
-              onPressed: () async {
-                Navigator.pop(context, model.locationInfo);
-              },
+            floatingActionButton: Column(
+              children: <Widget>[
+                FloatingActionButton(
+                  child: Icon(FontAwesomeIcons.cross),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  mini: true,
+                ),
+                const SizedBox(
+                  height: 8,
+                ),
+                FloatingActionButton(
+                  child: Icon(FontAwesomeIcons.check),
+                  onPressed: () async {
+                    Navigator.pop(context, model.locationInfo);
+                  },
+                ),
+              ],
             ),
           );
         },
@@ -101,7 +110,6 @@ class _SelectLocationPageState extends State<SelectLocationPage> {
   Future<void> _animateToUserLocation() async {
     final GoogleMapController controller = await _controller.future;
     final UserLocation userLocation = Provider.of<UserLocation>(context);
-
     final CameraPosition newPosition = CameraPosition(
         target: LatLng(userLocation.latitude, userLocation.longitude),
         zoom: _zoom);

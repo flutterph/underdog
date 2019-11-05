@@ -10,7 +10,7 @@ class ReportsDatabaseService {
     FirebaseDatabase.instance.setPersistenceEnabled(true);
   }
 
-  StatsStream _statsStream;
+  final StatsStream _statsStream = StatsStream();
   StreamSubscription<Event> _statsStreamSubscription;
 
   final DatabaseReference _databaseReference =
@@ -34,7 +34,15 @@ class ReportsDatabaseService {
     await _databaseReference.child(uid).child('is_rescued').set(isRescued);
   }
 
+  Future<void> initStats() async {
+    final Map<dynamic, dynamic> reportsMap =
+        (await getUnrescued().once()).value;
+    final Map<dynamic, dynamic> rescuesMap = (await getRescued().once()).value;
+    _statsStream.updateStats(Stats(reportsMap.length, rescuesMap.length));
+  }
+
   Stream<Stats> watchStats() {
+    initStats();
     _statsStreamSubscription =
         _databaseReference.onChildChanged.listen((_) async {
       final Map<dynamic, dynamic> reportsMap =

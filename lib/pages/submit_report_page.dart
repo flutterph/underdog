@@ -44,6 +44,7 @@ class _SubmitReportPageState extends State<SubmitReportPage>
           final bool isBusy = model.state == PageState.Busy;
 
           return Scaffold(
+            // resizeToAvoidBottomInset: false,
             appBar: AppBar(
               elevation: 0,
               backgroundColor: Colors.transparent,
@@ -79,6 +80,8 @@ class _SubmitReportPageState extends State<SubmitReportPage>
                       side: BorderSide(color: Colors.white12)),
                 ),
                 Positioned(
+                  left: 0,
+                  right: 0,
                   bottom: Constants.PAGE_BOTTOM_BAR_SIZE,
                   child: Container(
                     alignment: Alignment.topCenter,
@@ -304,6 +307,7 @@ class _SubmitReportPageState extends State<SubmitReportPage>
                                             ),
                                           );
                                         } else {
+                                          await _showSubmissionSuccessDialog();
                                           Navigator.pop(
                                               context,
                                               LatLng(
@@ -411,5 +415,27 @@ class _SubmitReportPageState extends State<SubmitReportPage>
         );
       },
     );
+  }
+
+  Future<void> _showSubmissionSuccessDialog() async {
+    showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)),
+              title: const Text('Success'),
+              content: const Text(
+                  'You have successfully submitted the report. Let\'s hope someone rescues the pup soon!'),
+              actions: <Widget>[
+                FlatButton(
+                  child: const Text('Okay'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                )
+              ]);
+        });
   }
 }
