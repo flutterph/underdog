@@ -81,26 +81,32 @@ class _SelectLocationPageState extends State<SelectLocationPage> {
                 ),
               ],
             ),
-            floatingActionButton: Column(
-              children: <Widget>[
-                FloatingActionButton(
-                  child: Icon(FontAwesomeIcons.cross),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  mini: true,
-                ),
-                const SizedBox(
-                  height: 8,
-                ),
-                FloatingActionButton(
-                  child: Icon(FontAwesomeIcons.check),
-                  onPressed: () async {
-                    Navigator.pop(context, model.locationInfo);
-                  },
-                ),
-              ],
+            floatingActionButton: FloatingActionButton(
+              child: Icon(FontAwesomeIcons.check),
+              onPressed: () async {
+                Navigator.pop(context, model.locationInfo);
+              },
             ),
+            //      floatingActionButton: Column(
+            //   children: <Widget>[
+            //     FloatingActionButton(
+            //       child: Icon(FontAwesomeIcons.cross),
+            //       onPressed: () {
+            //         Navigator.pop(context);
+            //       },
+            //       mini: true,
+            //     ),
+            //     const SizedBox(
+            //       height: 8,
+            //     ),
+            //     FloatingActionButton(
+            //       child: Icon(FontAwesomeIcons.check),
+            //       onPressed: () async {
+            //         Navigator.pop(context, model.locationInfo);
+            //       },
+            //     ),
+            //   ],
+            // ),
           );
         },
       ),

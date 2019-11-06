@@ -50,9 +50,9 @@ class _LoginPageState extends State<LoginPage>
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Image.asset(
-                            'assets/illustrations/dog_800px.png',
-                            colorBlendMode: BlendMode.modulate,
-                            color: UnderdogTheme.teal,
+                            'assets/illustrations/dog_colour_800px.png',
+                            // colorBlendMode: BlendMode.modulate,
+                            // color: UnderdogTheme.teal,
                           ),
                           const SizedBox(height: 64),
                           Hero(

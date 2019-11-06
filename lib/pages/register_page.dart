@@ -69,7 +69,7 @@ class _RegisterPageState extends State<RegisterPage>
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Image.asset(
-                            'assets/illustrations/hiker_man_800px.png',
+                            'assets/illustrations/hiker_man_colour_800px.png',
                             colorBlendMode: BlendMode.modulate,
                             color: UnderdogTheme.dirtyWhite,
                           ),

@@ -13,14 +13,14 @@ class SelectLocationModel extends ChangeNotifier {
   CameraPosition _cameraPosition;
   LocationInfo _locationInfo;
 
-  void getLocationInfoFromCameraPosition() async {
+  Future<void> getLocationInfoFromCameraPosition() async {
     _locationInfo = await _locationService
         .getLocationInfoFromCameraPosition(_cameraPosition);
     _addressLine = _locationInfo.addressLine;
     notifyListeners();
   }
 
-  void getLocationInfoFromCurrentLocation() async {
+  Future<void> getLocationInfoFromCurrentLocation() async {
     _locationInfo = await _locationService.getLocationInfoFromCurrentLocation();
   }
 

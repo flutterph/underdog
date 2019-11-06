@@ -264,29 +264,29 @@ class _ViewRescuePageState extends State<ViewRescuePage> {
             children: <Widget>[
               Expanded(
                 child: RaisedButton(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 16, horizontal: 16),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Icon(
-                            FontAwesomeIcons.phone,
-                            color: Colors.white,
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            'Phone',
-                            style: UnderdogTheme.raisedButtonText,
-                          ),
-                        ],
-                      ),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 16, horizontal: 16),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Icon(
+                          FontAwesomeIcons.phone,
+                          color: Colors.white,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Phone',
+                          style: UnderdogTheme.raisedButtonText,
+                        ),
+                      ],
                     ),
-                    // onPressed: () {
-                    //   Navigator.pop(context);
-                    //   launch('tel://09178796938');
-                    // }
-                    onPressed: null),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    launch('tel://${_viewRescueModel.rescue.contactNo}');
+                  },
+                ),
               ),
               const SizedBox(width: 8),
               Expanded(

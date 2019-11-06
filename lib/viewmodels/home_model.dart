@@ -65,10 +65,6 @@ class HomeModel extends ChangeNotifier {
   }
 
   void selectReport(Report report) {
-    if (report == null)
-      print('null boi');
-    else
-      print(report.uid);
     _selectedReport = report;
     notifyListeners();
   }

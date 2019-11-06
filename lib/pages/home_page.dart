@@ -280,8 +280,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   Future<void> _initializeUserMarker() async {
     final UserLocation userLocation = Provider.of<UserLocation>(context);
 
-    const ImageConfiguration imageConfig =
-        ImageConfiguration(size: Size(48, 48));
+    final ImageConfiguration imageConfig = ImageConfiguration(
+        size: const Size(44.0, 44.0),
+        devicePixelRatio: MediaQuery.of(context).devicePixelRatio);
     final BitmapDescriptor icon =
         await BitmapDescriptor.fromAssetImage(imageConfig, 'assets/marker.png');
 
@@ -303,16 +304,17 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       _homeModel.hasAnimatedToCurrentLocation = true;
     }
 
-    print(
-        'Initialized user location at ${userLocation.latitude}, ${userLocation.longitude}');
+    // print(
+    //     'Initialized user location at ${userLocation.latitude}, ${userLocation.longitude}');
   }
 
   // Called every 3 seconds by the location timer
   Future<void> _updateUserMarker(Timer t) async {
     final UserLocation userLocation = Provider.of<UserLocation>(context);
 
-    const ImageConfiguration imageConfig =
-        ImageConfiguration(size: Size(48, 48));
+    final ImageConfiguration imageConfig = ImageConfiguration(
+        size: const Size(44.0, 44.0),
+        devicePixelRatio: MediaQuery.of(context).devicePixelRatio);
     final BitmapDescriptor icon =
         await BitmapDescriptor.fromAssetImage(imageConfig, 'assets/marker.png');
 
@@ -329,8 +331,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       markers[_userMarkerId] = marker;
     });
 
-    print(
-        'Updated user location to ${userLocation.latitude}, ${userLocation.longitude}');
+    // print(
+    //     'Updated user location to ${userLocation.latitude}, ${userLocation.longitude}');
   }
 
   Future<void> _animateToUserLocation() async {

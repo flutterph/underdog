@@ -42,6 +42,7 @@ class SubmitRescueModel extends ChangeNotifier {
     double latitude,
     double longitude,
     String additionalInfo,
+    String contactNo,
   ) async {
     setState(PageState.Busy);
     final String imageUrl = await _storageService.uploadImage(image);
@@ -54,7 +55,8 @@ class SubmitRescueModel extends ChangeNotifier {
           latitude,
           longitude,
           additionalInfo,
-          DateTime.now().toIso8601String());
+          DateTime.now().toIso8601String(),
+          contactNo);
       await _reportsDatabaseService.updateReportToRescued(reportId, true);
       await _rescuesDatabaseService.addRescue(newRescue);
 

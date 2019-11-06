@@ -9,6 +9,7 @@ import 'package:underdog/data/models/report.dart';
 import 'package:underdog/pages/select_location_page.dart';
 import 'package:underdog/view_utils.dart';
 import 'package:underdog/viewmodels/submit_rescue_model.dart';
+import 'package:underdog/widgets/animated_flat_button.dart';
 import 'package:underdog/widgets/animated_outline_button.dart';
 import 'package:underdog/widgets/animated_raised_button.dart';
 import 'package:underdog/widgets/error_snackbar.dart';
@@ -288,28 +289,34 @@ class _SubmitRescuePageState extends State<SubmitRescuePage>
                             color: UnderdogTheme.darkTeal,
                             isBusy: isBusy,
                             style: UnderdogTheme.raisedButtonText,
-                            onPressed: () async {
-                              if (_formKey.currentState.validate()) {
-                                final String result = await model.submitRescue(
-                                    widget.report.uid,
-                                    _selectedImage,
-                                    model.locationInfo.addressLine,
-                                    model.locationInfo.latitude,
-                                    model.locationInfo.longitude,
-                                    _additionalInfoController.text);
+                            onPressed: isBusy
+                                ? null
+                                : () async {
+                                    // await _showSubmissionSuccessDialog();
 
-                                if (result != null) {
-                                  Scaffold.of(context).showSnackBar(
-                                    ErrorSnackBar(
-                                      content: Text(result),
-                                    ),
-                                  );
-                                } else {
-                                  await _showSubmissionSuccessDialog();
-                                  Navigator.pop(context, true);
-                                }
-                              }
-                            },
+                                    if (_formKey.currentState.validate()) {
+                                      final String result =
+                                          await model.submitRescue(
+                                              widget.report.uid,
+                                              _selectedImage,
+                                              model.locationInfo.addressLine,
+                                              model.locationInfo.latitude,
+                                              model.locationInfo.longitude,
+                                              _additionalInfoController.text,
+                                              _contactNoController.text);
+
+                                      if (result != null) {
+                                        Scaffold.of(context).showSnackBar(
+                                          ErrorSnackBar(
+                                            content: Text(result),
+                                          ),
+                                        );
+                                      } else {
+                                        // await _showSubmissionSuccessDialog();
+                                        Navigator.pop(context, true);
+                                      }
+                                    }
+                                  },
                             delay: 125,
                           ),
                         ),
@@ -404,14 +411,27 @@ class _SubmitRescuePageState extends State<SubmitRescuePage>
           return AlertDialog(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8)),
-              title: const Text('Success'),
-              content: const Text(
-                'You have successfully submitted the rescue. Thank you so much for helping a dog find his/her forever home!',
+              title: const Text(
+                'Success',
                 textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.green),
+              ),
+              content: Column(
+                children: <Widget>[
+                  Image.asset(
+                    'assets/illustrations/pet_toys_colour_800px.png',
+                    scale: 4,
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'You have successfully submitted the rescue. Thank you so much for helping a dog find his/her forever home!',
+                    textAlign: TextAlign.center,
+                  ),
+                ],
               ),
               actions: <Widget>[
-                FlatButton(
-                  child: const Text('Okay'),
+                AnimatedFlatButton(
+                  label: 'Okay',
                   onPressed: () {
                     Navigator.pop(context);
                   },

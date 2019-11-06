@@ -38,7 +38,8 @@ class ReportsDatabaseService {
     final Map<dynamic, dynamic> reportsMap =
         (await getUnrescued().once()).value;
     final Map<dynamic, dynamic> rescuesMap = (await getRescued().once()).value;
-    _statsStream.updateStats(Stats(reportsMap.length, rescuesMap.length));
+    _statsStream.updateStats(Stats(reportsMap == null ? 0 : reportsMap.length,
+        rescuesMap == null ? 0 : rescuesMap.length));
   }
 
   Stream<Stats> watchStats() {
@@ -50,7 +51,8 @@ class ReportsDatabaseService {
       final Map<dynamic, dynamic> rescuesMap =
           (await getRescued().once()).value;
 
-      _statsStream.updateStats(Stats(reportsMap.length, rescuesMap.length));
+      _statsStream.updateStats(Stats(reportsMap == null ? 0 : reportsMap.length,
+          rescuesMap == null ? 0 : rescuesMap.length));
     });
 
     return _statsStream.value;
