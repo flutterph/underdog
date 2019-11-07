@@ -50,7 +50,6 @@ class _SubmitRescuePageState extends State<SubmitRescuePage>
           final bool isBusy = model.state == PageState.Busy;
 
           return Scaffold(
-            // resizeToAvoidBottomInset: false,
             backgroundColor: UnderdogTheme.teal,
             appBar: AppBar(
               elevation: 0,
@@ -59,272 +58,294 @@ class _SubmitRescuePageState extends State<SubmitRescuePage>
               leading: const MyBackButton(),
             ),
             extendBodyBehindAppBar: true,
-            body: Stack(
-              children: <Widget>[
-                Positioned(
-                  bottom: Constants.PAGE_BOTTOM_BAR_SIZE,
-                  child: Container(
-                    height: double.infinity,
-                    width: MediaQuery.of(context).size.width,
-                    constraints: BoxConstraints(
-                      maxHeight: MediaQuery.of(context).size.height -
-                          Constants.PAGE_BOTTOM_BAR_SIZE,
-                    ),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          ViewUtils.createTopSpacing(),
-                          Text(
-                            'You\'re a hero',
-                            style: UnderdogTheme.pageTitle
-                                .copyWith(color: Colors.white),
-                          ),
-                          const SizedBox(height: 8),
-                          SizedBox(
-                            width: 300,
-                            child: Form(
-                              key: _formKey,
-                              autovalidate: false,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  InkWell(
-                                    onTap: !isBusy
-                                        ? _showImageSourceSelectionDialog
-                                        : null,
-                                    child: Material(
-                                      shape: RoundedRectangleBorder(
-                                          side: BorderSide(
-                                              color: Colors.black12)),
-                                      child: (_selectedImage == null)
-                                          ? Container(
-                                              height: 300,
-                                              width: 300,
-                                              child: Center(
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
-                                                  child: Text(
-                                                    'Upload proof of rescue (ideally a picture of you with the dog)',
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.black45),
+            body: SingleChildScrollView(
+              child: Container(
+                height: MediaQuery.of(context).size.height -
+                    Constants.PAGE_BOTTOM_BAR_SIZE,
+                child: Stack(
+                  children: <Widget>[
+                    Positioned(
+                      bottom: Constants.PAGE_BOTTOM_BAR_SIZE,
+                      child: Container(
+                        height: double.infinity,
+                        width: MediaQuery.of(context).size.width,
+                        constraints: BoxConstraints(
+                          maxHeight: MediaQuery.of(context).size.height -
+                              Constants.PAGE_BOTTOM_BAR_SIZE,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            ViewUtils.createTopSpacing(),
+                            Text(
+                              'You\'re a hero',
+                              style: UnderdogTheme.pageTitle
+                                  .copyWith(color: Colors.white),
+                            ),
+                            const SizedBox(height: 8),
+                            SizedBox(
+                              width: 300,
+                              child: Form(
+                                key: _formKey,
+                                autovalidate: false,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    InkWell(
+                                      onTap: !isBusy
+                                          ? _showImageSourceSelectionDialog
+                                          : null,
+                                      child: Material(
+                                        shape: RoundedRectangleBorder(
+                                            side: BorderSide(
+                                                color: Colors.black12)),
+                                        child: (_selectedImage == null)
+                                            ? Container(
+                                                height: 300,
+                                                width: 300,
+                                                child: Center(
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: Text(
+                                                      'Upload proof of rescue (ideally a picture of you with the dog)',
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color:
+                                                              Colors.black45),
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                              decoration: BoxDecoration(
-                                                color: Colors.white12,
-                                                // borderRadius:
-                                                //     BorderRadius.circular(16),
-                                              ),
-                                            )
-                                          : Container(
-                                              height: 300,
-                                              width: 300,
-                                              decoration: BoxDecoration(
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white12,
                                                   // borderRadius:
                                                   //     BorderRadius.circular(16),
-                                                  image: DecorationImage(
-                                                      fit: BoxFit.cover,
-                                                      image: FileImage(
-                                                          _selectedImage))),
-                                            ),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 24),
-                                  Center(
-                                    child: Container(
-                                      constraints:
-                                          const BoxConstraints(maxWidth: 280),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Text(
-                                            'FOUND AT',
-                                            style: UnderdogTheme.darkLabelStyle,
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                          Row(
-                                            children: <Widget>[
-                                              Expanded(
-                                                child: (model.locationInfo ==
-                                                        null)
-                                                    ? Container()
-                                                    : Text(
-                                                        model.locationInfo
-                                                            .addressLine,
-                                                        style: const TextStyle(
-                                                            color:
-                                                                Colors.white),
-                                                      ),
-                                              ),
-                                              IconButton(
-                                                icon: Icon(
-                                                  FontAwesomeIcons.mapMarkerAlt,
-                                                  color: UnderdogTheme.darkTeal,
                                                 ),
-                                                onPressed: !isBusy
-                                                    ? () {
-                                                        final Future<
-                                                                LocationInfo>
-                                                            result =
-                                                            Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute<
-                                                                        LocationInfo>(
-                                                                    builder: (BuildContext
-                                                                            context) =>
-                                                                        const SelectLocationPage()));
-
-                                                        result.then(
-                                                            (LocationInfo
-                                                                value) {
-                                                          if (value != null) {
-                                                            model
-                                                                .updateLocationInfo(
-                                                                    value);
-                                                          }
-                                                        });
-                                                      }
-                                                    : null,
                                               )
-                                            ],
-                                          ),
-                                          const SizedBox(height: 12),
-                                          Text(
-                                            'CONTACT NO.',
-                                            style: UnderdogTheme.darkLabelStyle,
-                                          ),
-                                          TextFormField(
-                                            enabled: !isBusy,
-                                            controller:
-                                                _additionalInfoController,
-                                            maxLines: 1,
-                                            textCapitalization:
-                                                TextCapitalization.sentences,
-                                            cursorColor: Colors.white,
-                                            decoration: InputDecoration(
-                                                enabledBorder: _enabledBorder,
-                                                focusedBorder: _focusedBorder,
-                                                hintText: '09xxxxxxxxx',
-                                                hintStyle:
-                                                    UnderdogTheme.darkHintText),
-                                            validator: (String value) {
-                                              if (value.length != 11 ||
-                                                  int.tryParse(value) == null) {
-                                                return 'Please enter a valid mobile number';
-                                              } else if (value.isEmpty) {
-                                                return 'This field is required';
-                                              }
-
-                                              return null;
-                                            },
-                                          ),
-                                          const SizedBox(height: 12),
-                                          Text(
-                                            'ADDITIONAL INFO',
-                                            style: UnderdogTheme.darkLabelStyle,
-                                          ),
-                                          TextFormField(
-                                            enabled: !isBusy,
-                                            controller:
-                                                _additionalInfoController,
-                                            maxLines: 1,
-                                            textCapitalization:
-                                                TextCapitalization.sentences,
-                                            cursorColor: Colors.white,
-                                            decoration: InputDecoration(
-                                                enabledBorder: _enabledBorder,
-                                                focusedBorder: _focusedBorder,
-                                                hintText:
-                                                    '(Optional) Any other additional valuable information',
-                                                hintStyle:
-                                                    UnderdogTheme.darkHintText),
-                                          ),
-                                        ],
+                                            : Container(
+                                                height: 300,
+                                                width: 300,
+                                                decoration: BoxDecoration(
+                                                    // borderRadius:
+                                                    //     BorderRadius.circular(16),
+                                                    image: DecorationImage(
+                                                        fit: BoxFit.cover,
+                                                        image: FileImage(
+                                                            _selectedImage))),
+                                              ),
                                       ),
                                     ),
-                                  )
-                                ],
+                                    const SizedBox(height: 24),
+                                    Center(
+                                      child: Container(
+                                        constraints:
+                                            const BoxConstraints(maxWidth: 280),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Text(
+                                              'FOUND AT',
+                                              style:
+                                                  UnderdogTheme.darkLabelStyle,
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                            Row(
+                                              children: <Widget>[
+                                                Expanded(
+                                                  child: (model.locationInfo ==
+                                                          null)
+                                                      ? Container()
+                                                      : Text(
+                                                          model.locationInfo
+                                                              .addressLine,
+                                                          style:
+                                                              const TextStyle(
+                                                                  color: Colors
+                                                                      .white),
+                                                        ),
+                                                ),
+                                                IconButton(
+                                                  icon: Icon(
+                                                    FontAwesomeIcons
+                                                        .mapMarkerAlt,
+                                                    color:
+                                                        UnderdogTheme.darkTeal,
+                                                  ),
+                                                  onPressed: !isBusy
+                                                      ? () {
+                                                          final Future<
+                                                                  LocationInfo>
+                                                              result =
+                                                              Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute<
+                                                                          LocationInfo>(
+                                                                      builder: (BuildContext
+                                                                              context) =>
+                                                                          const SelectLocationPage()));
+
+                                                          result.then(
+                                                              (LocationInfo
+                                                                  value) {
+                                                            if (value != null) {
+                                                              model
+                                                                  .updateLocationInfo(
+                                                                      value);
+                                                            }
+                                                          });
+                                                        }
+                                                      : null,
+                                                )
+                                              ],
+                                            ),
+                                            const SizedBox(height: 12),
+                                            Text(
+                                              'CONTACT NO.',
+                                              style:
+                                                  UnderdogTheme.darkLabelStyle,
+                                            ),
+                                            TextFormField(
+                                              enabled: !isBusy,
+                                              controller: _contactNoController,
+                                              maxLines: 1,
+                                              textCapitalization:
+                                                  TextCapitalization.sentences,
+                                              cursorColor: Colors.white,
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                              decoration: InputDecoration(
+                                                  enabledBorder: _enabledBorder,
+                                                  focusedBorder: _focusedBorder,
+                                                  hintText: '09xxxxxxxxx',
+                                                  hintStyle: UnderdogTheme
+                                                      .darkHintText),
+                                              validator: (String value) {
+                                                if (value.length != 11 ||
+                                                    int.tryParse(value) ==
+                                                        null) {
+                                                  return 'Please enter a valid mobile number';
+                                                } else if (value.isEmpty) {
+                                                  return 'This field is required';
+                                                }
+
+                                                return null;
+                                              },
+                                            ),
+                                            const SizedBox(height: 12),
+                                            Text(
+                                              'ADDITIONAL INFO',
+                                              style:
+                                                  UnderdogTheme.darkLabelStyle,
+                                            ),
+                                            TextFormField(
+                                              enabled: !isBusy,
+                                              controller:
+                                                  _additionalInfoController,
+                                              maxLines: 1,
+                                              textCapitalization:
+                                                  TextCapitalization.sentences,
+                                              cursorColor: Colors.white,
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                              decoration: InputDecoration(
+                                                  enabledBorder: _enabledBorder,
+                                                  focusedBorder: _focusedBorder,
+                                                  hintText:
+                                                      '(Optional) Any other additional valuable information',
+                                                  hintStyle: UnderdogTheme
+                                                      .darkHintText),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        bottom: Constants.PAGE_BOTTOM_BAR_ITEMS_BOTTOM_PADDING),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        FittedBox(
-                          child: AnimatedOutlineButton(
-                            label: 'Cancel',
-                            color: Colors.white,
-                            style: UnderdogTheme.darkFlatButtonText,
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            delay: 250,
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        FittedBox(
-                          child: AnimatedRaisedButton(
-                            label: 'Submit Rescue',
-                            color: UnderdogTheme.darkTeal,
-                            isBusy: isBusy,
-                            style: UnderdogTheme.raisedButtonText,
-                            onPressed: isBusy
-                                ? null
-                                : () async {
-                                    // await _showSubmissionSuccessDialog();
-
-                                    if (_formKey.currentState.validate()) {
-                                      final String result =
-                                          await model.submitRescue(
-                                              widget.report.uid,
-                                              _selectedImage,
-                                              model.locationInfo.addressLine,
-                                              model.locationInfo.latitude,
-                                              model.locationInfo.longitude,
-                                              _additionalInfoController.text,
-                                              _contactNoController.text);
-
-                                      if (result != null) {
-                                        Scaffold.of(context).showSnackBar(
-                                          ErrorSnackBar(
-                                            content: Text(result),
-                                          ),
-                                        );
-                                      } else {
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                            bottom:
+                                Constants.PAGE_BOTTOM_BAR_ITEMS_BOTTOM_PADDING),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            FittedBox(
+                              child: AnimatedOutlineButton(
+                                label: 'Cancel',
+                                color: Colors.white,
+                                style: UnderdogTheme.darkFlatButtonText,
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                delay: 250,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            FittedBox(
+                              child: AnimatedRaisedButton(
+                                label: isBusy
+                                    ? 'Submitting Rescue'
+                                    : 'Submit Rescue',
+                                color: UnderdogTheme.darkTeal,
+                                isBusy: isBusy,
+                                style: UnderdogTheme.raisedButtonText,
+                                onPressed: isBusy
+                                    ? null
+                                    : () async {
                                         // await _showSubmissionSuccessDialog();
-                                        Navigator.pop(context, true);
-                                      }
-                                    }
-                                  },
-                            delay: 125,
-                          ),
+
+                                        if (_formKey.currentState.validate()) {
+                                          final String result =
+                                              await model.submitRescue(
+                                                  widget.report.uid,
+                                                  _selectedImage,
+                                                  model
+                                                      .locationInfo.addressLine,
+                                                  model.locationInfo.latitude,
+                                                  model.locationInfo.longitude,
+                                                  _additionalInfoController
+                                                      .text,
+                                                  _contactNoController.text);
+
+                                          if (result != null) {
+                                            Scaffold.of(context).showSnackBar(
+                                              ErrorSnackBar(
+                                                content: Text(result),
+                                              ),
+                                            );
+                                          } else {
+                                            // await _showSubmissionSuccessDialog();
+                                            Navigator.pop(context, true);
+                                          }
+                                        }
+                                      },
+                                delay: 125,
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
           );
         },

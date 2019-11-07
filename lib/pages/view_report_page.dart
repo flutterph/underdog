@@ -72,6 +72,8 @@ class ViewReportPage extends StatelessWidget {
             child: Center(
               child: Container(
                 constraints: const BoxConstraints(maxWidth: 300),
+                height: MediaQuery.of(context).size.height -
+                    Constants.PAGE_BOTTOM_BAR_SIZE,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,

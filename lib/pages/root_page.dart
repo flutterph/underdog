@@ -4,6 +4,7 @@ import 'package:underdog/hero_tag.dart';
 import 'package:underdog/pages/home_page.dart';
 import 'package:underdog/pages/login_page.dart';
 import 'package:underdog/services/auth_service.dart';
+import 'package:underdog/widgets/slide_left_page_route.dart';
 
 import '../service_locator.dart';
 
@@ -25,15 +26,11 @@ class _RootPageState extends State<RootPage> {
           break;
         case AuthStatus.NOT_LOGGED_IN:
           Navigator.pushReplacement(
-              context,
-              MaterialPageRoute<void>(
-                  builder: (BuildContext context) => const LoginPage()));
+              context, SlideLeftPageRoute<void>(page: const LoginPage()));
           break;
         case AuthStatus.LOGGED_IN:
           Navigator.pushReplacement(
-              context,
-              MaterialPageRoute<void>(
-                  builder: (BuildContext context) => const HomePage()));
+              context, SlideLeftPageRoute<void>(page: const HomePage()));
           break;
       }
     });

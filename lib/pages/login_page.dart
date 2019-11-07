@@ -23,10 +23,8 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage>
     with SingleTickerProviderStateMixin {
-  final TextEditingController _emailController =
-      TextEditingController(text: 'oliatienza@gmail.com');
-  final TextEditingController _passwordController =
-      TextEditingController(text: 'password');
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
@@ -39,124 +37,125 @@ class _LoginPageState extends State<LoginPage>
 
           return Scaffold(
             backgroundColor: Colors.white,
-            body: Stack(
-              children: <Widget>[
-                Center(
-                  child: Container(
-                    constraints: const BoxConstraints(maxWidth: 256),
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Image.asset(
-                            'assets/illustrations/dog_colour_800px.png',
-                            // colorBlendMode: BlendMode.modulate,
-                            // color: UnderdogTheme.teal,
-                          ),
-                          const SizedBox(height: 64),
-                          Hero(
-                            tag: HeroTag.MAIN_TITLE,
-                            child: Material(
-                              type: MaterialType.transparency,
-                              child: SvgPicture.asset(
-                                'assets/wordmark.svg',
-                                width: 176,
-                                color: Theme.of(context).accentColor,
+            body: SingleChildScrollView(
+              child: Stack(
+                children: <Widget>[
+                  Center(
+                    child: Container(
+                      constraints: const BoxConstraints(maxWidth: 256),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Image.asset(
+                              'assets/illustrations/dog_colour_800px.png',
+                            ),
+                            const SizedBox(height: 64),
+                            Hero(
+                              tag: HeroTag.MAIN_TITLE,
+                              child: Material(
+                                type: MaterialType.transparency,
+                                child: SvgPicture.asset(
+                                  'assets/wordmark.svg',
+                                  width: 176,
+                                  color: Theme.of(context).accentColor,
+                                ),
                               ),
                             ),
-                          ),
-                          const SizedBox(height: 8),
-                          TextFormField(
-                            enabled: !isBusy,
-                            controller: _emailController,
-                            decoration: const InputDecoration(
-                                hintText: 'E-mail',
-                                contentPadding: EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 16)),
-                            validator: (String value) {
-                              if (value.isNotEmpty) {
-                                final bool emailValid = RegExp(
-                                        r'^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+')
-                                    .hasMatch(value);
+                            const SizedBox(height: 8),
+                            TextFormField(
+                              enabled: !isBusy,
+                              controller: _emailController,
+                              decoration: const InputDecoration(
+                                  hintText: 'E-mail',
+                                  contentPadding: EdgeInsets.symmetric(
+                                      horizontal: 8, vertical: 16)),
+                              validator: (String value) {
+                                if (value.isNotEmpty) {
+                                  final bool emailValid = RegExp(
+                                          r'^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+')
+                                      .hasMatch(value);
 
-                                return emailValid
-                                    ? null
-                                    : 'Please enter a valid e-mail';
-                              }
+                                  return emailValid
+                                      ? null
+                                      : 'Please enter a valid e-mail';
+                                }
 
-                              return 'You cannot leave this field blank';
-                            },
-                          ),
-                          TextFormField(
-                            enabled: !isBusy,
-                            controller: _passwordController,
-                            obscureText: true,
-                            decoration: const InputDecoration(
-                                hintText: 'Password',
-                                contentPadding: EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 16)),
-                            validator: (String value) {
-                              if (value.isNotEmpty) {
-                                if (value.length < 8)
-                                  return 'Must be 8 or more characters';
+                                return 'You cannot leave this field blank';
+                              },
+                            ),
+                            TextFormField(
+                              enabled: !isBusy,
+                              controller: _passwordController,
+                              obscureText: true,
+                              decoration: const InputDecoration(
+                                  hintText: 'Password',
+                                  contentPadding: EdgeInsets.symmetric(
+                                      horizontal: 8, vertical: 16)),
+                              validator: (String value) {
+                                if (value.isNotEmpty) {
+                                  if (value.length < 8)
+                                    return 'Must be 8 or more characters';
 
-                                return null;
-                              }
+                                  return null;
+                                }
 
-                              return 'You cannot leave this field blank';
-                            },
-                          ),
-                          const SizedBox(height: 24),
-                          Builder(
-                            builder: (BuildContext context) =>
-                                AnimatedRaisedButton(
-                              isBusy: isBusy,
-                              label: !isBusy ? 'Log In' : 'Logging In',
-                              delay: 125,
-                              onPressed: !isBusy
-                                  ? () {
-                                      if (_formKey.currentState.validate()) {
-                                        model
-                                            .login(_emailController.text.trim(),
-                                                _passwordController.text)
-                                            .then((String value) {
-                                          if (value == null)
-                                            Navigator.pushReplacement(
-                                                context,
-                                                SlideLeftPageRoute<void>(
-                                                    page: const HomePage()));
-                                          else {
-                                            Scaffold.of(context)
-                                                .showSnackBar(ErrorSnackBar(
-                                              content: Text(value),
-                                            ));
-                                          }
-                                        });
+                                return 'You cannot leave this field blank';
+                              },
+                            ),
+                            const SizedBox(height: 24),
+                            Builder(
+                              builder: (BuildContext context) =>
+                                  AnimatedRaisedButton(
+                                isBusy: isBusy,
+                                label: !isBusy ? 'Log In' : 'Logging In',
+                                delay: 125,
+                                onPressed: !isBusy
+                                    ? () {
+                                        if (_formKey.currentState.validate()) {
+                                          model
+                                              .login(
+                                                  _emailController.text.trim(),
+                                                  _passwordController.text)
+                                              .then((String value) {
+                                            if (value == null)
+                                              Navigator.pushReplacement(
+                                                  context,
+                                                  SlideLeftPageRoute<void>(
+                                                      page: const HomePage()));
+                                            else {
+                                              Scaffold.of(context)
+                                                  .showSnackBar(ErrorSnackBar(
+                                                content: Text(value),
+                                              ));
+                                            }
+                                          });
+                                        }
                                       }
-                                    }
-                                  : null,
+                                    : null,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 8),
-                          Builder(
-                            builder: (BuildContext context) =>
-                                AnimatedFlatButton(
-                              label: 'Sign Up',
-                              delay: 250,
-                              onPressed: !isBusy
-                                  ? () {
-                                      _navigateToRegisterPage(context);
-                                    }
-                                  : null,
-                            ),
-                          )
-                        ],
+                            const SizedBox(height: 8),
+                            Builder(
+                              builder: (BuildContext context) =>
+                                  AnimatedFlatButton(
+                                label: 'Sign Up',
+                                delay: 250,
+                                onPressed: !isBusy
+                                    ? () {
+                                        _navigateToRegisterPage(context);
+                                      }
+                                    : null,
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           );
         },

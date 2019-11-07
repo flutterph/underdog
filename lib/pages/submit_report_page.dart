@@ -55,7 +55,8 @@ class _SubmitReportPageState extends State<SubmitReportPage>
             extendBodyBehindAppBar: true,
             body: SingleChildScrollView(
               child: Container(
-                height: MediaQuery.of(context).size.height,
+                height: MediaQuery.of(context).size.height -
+                    Constants.PAGE_BOTTOM_BAR_SIZE,
                 child: Stack(
                   children: <Widget>[
                     Material(
