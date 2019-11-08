@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 import 'package:underdog/constants.dart';
+import 'package:underdog/pages/about_page.dart';
 import 'package:underdog/pages/login_page.dart';
 import 'package:underdog/viewmodels/home_drawer_model.dart';
 import 'package:underdog/viewmodels/home_model.dart';
@@ -75,7 +76,12 @@ class HomeDrawer extends StatelessWidget {
                       const SizedBox(height: 8),
                       AnimatedFlatButton(
                         label: 'About',
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              SlideLeftPageRoute<void>(
+                                  page: const AboutPage()));
+                        },
                       ),
                       const SizedBox(height: 8),
                       AnimatedRaisedButton(

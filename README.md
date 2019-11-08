@@ -1,16 +1,21 @@
-# underdog
+# Underdog
 
-A new Flutter project.
+Report. Rescue. Love.
 
-## Getting Started
+Underdog helps you share the love you have to give to dogs, especially the less fortunate ones.
 
-This project is a starting point for a Flutter application.
+This app lets you report the location of stray or maybe lost dogs looking to find their way to their forever homes. It also helps you rescue the report cases by easily marking the locations on a map and navigating to said locations with a tap of the button.
 
-A few resources to get you started if this is your first Flutter project:
+If you are a rescuer, you can then report to the app that you have rescued a pup for other people to be able to contact you if you decide to look for a new owner for the pup or just share the joy to the community now that you have a new lovely pet.
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+UPCOMING FEATURES:
+- Shoutbox
+- Chat
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+###This is now available in public beta
+- [Play Store](https://play.google.com/store/apps/details?id=com.oliatienza.underdog)
+
+### Reach Out
+- [Facebook](fb.com/oliatienza)
+- [Twitter](https://twitter.com/oliatienza)
+

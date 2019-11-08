@@ -60,8 +60,7 @@ class _SubmitRescuePageState extends State<SubmitRescuePage>
             extendBodyBehindAppBar: true,
             body: SingleChildScrollView(
               child: Container(
-                height: MediaQuery.of(context).size.height -
-                    Constants.PAGE_BOTTOM_BAR_SIZE,
+                height: MediaQuery.of(context).size.height,
                 child: Stack(
                   children: <Widget>[
                     Positioned(
@@ -230,7 +229,9 @@ class _SubmitRescuePageState extends State<SubmitRescuePage>
                                                   hintStyle: UnderdogTheme
                                                       .darkHintText),
                                               validator: (String value) {
-                                                if (value.length != 11 ||
+                                                final String trimmed =
+                                                    value.trim();
+                                                if (trimmed.length != 11 ||
                                                     int.tryParse(value) ==
                                                         null) {
                                                   return 'Please enter a valid mobile number';

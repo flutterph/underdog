@@ -54,9 +54,7 @@ dev_dependencies:
 
 flutter_icons:
   android: true
-  ios: true
-  image_path_ios: "assets/ic_launcher.png"
-  image_path_android: "assets/ic_launcher.png"
+  image_path: "assets/ic_launcher.png"
   adaptive_icon_background: "#16BAC6"
   adaptive_icon_foreground: "assets/ic_foreground.png"
 
@@ -93,13 +91,13 @@ flutter:
       fonts:
         - asset: assets/fonts/jua/Jua-Regular.ttf
 
-    - family: Manjari
-      fonts:
-        - asset: assets/fonts/manjari/Manjari-Regular.ttf
-        - asset: assets/fonts/manjari/Manjari-Bold.ttf
-          weight: 700
-        - asset: assets/fonts/manjari/Manjari-Thin.ttf
-          weight: 100
+    # - family: Manjari
+    #   fonts:
+    #     - asset: assets/fonts/manjari/Manjari-Regular.ttf
+    #     - asset: assets/fonts/manjari/Manjari-Bold.ttf
+    #       weight: 700
+    #     - asset: assets/fonts/manjari/Manjari-Thin.ttf
+    #       weight: 100
 
     - family: Lato
       fonts:

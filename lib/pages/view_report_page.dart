@@ -67,11 +67,13 @@ class ViewReportPage extends StatelessWidget {
                     bottomRight: Radius.circular(radius)),
                 side: BorderSide(color: Colors.white12)),
           ),
-          Material(
-            type: MaterialType.transparency,
-            child: Center(
+          Align(
+            alignment: Alignment.topCenter,
+            child: Material(
+              type: MaterialType.transparency,
               child: Container(
                 constraints: const BoxConstraints(maxWidth: 300),
+                width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height -
                     Constants.PAGE_BOTTOM_BAR_SIZE,
                 child: Column(
